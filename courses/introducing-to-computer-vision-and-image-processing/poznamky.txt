@@ -1,0 +1,26 @@
+24.10.2024
+- Co je vlastne problem na diplomovke, ktory idem riesit? 
+	- video zaznam, ktory je dlhy trva dlhu dobu kym sa prezrie a detekuje sa na nom to co sa ma detekovat
+	- vyhladanie nejakeho predmetu, napriec viacerymi kamerami
+	- vyhladanie nejakej cinnosti, napriek viacerymi kamerami
+	- v com ale bude moje riesnie ine od druhych? 
+	- co ak by som vedel detekovat trasu na zaklade tych video zaznamov - ak by som vedel detekovat jednotlive objekty napriec roznymi kamerami
+25.10.2024
+	- OpenCV a PIL kniznicne na pracu s obrazkami 
+26.10.2024
+ 	- co vlastne budem v diplomovke riesit? 
+ 		- image classification 
+ 		- object detection 
+ 		- anomaly detection 
+ 	- zdroje:
+ 		- https://www.youtube.com/watch?v=5nZGnYPyKLU
+ 		- https://www.youtube.com/watch?v=qg4PchTECck
+ 		- https://www.coursera.org/learn/introduction-computer-vision-watson-opencv/lecture/QJlpk/neural-networks
+ 		- https://www.youtube.com/watch?v=28xk5i1_7Zc
+ 27.10.2024
+ 	- Zdroje:
+ 		- https://www.coursera.org/learn/introduction-computer-vision-watson-opencv/lecture/C24Ro/cnn-architectures
+ 		- https://www.youtube.com/watch?v=YRhxdVk_sIs (CNN velmi dobre)
+ 		- https://course17.fast.ai/start.html (mozno stoji za to to pozriet)
+ 	- Transfer learning - nieco co vyuzijem tiez pradepodobne - vyuzitie nejake CNN k tomu aby som ju len dotrenoval na moj problem
+ 	- potrebujem vediet ako trackovat verzie mojho modelu - ako ho mozem deploynut a vyuzit v aplikacii
