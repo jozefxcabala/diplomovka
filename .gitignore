@@ -1,1 +1,6 @@
 *.pt
+*.pt
+*.log
+*.mp4
+__pycache__/
+*.DS_Store
