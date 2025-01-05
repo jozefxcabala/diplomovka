@@ -3,7 +3,7 @@ from yolo_handler import YOLOHandler
 
 def main():
     video_path = "../data/input/street.mp4"
-    output_path = "../data/output/clips/"
+    output_path = "../data/output/clips/street_output.mp4"
     model_path = "../data/models/yolo11n.pt"
 
     # Triedy na detekciu (len 'person', ktorá zodpovedá triede [0])
