@@ -24,15 +24,14 @@ class YOLOHandler:
         filtered_results = []
 
         for result in results[0].boxes:
-            class_id = int(result.cls[0])  # Trieda detekcie
-            confidence = float(result.conf[0])  # Pravdepodobnosť detekcie
+            class_id = int(result.cls[0]) 
+            confidence = float(result.conf[0])
 
-            # Filtrujeme detekcie podľa vybraných tried a prahovej hodnoty
             if confidence >= confidence_threshold:
                 filtered_results.append({
                     'class_id': class_id,
                     'confidence': confidence,
-                    'bbox': result.xyxy[0].tolist()  # Bounding box súradnice
+                    'bbox': result.xyxy[0].tolist()
                 })
 
         return filtered_results
@@ -49,14 +48,13 @@ class YOLOHandler:
       results = self.model.track(source=frame, classes=self.classes_to_detect, verbose=self.verbose)
 
       filtered_results = []
-      if results and results[0].boxes:  # Overíme, že výsledky a boxy existujú
+      if results and results[0].boxes: 
           for result in results[0].boxes:
               class_id = int(result.cls[0]) if result.cls is not None else None
               confidence = float(result.conf[0]) if result.conf is not None else None
               track_id = int(result.id[0]) if result.id is not None else None
               bbox = result.xyxy[0].tolist() if result.xyxy is not None else None
 
-              # Filtrujeme na základe confidence threshold a validných hodnôt
               if confidence is not None and confidence >= confidence_threshold and bbox is not None:
                   filtered_results.append({
                       'class_id': class_id,
