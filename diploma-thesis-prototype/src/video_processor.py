@@ -1,15 +1,19 @@
 import cv2
 
-def process_segment(video_path, start_frame, end_frame, yolo_handler, tracking=True):
+def process_segment(video_path, start_frame, end_frame, yolo_handler, stop_event, tracking=True):
     """Spracuje segment videa a vráti detekcie."""
     cap = cv2.VideoCapture(video_path)
     cap.set(cv2.CAP_PROP_POS_FRAMES, start_frame)  # Nastaví na začiatok segmentu
     detections = []
 
     skip_frames = True
-    num_of_skip_frames = 3
+    num_of_skip_frames = 5
 
     for frame_idx in range(start_frame, end_frame):
+        if stop_event.is_set():
+          print(f"Vlákno pre segment {start_frame}-{end_frame} ukončené.")
+          break
+
         ret, frame = cap.read()
         if not ret:
             break
@@ -18,9 +22,9 @@ def process_segment(video_path, start_frame, end_frame, yolo_handler, tracking=T
             continue
         
         if tracking:
-            frame_detections = yolo_handler.track(frame, confidence_threshold=0.01)
+            frame_detections = yolo_handler.track(frame, confidence_threshold=0.3)
         else:
-            frame_detections = yolo_handler.detect(frame, confidence_threshold=0.01)
+            frame_detections = yolo_handler.detect(frame, confidence_threshold=0.3)
 
         if frame_detections:
           for detection in frame_detections:

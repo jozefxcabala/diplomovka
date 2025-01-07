@@ -62,30 +62,10 @@ def process_segments_parallel(video_path, segments, output_dir, model_path, clas
 
 def process_segment_and_store_results(video_path, start_frame, end_frame, yolo_handler, results_queue, stop_event):
     try:
-        detections = process_segment(video_path, start_frame, end_frame, yolo_handler, stop_event)
+        detections = process_segment(video_path, start_frame, end_frame, yolo_handler, stop_event, True)
         results_queue.put(detections)
     except Exception as e:
         print(f"Chyba pri spracovaní segmentu {start_frame}-{end_frame}: {e}")
-
-def process_segment(video_path, start_frame, end_frame, yolo_handler, stop_event):
-    cap = cv2.VideoCapture(video_path)
-    detections = []
-
-    for frame_id in range(start_frame, end_frame):
-        if stop_event.is_set():
-            print(f"Vlákno pre segment {start_frame}-{end_frame} ukončené.")
-            break
-
-        ret, frame = cap.read()
-        if not ret:
-            break
-
-        detection = yolo_handler.detect(frame)
-        detections.append({"frame_id": frame_id, "detection": detection})
-
-    cap.release()
-    return detections
-
 
 def process_segments_sequential(video_path, segments, output_dir, model_path, classes_to_detect):
     """Sekvenčne spracuje segmenty videa a vráti detekcie pre každý segment."""
