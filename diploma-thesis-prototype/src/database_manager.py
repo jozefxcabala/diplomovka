@@ -219,3 +219,78 @@ class DatabaseManager:
 
       return result[0] if result else None
 
+    def fetch_detection_by_id(self, detection_id):
+        """Získa detekciu podľa ID."""
+        conn = self.get_connection()
+        cursor = conn.cursor()
+
+        query = """
+            SELECT id, video_id, start_frame, end_frame, class_id, confidence, track_id 
+            FROM detections WHERE id = %s;
+        """
+        cursor.execute(query, (detection_id,))
+        result = cursor.fetchone()
+        self.release_connection(conn)
+
+        if result:
+            return {
+                'id': result[0],
+                'video_id': result[1],
+                'start_frame': result[2],
+                'end_frame': result[3],
+                'class_id': result[4],
+                'confidence': result[5],
+                'track_id': result[6]
+            }
+        else:
+            return None
+
+    def fetch_bounding_boxes(self, detection_id):
+        """Získa všetky bounding boxy pre danú detekciu."""
+        conn = self.get_connection()
+        cursor = conn.cursor()
+
+        query = """
+            SELECT id, detection_id, frame_id, bbox FROM bounding_boxes WHERE detection_id = %s;
+        """
+        cursor.execute(query, (detection_id,))
+        result = cursor.fetchall()
+        self.release_connection(conn)
+
+        bounding_boxes = []
+        for row in result:
+            bounding_boxes.append({
+                'id': row[0],
+                'detection_id': row[1],
+                'frame_id': row[2],
+                'bbox': json.loads(row[3])  # Deserialize bounding box (assuming it's stored as JSON)
+            })
+
+        return bounding_boxes
+    
+    def fetch_detections_by_video_id(self, video_id):
+      """Získa všetky detekcie pre dané video_id."""
+      conn = self.get_connection()
+      cursor = conn.cursor()
+
+      query = """
+          SELECT id, video_id, start_frame, end_frame, class_id, confidence, track_id
+          FROM detections WHERE video_id = %s;
+      """
+      cursor.execute(query, (video_id,))
+      result = cursor.fetchall()
+      self.release_connection(conn)
+
+      detections = []
+      for row in result:
+          detections.append({
+              'id': row[0],
+              'video_id': row[1],
+              'start_frame': row[2],
+              'end_frame': row[3],
+              'class_id': row[4],
+              'confidence': row[5],
+              'track_id': row[6]
+          })
+
+      return detections

@@ -22,9 +22,9 @@ def process_segment(video_path, start_frame, end_frame, yolo_handler, stop_event
             continue
         
         if tracking:
-            frame_detections = yolo_handler.track(frame, confidence_threshold=0.8)
+            frame_detections = yolo_handler.track(frame, confidence_threshold=0.25)
         else:
-            frame_detections = yolo_handler.detect(frame, confidence_threshold=0.8)
+            frame_detections = yolo_handler.detect(frame, confidence_threshold=0.25)
 
         if frame_detections:
           for detection in frame_detections:
