@@ -38,15 +38,15 @@ def main():
 
         try:
             print("\nDetekcia bola zacata.")
-
-            # if args.processing_mode == 'parallel':
-            #     all_detections = process_segments_parallel(
-            #         args.video_path, segments, args.output_dir, args.model_path, args.classes_to_detect
-            #     )
-            # else:
-            #     all_detections = process_segments_sequential(
-            #         args.video_path, segments, args.output_dir, args.model_path, args.classes_to_detect
-            #     )
+            
+            if args.processing_mode == 'parallel':
+                all_detections = process_segments_parallel(
+                    args.video_path, segments, args.output_dir, args.model_path, args.classes_to_detect, db_manager, video_id
+                )
+            else:
+                all_detections = process_segments_sequential(
+                    args.video_path, segments, args.output_dir, args.model_path, args.classes_to_detect, db_manager, video_id
+                )
 
             # print_detections(all_detections)
 
