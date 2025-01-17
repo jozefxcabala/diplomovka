@@ -4,6 +4,8 @@ import numpy as np
 from transformers import XCLIPProcessor, XCLIPModel
 from PIL import Image
 
+# https://github.com/NielsRogge/Transformers-Tutorials/blob/master/X-CLIP/Zero_shot_classify_a_YouTube_video_with_X_CLIP.ipynb
+# https://huggingface.co/docs/transformers/model_doc/xclip
 class XCLIPHandler:
     def __init__(self, closed_set_categories=None):
         """

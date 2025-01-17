@@ -11,7 +11,7 @@ def main():
     # Uzavretý set kategórií, ak je potrebný
     closed_set_categories = [
       "man waiting in place", 
-      "person holding a box", # TODO je dolezite, mat konkretny vysek videa!!!!
+      "person holding a box", 
       "person riding a bike", 
       "woman carrying a shopping bag", 
       "man walking on the street", 
@@ -26,7 +26,10 @@ def main():
     # Výstupy výsledkov
     for idx, result in enumerate(results):
         print(f"Dávka {idx+1}:")
-        print(result)
+        for i, prob in enumerate(result[0]):
+            description = closed_set_categories[i]
+            probability = prob.item() * 100  # Convert to percentage
+            print(f"Popis: {description} - Pravdepodobnosť: {probability:.2f}%")
         print("------------")
 
     end_time = time.time()
