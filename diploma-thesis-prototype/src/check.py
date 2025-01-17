@@ -1,7 +1,7 @@
 import cv2
 from database_manager import DatabaseManager
 
-skip_frames = False
+skip_frames = True
 num_of_skip_frames = 5
 
 def assign_bounding_boxes_to_video(db_manager, video_id, video_path, output_video_path):
@@ -18,6 +18,7 @@ def assign_bounding_boxes_to_video(db_manager, video_id, video_path, output_vide
     # Načítať video
     cap = cv2.VideoCapture(video_path)
     total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+    fps = cap.get(cv2.CAP_PROP_FPS)  # Získame správny framerate videa
 
     # Overenie, či sú rámce validné
     if total_frames <= 0:
@@ -42,7 +43,7 @@ def assign_bounding_boxes_to_video(db_manager, video_id, video_path, output_vide
 
     # Nastavenie VideoWriter pre uloženie videa
     fourcc = cv2.VideoWriter_fourcc(*'mp4v')  # Kódovanie pre mp4
-    out = cv2.VideoWriter(output_video_path, fourcc, 30.0, (width, height))
+    out = cv2.VideoWriter(output_video_path, fourcc, fps, (width, height))  # Použijeme správny framerate
 
     # Pre každý rámec vo videu
     for frame_id in range(total_frames):
@@ -64,7 +65,7 @@ def assign_bounding_boxes_to_video(db_manager, video_id, video_path, output_vide
                 cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)  # Nakreslíme zelený obdĺžnik
 
                 # Pridanie textu (frame_id, track_id, detection_id) na obrázok
-                label = f"Frame: {frame_id}, Track ID: {detection['track_id']}, Detection ID: {detection['id']}"
+                label = f"Track ID: {detection['track_id']}, Frame: {frame_id}, Detection ID: {detection['id']}"
                 cv2.putText(frame, label, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
 
         # Pridanie čísla frame_id do rohu videa
@@ -83,7 +84,7 @@ def assign_bounding_boxes_to_video(db_manager, video_id, video_path, output_vide
 db_manager = DatabaseManager(db_name="diploma_thesis_prototype_db", user="postgres", password="postgres")
 db_manager.connect()
 
-video_id = 33  # Zadaj ID videa, pre ktoré chceš spracovať detekcie
+video_id = 36  # Zadaj ID videa, pre ktoré chceš spracovať detekcie
 video_path = "../data/input/uvoz2.mp4"  # Zadaj cestu k videu
 output_video_path = "../data/output/uvoz2_with_bboxes.mp4"  # Cesta k uloženému videu
 

@@ -45,7 +45,7 @@ class YOLOHandler:
       :param confidence_threshold: Prahová hodnota pre pravdepodobnosť sledovania.
       :return: Zoznam sledovaných objektov.
       """
-      results = self.model.track(source=frame, classes=self.classes_to_detect, verbose=self.verbose)
+      results = self.model.track(source=frame, classes=self.classes_to_detect, verbose=self.verbose, tracker="bytetrack.yaml")
 
       filtered_results = []
       if results and results[0].boxes: 

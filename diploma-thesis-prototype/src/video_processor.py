@@ -6,7 +6,7 @@ def process_segment(video_path, start_frame, end_frame, yolo_handler, stop_event
     cap.set(cv2.CAP_PROP_POS_FRAMES, start_frame)  # Nastaví na začiatok segmentu
     detections = []
 
-    skip_frames = False
+    skip_frames = True
     num_of_skip_frames = 5
 
     for frame_idx in range(start_frame, end_frame):
