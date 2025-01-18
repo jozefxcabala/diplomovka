@@ -6,16 +6,32 @@ def main():
 
     start_time = time.time()
 
-    video_path = "../data/input/uvoz2-men.mp4"
+    video_path = "../data/input/uvoz2-men3.mp4"
     
     # Uzavretý set kategórií, ak je potrebný
     closed_set_categories = [
-      "man waiting in place", 
-      "person holding a box", 
-      "person riding a bike", 
-      "woman carrying a shopping bag", 
-      "man walking on the street", 
+        "person walking in an area", 
+        "person waiting in place", 
+        "person crossing the street", 
+        "person using a device", 
+        "person carrying something", 
+        "person talking to someone", 
+        "person sitting on a bench", 
+        "person holding something", 
+        "person riding a vehicle", 
+        "person interacting with an object", 
+        "person using public transport", 
+        "person waiting for transport", 
+        "person drinking", 
+        "person shopping", 
+        "person looking at something", 
+        "person eating", 
+        "person wearing something", 
+        "person walking with someone", 
+        "person with a companion", 
+        "person performing physical activity"
     ]
+
 
     # Inicializácia handlera
     handler = XCLIPHandler(closed_set_categories=closed_set_categories)
@@ -29,7 +45,8 @@ def main():
         for i, prob in enumerate(result[0]):
             description = closed_set_categories[i]
             probability = prob.item() * 100  # Convert to percentage
-            print(f"Popis: {description} - Pravdepodobnosť: {probability:.2f}%")
+            if probability > 5:
+                print(f"Popis: {description} - Pravdepodobnosť: {probability:.2f}%")
         print("------------")
 
     end_time = time.time()
