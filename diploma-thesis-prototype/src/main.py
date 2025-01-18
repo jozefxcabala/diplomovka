@@ -1,10 +1,9 @@
 import argparse
 import time
-from utils import split_video, process_segments_parallel, process_segments_sequential, print_detections, DetectionInterruptedError
+from utils import split_video, process_segments_parallel, process_segments_sequential, DetectionInterruptedError
 from database_manager import DatabaseManager
 
-def main():
-    # Nastavenie argumentov príkazového riadku
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="YOLO video processing with segment-based detection.")
     parser.add_argument("--video_path", type=str, required=True, help="Path to the input video.")
     parser.add_argument("--output_dir", type=str, required=True, help="Directory to store processed segments.")
@@ -17,27 +16,20 @@ def main():
 
     args = parser.parse_args()
 
-    # Inicializácia databázového správcu
+    # Initialization of the database manager
     db_manager = DatabaseManager(db_name="diploma_thesis_prototype_db", user="postgres", password="postgres")
     
     try:
-        # 1. Pripojenie k databáze
         db_manager.connect()
-
-        # 2. Vytvorenie tabuliek (ak neexistujú) - len raz na začiatku
         db_manager.create_tables()
-
-        # 3. Vloženie videa do tabuľky
         video_id = db_manager.insert_video(args.video_path)
 
-        # Začiatok merania času
         start_time = time.time()
 
-        # Rozdelenie videa na segmenty
         segments = split_video(args.video_path, args.num_segments)
 
         try:
-            print("\nDetekcia bola zacata.")
+            print("\nThe detection has started.")
             
             if args.processing_mode == 'parallel':
                 all_detections = process_segments_parallel(
@@ -48,25 +40,19 @@ def main():
                     args.video_path, segments, args.output_dir, args.model_path, args.classes_to_detect, db_manager, video_id
                 )
 
-            # print_detections(all_detections)
-
         except DetectionInterruptedError as e:
-            print("\nDetekcia bola manuálne prerušená. Ukončujem program.")
+            print("\nThe detection was manually interrupted. Shutting down the program.")
         except KeyboardInterrupt:
-            print("\nDetekcia bola manuálne prerušená. Ukončujem program.")
+            print("\nThe detection was manually interrupted. Shutting down the program.")
         except Exception as e:
-            print(f"Vyskytla sa neočakávaná chyba: {e}")
+            print(f"An unexpected error occurred: {e}")
         finally:
             end_time = time.time()
             elapsed_time = end_time - start_time
-            print(f"Program ukončený. Trvalo to {elapsed_time:.2f} sekúnd.")
+            print(f"Program finished. It took {elapsed_time:.2f} seconds.")
 
     except Exception as e:
-        print(f"Chyba pri práci s databázou: {e}")
+        print(f"Database error: {e}")
     
     finally:
-        # 3. Uzatvorenie pripojenia k databáze
         db_manager.close()
-
-if __name__ == "__main__":
-    main()

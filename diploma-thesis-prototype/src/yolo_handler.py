@@ -1,26 +1,20 @@
 from ultralytics import YOLO
 
+# This class, `YOLOHandler`, is designed to handle object detection and tracking using the YOLO model from the `ultralytics` library.
+# It includes methods for:
+# - Initializing the YOLO model with a specified path and setting the classes to detect.
+# - Detecting objects in a given frame, filtering results by a confidence threshold, and returning the bounding boxes and associated class IDs.
+# - Tracking objects across frames, leveraging the YOLO model's tracking capabilities with the "bytetrack" tracker.
+# The class allows customization of the detection process by specifying which object classes to detect and setting a confidence threshold for filtering low-confidence detections.
 class YOLOHandler:
     def __init__(self, model_path: str, classes_to_detect=None, verbose=False):
-        """
-        Inicializuje YOLO model a nastaví triedy na detekciu.
-        
-        :param model_path: Cesta k modelu YOLO.
-        :param classes_to_detect: Zoznam tried, ktoré chcete detekovať (napr. ['person']).
-        """
         self.classes_to_detect = classes_to_detect if classes_to_detect is not None else []
         self.verbose = verbose
         self.model = YOLO(model_path)
 
     def detect(self, frame, confidence_threshold=0.5):
-        """
-        Detekuje objekty na zadanom frame.
-        
-        :param frame: Obrazový rámec na analýzu.
-        :param confidence_threshold: Prahová hodnota pre pravdepodobnosť detekcie.
-        :return: Výsledky detekcie pre vybrané triedy.
-        """
-        results = self.model(frame, classes=self.classes_to_detect, verbose=self.verbose) # you can add save=True to save model
+        # you can add save=True to save model
+        results = self.model(frame, classes=self.classes_to_detect, verbose=self.verbose) 
         filtered_results = []
 
         for result in results[0].boxes:
@@ -38,13 +32,6 @@ class YOLOHandler:
     
     # https://docs.ultralytics.com/modes/track/#persisting-tracks-loop
     def track(self, frame, confidence_threshold=0.5):
-      """
-      Sledovanie objektov na zadanom frame.
-      
-      :param frame: Obrazový rámec na analýzu.
-      :param confidence_threshold: Prahová hodnota pre pravdepodobnosť sledovania.
-      :return: Zoznam sledovaných objektov.
-      """
       results = self.model.track(source=frame, classes=self.classes_to_detect, verbose=self.verbose, tracker="bytetrack.yaml")
 
       filtered_results = []

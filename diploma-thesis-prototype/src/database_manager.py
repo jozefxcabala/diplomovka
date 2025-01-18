@@ -1,9 +1,17 @@
 import psycopg2
 from psycopg2 import sql
 import json
-import cv2  # Import OpenCV na získanie dĺžky videa
+import cv2
 from psycopg2 import pool
 
+# This class, `DatabaseManager`, provides an interface for interacting with a PostgreSQL database to store and manage video processing data.
+# It includes methods for:
+# - Connecting to the database using a connection pool to manage multiple connections efficiently.
+# - Creating, clearing, and dropping tables for storing video metadata, detections, and bounding boxes.
+# - Inserting new video, detection, and bounding box records into the database.
+# - Fetching detections and bounding boxes from the database, filtered by video ID or detection ID.
+# - Updating detection data such as the end frame for a detection.
+# The connection pool is initialized with minimum and maximum pool sizes, ensuring efficient database access without overloading the server with too many concurrent connections.
 class DatabaseManager:
     def __init__(self, db_name, user, password, host='localhost', port='5432'):
         self.db_name = db_name
@@ -16,27 +24,23 @@ class DatabaseManager:
         self.max_connection_pool = 20
 
     def connect(self):
-        """Inicializácia connection poolu."""
+        """Initializing the connection pool."""
         self.connection_pool = psycopg2.pool.SimpleConnectionPool(
-            self.min_connection_pool, self.max_connection_pool,  # Min a Max pripojení
+            self.min_connection_pool, self.max_connection_pool,
             dbname=self.db_name, user=self.user, password=self.password,
             host=self.host, port=self.port
         )
 
     def get_connection(self):
-        """Získa pripojenie z poolu."""
         return self.connection_pool.getconn()
 
     def release_connection(self, conn):
-        """Vráti pripojenie späť do poolu."""
         self.connection_pool.putconn(conn)
 
     def close(self):
-        """Uzavretie všetkých pripojení v poolu."""
         self.connection_pool.closeall()
 
     def create_tables(self):
-        """Vytvorenie tabuliek (ak neexistujú)."""
         create_videos_table = """
             CREATE TABLE IF NOT EXISTS videos (
                 id SERIAL PRIMARY KEY,
@@ -73,7 +77,6 @@ class DatabaseManager:
         conn = self.get_connection()
         cursor = conn.cursor()
 
-        # Vytvorenie tabuliek
         cursor.execute(create_videos_table)
         cursor.execute(create_detections_table)
         cursor.execute(create_bounding_boxes_table)
@@ -82,7 +85,6 @@ class DatabaseManager:
         self.release_connection(conn)
 
     def clear_tables(self):
-        """Vymazanie všetkých záznamov zo všetkých tabuliek."""
         delete_bounding_boxes = "DELETE FROM bounding_boxes;"
         delete_detections = "DELETE FROM detections;"
         delete_videos = "DELETE FROM videos;"
@@ -99,7 +101,6 @@ class DatabaseManager:
         self.release_connection(conn)
 
     def drop_tables(self):
-        """Zmazanie tabuliek."""
         drop_videos_table = "DROP TABLE IF EXISTS videos;"
         drop_detections_table = "DROP TABLE IF EXISTS detections;"
         drop_bounding_boxes_table = "DROP TABLE IF EXISTS bounding_boxes;"
@@ -123,7 +124,6 @@ class DatabaseManager:
         return duration
 
     def insert_video(self, video_path):
-        """Vkladanie metadát o videu do tabuľky videos."""
         duration = self.get_video_duration(video_path)
         insert_query = sql.SQL("""
             INSERT INTO videos (video_path, duration)
@@ -140,7 +140,6 @@ class DatabaseManager:
         return video_id
 
     def insert_detection(self, video_id, start_frame, end_frame, class_id, confidence, track_id):
-        """Vkladanie detekcie do tabuľky detections."""
         insert_query = sql.SQL("""
             INSERT INTO detections (video_id, start_frame, end_frame, class_id, confidence, track_id)
             VALUES (%s, %s, %s, %s, %s, %s) RETURNING id
@@ -156,7 +155,6 @@ class DatabaseManager:
         return detection_id
 
     def insert_bounding_box(self, detection_id, frame_id, bbox):
-        """Vkladanie bounding boxu do tabuľky bounding_boxes."""
         insert_query = sql.SQL("""
             INSERT INTO bounding_boxes (detection_id, frame_id, bbox)
             VALUES (%s, %s, %s)
@@ -170,7 +168,6 @@ class DatabaseManager:
         self.release_connection(conn)
 
     def fetch_detections(self):
-        """Extrahovanie všetkých detekcií."""
         conn = self.get_connection()
         cursor = conn.cursor()
 
@@ -179,48 +176,29 @@ class DatabaseManager:
         self.release_connection(conn)
         return result
 
-    def fetch_bounding_boxes(self, detection_id):
-        """Extrahovanie bounding boxov pre konkrétnu detekciu."""
-        conn = self.get_connection()
-        cursor = conn.cursor()
-
-        cursor.execute("SELECT * FROM bounding_boxes WHERE detection_id = %s;", (detection_id,))
-        result = cursor.fetchall()
-        self.release_connection(conn)
-        return result
-
     def update_detection_end_frame(self, detection_id, new_end_frame):
-      """Aktualizuje end_frame pre existujúcu detekciu."""
-      # Získame pripojenie a cursor z poolu
       conn = self.get_connection()
       cursor = conn.cursor()
 
-      # Aktualizujeme end_frame
       update_query = "UPDATE detections SET end_frame = %s WHERE id = %s;"
       cursor.execute(update_query, (new_end_frame, detection_id))
       conn.commit()
 
-      # Uvoľníme pripojenie späť do poolu
       self.release_connection(conn)
 
     def fetch_detection_end_frame(self, detection_id):
-      """Získa current end_frame pre detekciu."""
-      # Získame pripojenie a cursor z poolu
       conn = self.get_connection()
       cursor = conn.cursor()
 
-      # Získame current end_frame
       query = "SELECT end_frame FROM detections WHERE id = %s;"
       cursor.execute(query, (detection_id,))
       result = cursor.fetchone()
 
-      # Uvoľníme pripojenie späť do poolu
       self.release_connection(conn)
 
       return result[0] if result else None
 
     def fetch_detection_by_id(self, detection_id):
-        """Získa detekciu podľa ID."""
         conn = self.get_connection()
         cursor = conn.cursor()
 
@@ -245,8 +223,7 @@ class DatabaseManager:
         else:
             return None
 
-    def fetch_bounding_boxes(self, detection_id):
-        """Získa všetky bounding boxy pre danú detekciu."""
+    def fetch_bounding_boxes_by_detection_id(self, detection_id):
         conn = self.get_connection()
         cursor = conn.cursor()
 
@@ -263,7 +240,7 @@ class DatabaseManager:
                 'id': row[0],
                 'detection_id': row[1],
                 'frame_id': row[2],
-                'bbox': json.loads(row[3])  # Deserialize bounding box (assuming it's stored as JSON)
+                'bbox': json.loads(row[3])
             })
 
         return bounding_boxes
