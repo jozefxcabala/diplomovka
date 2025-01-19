@@ -24,10 +24,7 @@ from yolo_handler import YOLOHandler
 class DetectionInterruptedError(Exception):
     pass
 
-def process_segments_parallel(video_path, segments, output_dir, model_path, classes_to_detect, db_manager, video_id):
-    if not os.path.exists(output_dir):
-        os.makedirs(output_dir)
-
+def process_segments_parallel(video_path, segments, model_path, classes_to_detect, db_manager, video_id):
     threads = []
     results_queue = Queue()
     stop_event = Event()
@@ -156,7 +153,7 @@ def process_segment(video_path, start_frame, end_frame, yolo_handler, stop_event
     return detections
 
 
-def main(video_path, num_segments, processing_mode, output_dir, model_path, classes_to_detect):
+def main(video_path, num_segments, processing_mode, model_path, classes_to_detect):
     # Initialization of the database manager
     db_manager = DatabaseManager(db_name="diploma_thesis_prototype_db", user="postgres", password="postgres")
     
@@ -174,7 +171,7 @@ def main(video_path, num_segments, processing_mode, output_dir, model_path, clas
             
             if processing_mode == 'parallel':
                 all_detections = process_segments_parallel(
-                    video_path, segments, output_dir, model_path, classes_to_detect, db_manager, video_id
+                    video_path, segments, model_path, classes_to_detect, db_manager, video_id
                 )
 
         except DetectionInterruptedError as e:
@@ -193,12 +190,12 @@ def main(video_path, num_segments, processing_mode, output_dir, model_path, clas
     
     finally:
         db_manager.close()
+        return video_id
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="YOLO video processing with segment-based detection.")
     parser.add_argument("--video_path", type=str, required=True, help="Path to the input video.")
-    parser.add_argument("--output_dir", type=str, required=True, help="Directory to store processed segments.")
     parser.add_argument("--model_path", type=str, required=True, help="Path to the YOLO model.")
     parser.add_argument("--num_segments", type=int, default=8, help="Number of segments to split the video into.")
     parser.add_argument("--processing_mode", type=str, choices=["parallel", "sequential"], default="parallel",
@@ -208,4 +205,4 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    main(args.video_path, args.num_segments, args.processing_mode, args.output_dir, args.model_path, args.classes_to_detect)
+    main(args.video_path, args.num_segments, args.processing_mode, args.model_path, args.classes_to_detect)

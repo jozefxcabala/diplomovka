@@ -1,5 +1,7 @@
 # This script contains helper functions.
 
+import os
+
 # The `print_detections_from_object_detection_processor` function prints details of detections from multiple segments,
 # including frame ID, track ID (if available), confidence, and the bounding box coordinates.
 # It helps in reviewing and logging detection results for debugging or analysis.
@@ -22,6 +24,8 @@ def display_results_from_anomaly_recognition(results, list_of_categories, probab
                 print(f"Description: {description} - Probability: {probability:.2f}%")
         print("------------")
 
+def create_folders(path):
+    os.makedirs(path, exist_ok=True)
 
 # from database_manager import DatabaseManager
 

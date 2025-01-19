@@ -48,7 +48,7 @@ def fetch_detections_and_bounding_boxes(video_id, db_manager):
 def crop_video_for_detection(args):
     input_video_path, detection, frame_bbox_map, output_dir, video_id, offset_x, offset_y, size_threshold = args
     cap = cv2.VideoCapture(input_video_path)
-    output_video_path = os.path.join(output_dir, f"video_{video_id}_detection_{detection['id']}.mp4")
+    output_video_path = os.path.join(output_dir, f"{video_id}_{detection['id']}.mp4")
     
     fps = cap.get(cv2.CAP_PROP_FPS) 
     width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)) 
@@ -100,9 +100,6 @@ def crop_video_for_detection(args):
     out.release()
 
 def prepare_data_for_xclip(video_id, video_path, db_manager, output_dir, offset_x, offset_y, size_threshold):
-    if not os.path.exists(output_dir):
-        os.makedirs(output_dir)
-
     detections, all_bounding_boxes = fetch_detections_and_bounding_boxes(video_id, db_manager)
 
     args_list = []
