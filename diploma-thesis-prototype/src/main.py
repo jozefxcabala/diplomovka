@@ -1,6 +1,6 @@
 import argparse
 import time
-from utils import split_video, process_segments_parallel, process_segments_sequential, DetectionInterruptedError
+from utils import split_video, process_segments_parallel, DetectionInterruptedError
 from database_manager import DatabaseManager
 
 if __name__ == "__main__":
@@ -33,10 +33,6 @@ if __name__ == "__main__":
             
             if args.processing_mode == 'parallel':
                 all_detections = process_segments_parallel(
-                    args.video_path, segments, args.output_dir, args.model_path, args.classes_to_detect, db_manager, video_id
-                )
-            else:
-                all_detections = process_segments_sequential(
                     args.video_path, segments, args.output_dir, args.model_path, args.classes_to_detect, db_manager, video_id
                 )
 
