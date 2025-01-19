@@ -1,3 +1,11 @@
+# This script processes a video and assigns bounding boxes for all detections within the video.
+# The `assign_bounding_boxes_to_video` function:
+# - Loads the video and its detections from the database.
+# - Loops through each frame and assigns bounding boxes for detected objects.
+# - Displays the bounding boxes along with relevant information (e.g., track ID, detection ID, frame ID) on each frame.
+# - Outputs the processed video with the bounding boxes and additional details to a specified file path.
+# The function supports skipping frames during processing, improving performance for long videos.
+
 import cv2
 import argparse
 from database_manager import DatabaseManager
