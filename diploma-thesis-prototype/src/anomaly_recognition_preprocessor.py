@@ -127,26 +127,16 @@ def prepare_data_for_xclip(video_id, video_path, db_manager, output_dir, offset_
     finally:
         print("All threads have been terminated.")
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Prepare video data for analysis.")
-    parser.add_argument('--video_id', required=True, type=int, help="ID of the video to process.")
-    parser.add_argument('--video_path', required=True, type=str, help="Path to the input video file.")
-    parser.add_argument('--output_dir', required=True, type=str, help="Directory where cropped videos will be saved.")
-    parser.add_argument('--size_threshold', required=True, type=int, help="Threshold for bounding box size change.")
-    parser.add_argument('--offset_x', required=True, type=int, help="Offset for bounding box cropping (x-axis).")
-    parser.add_argument('--offset_y', required=True, type=int, help="Offset for bounding box cropping (y-axis).")
-    
-    args = parser.parse_args()
-
+def main(video_id, video_path, output_dir, offset_x, offset_y, size_threshold):
     db_manager = DatabaseManager(db_name="diploma_thesis_prototype_db", user="postgres", password="postgres")
     db_manager.connect()
-
+    
     start_time = time.time()
 
     try:
         print("The program for preparing data for XCLIP action recognition has started.")
 
-        prepare_data_for_xclip(args.video_id, args.video_path, db_manager, args.output_dir, args.offset_x, args.offset_y, args.size_threshold)
+        prepare_data_for_xclip(video_id, video_path, db_manager, output_dir, offset_x, offset_y, size_threshold)
 
     except DetectionInterruptedError as e:
         print("\nThe detection was manually interrupted. Shutting down the program.")
@@ -161,3 +151,16 @@ if __name__ == "__main__":
         print(f"Program finished. It took {elapsed_time:.2f} seconds.")
 
         db_manager.close()
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Prepare video data for analysis.")
+    parser.add_argument('--video_id', required=True, type=int, help="ID of the video to process.")
+    parser.add_argument('--video_path', required=True, type=str, help="Path to the input video file.")
+    parser.add_argument('--output_dir', required=True, type=str, help="Directory where cropped videos will be saved.")
+    parser.add_argument('--size_threshold', required=True, type=int, help="Threshold for bounding box size change.")
+    parser.add_argument('--offset_x', required=True, type=int, help="Offset for bounding box cropping (x-axis).")
+    parser.add_argument('--offset_y', required=True, type=int, help="Offset for bounding box cropping (y-axis).")
+    
+    args = parser.parse_args()
+
+    main(args.video_id, args.video_path, args.output_dir, args.offset_x, args.offset_y, args.size_threshold)

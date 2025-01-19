@@ -11,7 +11,10 @@ import argparse
 from database_manager import DatabaseManager
 
 """It assigns bounding boxes for all detections in the given video and saves the entire video."""
-def assign_bounding_boxes_to_video(db_manager, video_id, video_path, output_video_path, skip_frames, num_of_skip_frames):
+def assign_bounding_boxes_to_video(video_id, video_path, output_video_path, skip_frames, num_of_skip_frames):
+    # Initialize connection to the database and call the function
+    db_manager = DatabaseManager(db_name="diploma_thesis_prototype_db", user="postgres", password="postgres")
+    db_manager.connect()
     
     detections = db_manager.fetch_detections_by_video_id(video_id)
     
@@ -78,7 +81,7 @@ def assign_bounding_boxes_to_video(db_manager, video_id, video_path, output_vide
     out.release()
     cv2.destroyAllWindows()
     print(f"The video has been saved to: {output_video_path}")
-
+    db_manager.close()
 
 if __name__ == "__main__":
     # Parse command line arguments
@@ -91,17 +94,10 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    # Initialize connection to the database and call the function
-    db_manager = DatabaseManager(db_name="diploma_thesis_prototype_db", user="postgres", password="postgres")
-    db_manager.connect()
-
     assign_bounding_boxes_to_video(
-        db_manager,
         args.video_id,
         args.video_path,
         args.output_video_path,
         args.skip_frames,
         args.num_of_skip_frames
     )
-
-    db_manager.close()
