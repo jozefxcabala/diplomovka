@@ -21,3 +21,11 @@ def display_results_from_anomaly_recognition(results, list_of_categories, probab
             if probability > probability_threshold:
                 print(f"Description: {description} - Probability: {probability:.2f}%")
         print("------------")
+
+
+# from database_manager import DatabaseManager
+
+# db_manager = DatabaseManager(db_name="diploma_thesis_prototype_db", user="postgres", password="postgres")
+# db_manager.connect()
+
+# db_manager.drop_tables()

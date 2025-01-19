@@ -59,6 +59,9 @@ class DatabaseManager:
                 class_id INTEGER,
                 confidence FLOAT,
                 track_id INTEGER,
+                video_object_detection_path TEXT NULL,
+                is_anomaly BOOLEAN DEFAULT NULL,
+                type_of_anomaly TEXT DEFAULT NULL,
                 timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (video_id) REFERENCES videos(id) ON DELETE CASCADE
             );
@@ -108,9 +111,9 @@ class DatabaseManager:
         conn = self.get_connection()
         cursor = conn.cursor()
 
-        cursor.execute(drop_videos_table)
-        cursor.execute(drop_detections_table)
         cursor.execute(drop_bounding_boxes_table)
+        cursor.execute(drop_detections_table)
+        cursor.execute(drop_videos_table)
         conn.commit()
 
         self.release_connection(conn)
@@ -139,19 +142,33 @@ class DatabaseManager:
         self.release_connection(conn)
         return video_id
 
-    def insert_detection(self, video_id, start_frame, end_frame, class_id, confidence, track_id):
+    def insert_detection(self, video_id, start_frame, end_frame, class_id, confidence, track_id, video_type="mp4"):
         insert_query = sql.SQL("""
             INSERT INTO detections (video_id, start_frame, end_frame, class_id, confidence, track_id)
             VALUES (%s, %s, %s, %s, %s, %s) RETURNING id
         """)
+        
         conn = self.get_connection()
         cursor = conn.cursor()
-
+        
         cursor.execute(insert_query, (video_id, start_frame, end_frame, class_id, confidence, track_id))
         conn.commit()
-
+        
         detection_id = cursor.fetchone()[0]
+        
+        video_object_detection_path = f"data/output/{video_id}/anomaly_recognition_preprocessor/{video_id}_{detection_id}.{video_type}"
+
+        update_query = sql.SQL("""
+            UPDATE detections
+            SET video_object_detection_path = %s
+            WHERE id = %s
+        """)
+        
+        cursor.execute(update_query, (video_object_detection_path, detection_id))
+        conn.commit()
+
         self.release_connection(conn)
+        
         return detection_id
 
     def insert_bounding_box(self, detection_id, frame_id, bbox):
