@@ -19,7 +19,8 @@ if __name__ == "__main__":
         video_id = object_detection_processor(args.video_path, 8, 'parallel', '../data/models/yolo11n.pt', 0)
         create_folders(f'../data/output/{video_id}/anomaly_recognition_preprocessor')
         anomaly_recognition_preprocessor(video_id, args.video_path, f'../data/output/{video_id}/anomaly_recognition_preprocessor', 50, 200, 200)
-        anomaly_recognition(args.video_path, "../data/input/list-of-categories.json", 5) # TODO prerobit aby to namiesto video_path bralo video_id a na zaklade toho si fetchlo vsetky detections - kde uvidi aj mena suborov ktore ma spracovat (dorobit parallel)
+        anomaly_recognition(video_id, "../data/input/list-of-categories.json", 5) # TODO dorobit parallel
+        # TODO results - what is anomaly? v metode vyssie netreba mozno printovat vysledky, to spravit az nakoniec cez DB query
 
     except Exception as e:
         print(f"An unexpected error occurred: {e}")

@@ -220,7 +220,7 @@ class DatabaseManager:
         cursor = conn.cursor()
 
         query = """
-            SELECT id, video_id, start_frame, end_frame, class_id, confidence, track_id 
+            SELECT id, video_id, start_frame, end_frame, class_id, confidence, track_id, video_object_detection_path, is_anomaly, type_of_anomaly
             FROM detections WHERE id = %s;
         """
         cursor.execute(query, (detection_id,))
@@ -235,7 +235,10 @@ class DatabaseManager:
                 'end_frame': result[3],
                 'class_id': result[4],
                 'confidence': result[5],
-                'track_id': result[6]
+                'track_id': result[6],
+                'video_object_detection_path': result[7],
+                'is_anomaly': result[8],
+                'type_of_anomaly': result[9]
             }
         else:
             return None
@@ -268,7 +271,7 @@ class DatabaseManager:
       cursor = conn.cursor()
 
       query = """
-          SELECT id, video_id, start_frame, end_frame, class_id, confidence, track_id
+          SELECT id, video_id, start_frame, end_frame, class_id, confidence, track_id, video_object_detection_path, is_anomaly, type_of_anomaly
           FROM detections WHERE video_id = %s;
       """
       cursor.execute(query, (video_id,))
@@ -284,7 +287,40 @@ class DatabaseManager:
               'end_frame': row[3],
               'class_id': row[4],
               'confidence': row[5],
-              'track_id': row[6]
+              'track_id': row[6],
+              'video_object_detection_path': row[7],
+              'is_anomaly': row[8],
+              'type_of_anomaly': row[9]
           })
 
       return detections
+
+    def fetch_detections_by_video_id_and_duration(self, video_id, duration):
+        """Získa všetky detekcie pre dané video_id."""
+        conn = self.get_connection()
+        cursor = conn.cursor()
+
+        query = """
+            SELECT id, video_id, start_frame, end_frame, class_id, confidence, track_id, video_object_detection_path, is_anomaly, type_of_anomaly
+            FROM detections WHERE video_id = %s AND (end_frame - start_frame) > %s;
+        """
+        cursor.execute(query, (video_id, duration,))
+        result = cursor.fetchall()
+        self.release_connection(conn)
+
+        detections = []
+        for row in result:
+            detections.append({
+                'id': row[0],
+                'video_id': row[1],
+                'start_frame': row[2],
+                'end_frame': row[3],
+                'class_id': row[4],
+                'confidence': row[5],
+                'track_id': row[6],
+                'video_object_detection_path': row[7],
+                'is_anomaly': row[8],
+                'type_of_anomaly': row[9]
+            })
+
+        return detections
