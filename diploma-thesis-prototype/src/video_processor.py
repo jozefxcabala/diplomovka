@@ -1,6 +1,7 @@
 # This script contains a helper functions for interaction with video.
 
 import cv2
+from moviepy.video.io.VideoFileClip import VideoFileClip
 
 # The `split_video` function divides the video into `num_segments` parts for parallel processing,
 # based on the total number of frames, to enable more efficient processing.
@@ -18,3 +19,7 @@ def split_video(video_path, num_segments):
         segments.append((start_frame, end_frame))
 
     return segments
+
+def compress_video(input_path, output_path, bitrate="500k", preset="ultrafast"):
+    input_video = VideoFileClip(input_path)
+    input_video.write_videofile(output_path, preset=preset, bitrate=bitrate)
