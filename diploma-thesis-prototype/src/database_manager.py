@@ -62,6 +62,7 @@ class DatabaseManager:
                 video_object_detection_path TEXT NULL,
                 is_anomaly BOOLEAN DEFAULT NULL,
                 type_of_anomaly TEXT DEFAULT NULL,
+                logits_per_video BYTEA DEFAULT NULL,
                 timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (video_id) REFERENCES videos(id) ON DELETE CASCADE
             );
@@ -220,7 +221,7 @@ class DatabaseManager:
         cursor = conn.cursor()
 
         query = """
-            SELECT id, video_id, start_frame, end_frame, class_id, confidence, track_id, video_object_detection_path, is_anomaly, type_of_anomaly
+            SELECT id, video_id, start_frame, end_frame, class_id, confidence, track_id, video_object_detection_path, is_anomaly, type_of_anomaly, logits_per_video
             FROM detections WHERE id = %s;
         """
         cursor.execute(query, (detection_id,))
@@ -238,7 +239,8 @@ class DatabaseManager:
                 'track_id': result[6],
                 'video_object_detection_path': result[7],
                 'is_anomaly': result[8],
-                'type_of_anomaly': result[9]
+                'type_of_anomaly': result[9],
+                'logits_per_video': result[10]
             }
         else:
             return None
@@ -271,7 +273,7 @@ class DatabaseManager:
       cursor = conn.cursor()
 
       query = """
-          SELECT id, video_id, start_frame, end_frame, class_id, confidence, track_id, video_object_detection_path, is_anomaly, type_of_anomaly
+          SELECT id, video_id, start_frame, end_frame, class_id, confidence, track_id, video_object_detection_path, is_anomaly, type_of_anomaly, logits_per_video
           FROM detections WHERE video_id = %s;
       """
       cursor.execute(query, (video_id,))
@@ -290,7 +292,8 @@ class DatabaseManager:
               'track_id': row[6],
               'video_object_detection_path': row[7],
               'is_anomaly': row[8],
-              'type_of_anomaly': row[9]
+              'type_of_anomaly': row[9],
+              'logits_per_video': row[10]
           })
 
       return detections
@@ -301,7 +304,7 @@ class DatabaseManager:
         cursor = conn.cursor()
 
         query = """
-            SELECT id, video_id, start_frame, end_frame, class_id, confidence, track_id, video_object_detection_path, is_anomaly, type_of_anomaly
+            SELECT id, video_id, start_frame, end_frame, class_id, confidence, track_id, video_object_detection_path, is_anomaly, type_of_anomaly, logits_per_video
             FROM detections WHERE video_id = %s AND (end_frame - start_frame) > %s;
         """
         cursor.execute(query, (video_id, duration,))
@@ -320,7 +323,22 @@ class DatabaseManager:
                 'track_id': row[6],
                 'video_object_detection_path': row[7],
                 'is_anomaly': row[8],
-                'type_of_anomaly': row[9]
+                'type_of_anomaly': row[9],
+                'logits_per_video': row[10]
             })
 
         return detections
+    
+    def update_detection_logits(self, detection_id, logits_per_video):
+        conn = self.get_connection()
+        cursor = conn.cursor()
+
+        update_query = """
+            UPDATE detections 
+            SET logits_per_video = %s 
+            WHERE id = %s;
+        """
+        cursor.execute(update_query, (logits_per_video, detection_id))
+        conn.commit()
+
+        self.release_connection(conn)
