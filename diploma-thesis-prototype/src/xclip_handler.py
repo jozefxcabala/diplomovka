@@ -23,10 +23,16 @@ class XCLIPHandler:
 
     def sample_frame_indices(self, clip_len, frame_sample_rate, seg_len):
         converted_len = int(clip_len * frame_sample_rate)
-        end_idx = np.random.randint(converted_len, seg_len)
-        start_idx = end_idx - converted_len
-        indices = np.linspace(start_idx, end_idx, num=clip_len)
-        indices = np.clip(indices, start_idx, end_idx - 1).astype(np.int64)
+        if converted_len >= seg_len:
+            start_idx = 0
+            end_idx = seg_len
+            indices = np.linspace(start_idx, end_idx - 1, num=min(clip_len, seg_len)).astype(np.int64)
+        else:
+            end_idx = np.random.randint(converted_len, seg_len)
+            start_idx = end_idx - converted_len
+            indices = np.linspace(start_idx, end_idx, num=clip_len)
+            indices = np.clip(indices, start_idx, end_idx - 1).astype(np.int64)
+
         return indices
 
     def process_video(self, video_path, clip_len=32, frame_sample_rate=4):
@@ -57,7 +63,6 @@ class XCLIPHandler:
         # Calculating similarity between images and text
         logits_per_video = outputs.logits_per_video  # Similarity score between images and text
         probs = logits_per_video.softmax(dim=1) 
-
         return probs
 
     def analyze_video(self, video_path, batch_size=32):
