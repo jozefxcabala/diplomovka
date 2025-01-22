@@ -5,6 +5,7 @@ import argparse
 import time
 from multiprocessing import Pool
 import signal
+from typing import Dict, List, Tuple
 
 # This script is designed to prepare video data for XCLIP action recognition by processing video segments.
 # The main tasks of this script include:
@@ -34,6 +35,26 @@ def create_bb_map(bounding_boxes):
 
     return bb_map
 
+
+def find_max_bounding_box(size_treshold, frame_bbox_map: Dict[int, List[Tuple[str, str, str, str]]]) -> Tuple[int, int, int, int]:
+    min_x1 = float('+inf')
+    min_y1 = float('+inf')
+    max_x2 = float('-inf')
+    max_y2 = float('-inf')
+
+    for frame_id, bbox in frame_bbox_map.items():
+        try:
+            x1, y1, x2, y2 = map(int, bbox)
+        except ValueError:
+            raise ValueError(f"The bounding box contains non-convertible values in frame {frame_id}: {bbox}")
+        finally:
+            min_x1 = min(min_x1, x1)
+            min_y1 = min(min_y1, y1)
+            max_x2 = max(max_x2, x2)
+            max_y2 = max(max_y2, y2)
+    
+    return min_x1, min_y1, max_x2, max_y2
+
 def fetch_detections_and_bounding_boxes(video_id, db_manager):
     detections = db_manager.fetch_detections_by_video_id(video_id)
     all_bounding_boxes = {}
@@ -46,7 +67,7 @@ def fetch_detections_and_bounding_boxes(video_id, db_manager):
     return detections, all_bounding_boxes
 
 def crop_video_for_detection(args):
-    input_video_path, detection, frame_bbox_map, output_dir, video_id, offset_x, offset_y, size_threshold = args
+    input_video_path, detection, max_bb, output_dir, video_id, offset_x, offset_y, size_threshold = args
     cap = cv2.VideoCapture(input_video_path)
     output_video_path = os.path.join(output_dir, f"{video_id}_{detection['id']}.mp4")
     
@@ -62,24 +83,12 @@ def crop_video_for_detection(args):
 
     cap.set(cv2.CAP_PROP_POS_FRAMES, detection_start_frame)
     
-    prev_bbox = None
-
     for frame_idx in range(detection_start_frame, detection_end_frame + 1):
         ret, frame = cap.read()
         if not ret:
             break 
-        
-        bbox = frame_bbox_map.get(frame_idx, False)
 
-        if bbox:
-            x1, y1, x2, y2 = map(int, bbox)
-        else: 
-            x1, y1, x2, y2 = prev_bbox
-
-        if prev_bbox and (abs(prev_bbox[2] - x2) > size_threshold or abs(prev_bbox[3] - y2) > size_threshold):
-            x1, y1, x2, y2 = prev_bbox 
-        else:
-            prev_bbox = (x1, y1, x2, y2)
+        x1, y1, x2, y2 = map(int, max_bb)
         
         x1 = max(0, x1 - offset_x)
         y1 = max(0, y1 - offset_y)
@@ -106,12 +115,13 @@ def prepare_data_for_xclip(video_id, video_path, db_manager, output_dir, offset_
     for detection in detections:
         detection_id = detection['id']
         bounding_boxes = all_bounding_boxes.get(detection_id, [])
+        max_bb = find_max_bounding_box(size_threshold, bounding_boxes)
         
         if not bounding_boxes:
             print(f"No bounding boxes for detection {detection_id}. Skipping...")
             continue
         
-        args_list.append((video_path, detection, bounding_boxes, output_dir, video_id, offset_x, offset_y, size_threshold))
+        args_list.append((video_path, detection, max_bb, output_dir, video_id, offset_x, offset_y, size_threshold))
 
     # Parallel processing using multiprocessing Pool
     try:
