@@ -15,9 +15,8 @@ def print_detections_from_object_detection_processor(all_detections):
 # It displays the descriptions of detected anomalies along with their probabilities, filtering results based on a specified probability threshold.
 # This function helps in visualizing and analyzing the outcomes of anomaly detection in batches, making it easier to identify high-probability anomalies.
 def display_results_from_anomaly_recognition(videos, list_of_categories, probability_threshold):
-    counter = 1
-    for video in videos: # TODO dorobit aby tam bol nazov videa
-        print(f"Video {counter}:")
+    for detection_id, video in videos:
+        print(f"Detection ID {detection_id}:")
         for idx, result in enumerate(video):
             print(f"Batch {idx+1}:")
             for i, prob in enumerate(result[0]):
@@ -26,7 +25,6 @@ def display_results_from_anomaly_recognition(videos, list_of_categories, probabi
                 if probability > probability_threshold:
                     print(f"Description: {description} - Probability: {probability:.2f}%")
             print("------------")
-        counter += 1
 
 def create_folders(path):
     os.makedirs(path, exist_ok=True)

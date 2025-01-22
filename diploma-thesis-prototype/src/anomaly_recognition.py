@@ -4,6 +4,8 @@ import argparse
 import json
 from helpers import display_results_from_anomaly_recognition
 from database_manager import DatabaseManager
+from multiprocessing import Pool
+import os
 
 def fetch_video_segments(video_id):
     db_manager = DatabaseManager(db_name="diploma_thesis_prototype_db", user="postgres", password="postgres")
@@ -11,12 +13,17 @@ def fetch_video_segments(video_id):
     try:
         db_manager.connect()
         detections = db_manager.fetch_detections_by_video_id_and_duration(video_id, 100)
-        videos = [f"../{detection['video_object_detection_path']}" for detection in detections]
+        videos = [(f"../{detection['video_object_detection_path']}", detection['id']) for detection in detections]
     except Exception as e:
         print(f"Database error: {e}")
     finally:
         db_manager.close()
         return videos
+    
+def analyze_video_task(args):
+    video_path, list_of_categories, detection_id = args
+    handler = XCLIPHandler(list_of_categories)
+    return (detection_id, handler.analyze_video(video_path, batch_size=32))
 
 def main(video_id, categories_json, probability_threshold):
     print(f"The XCLIP - Action Recognition program has started.")
@@ -34,8 +41,12 @@ def main(video_id, categories_json, probability_threshold):
     results = []
     videos = fetch_video_segments(video_id)
 
-    for video_path in videos:
-        results.append(handler.analyze_video(video_path, batch_size=32))
+    os.environ["TOKENIZERS_PARALLELISM"] = "false"
+
+    # Use multiprocessing Pool for parallel processing
+    num_processes = os.cpu_count()
+    with Pool(processes=min(len(videos), num_processes)) as pool:
+        results = pool.map(analyze_video_task, [(video_path, list_of_categories, detection_id) for video_path, detection_id in videos])
     
     # Display results with the given threshold
     display_results_from_anomaly_recognition(results, list_of_categories, probability_threshold)
