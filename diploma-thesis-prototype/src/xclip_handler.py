@@ -62,21 +62,18 @@ class XCLIPHandler:
         
         # Calculating similarity between images and text
         logits_per_video = outputs.logits_per_video  # Similarity score between images and text
-        probs = logits_per_video.softmax(dim=1) 
-        return probs
+        return logits_per_video
 
     def analyze_video(self, video_path, batch_size=32):
         """
         Analyzes the entire video, splits it into batches of frames, performs classification, and returns the results.
         """
         frames = self.process_video(video_path)
-        results = []
 
         descriptions = self.extract_descriptions()
-        probs = self.classify_batch(frames, descriptions)
-        results.append(probs)
+        logits_per_video = self.classify_batch(frames, descriptions)
 
-        return results
+        return logits_per_video
     
 # Sources:
 # https://github.com/NielsRogge/Transformers-Tutorials/blob/master/X-CLIP/Zero_shot_classify_a_YouTube_video_with_X_CLIP.ipynb

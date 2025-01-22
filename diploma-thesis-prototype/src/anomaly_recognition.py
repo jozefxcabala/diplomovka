@@ -2,17 +2,26 @@ from xclip_handler import XCLIPHandler
 import time
 import argparse
 import json
-from helpers import display_results_from_anomaly_recognition
 from database_manager import DatabaseManager
 from multiprocessing import Pool
 import os
+import torch
 
-def fetch_video_segments(video_id):
-    db_manager = DatabaseManager(db_name="diploma_thesis_prototype_db", user="postgres", password="postgres")
-    
+def save_results_to_db(results, video_id, db_manager: DatabaseManager):
     try:
         db_manager.connect()
-        detections = db_manager.fetch_detections_by_video_id_and_duration(video_id, 100)
+        for detection_id, logits_per_video in results:
+            logits_binary = logits_per_video.numpy().tobytes()
+            db_manager.insert_anomaly_recognition_data(video_id, detection_id, logits_binary)
+    except Exception as e:
+        print(f"Database error: {e}")
+    finally:
+        db_manager.close()
+
+def fetch_video_segments(video_id, db_manager: DatabaseManager):
+    try:
+        db_manager.connect()
+        detections = db_manager.fetch_detections_by_video_id_and_duration(video_id, 50)
         videos = [(f"../{detection['video_object_detection_path']}", detection['id']) for detection in detections]
     except Exception as e:
         print(f"Database error: {e}")
@@ -25,9 +34,11 @@ def analyze_video_task(args):
     handler = XCLIPHandler(list_of_categories)
     return (detection_id, handler.analyze_video(video_path, batch_size=32))
 
-def main(video_id, categories_json, probability_threshold):
+def main(video_id, categories_json):
     print(f"The XCLIP - Action Recognition program has started.")
 
+    db_manager = DatabaseManager(db_name="diploma_thesis_prototype_db", user="postgres", password="postgres")
+    
     start_time = time.time()
 
     # Load categories from the provided JSON file
@@ -39,7 +50,7 @@ def main(video_id, categories_json, probability_threshold):
     
     # Analyze video and get results
     results = []
-    videos = fetch_video_segments(video_id)
+    videos = fetch_video_segments(video_id, db_manager)
 
     os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
@@ -48,8 +59,7 @@ def main(video_id, categories_json, probability_threshold):
     with Pool(processes=min(len(videos), num_processes)) as pool:
         results = pool.map(analyze_video_task, [(video_path, list_of_categories, detection_id) for video_path, detection_id in videos])
     
-    # Display results with the given threshold
-    display_results_from_anomaly_recognition(results, list_of_categories, probability_threshold)
+    save_results_to_db(results, video_id, db_manager)
     
     end_time = time.time()
     elapsed_time = end_time - start_time
@@ -62,8 +72,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run XCLIP Action Recognition")
     parser.add_argument('--video_id', required=True, type=int, help="ID of video source in database")
     parser.add_argument('--categories_json', required=True, type=str, help="Path to the JSON file containing categories")
-    parser.add_argument('--probability_threshold', required=True, type=float, help="Probability threshold for displaying results")
     
     args = parser.parse_args()
 
-    main(args.video_id, args.categories_json, args.probability_threshold)
+    main(args.video_id, args.categories_json)

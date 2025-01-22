@@ -62,7 +62,6 @@ class DatabaseManager:
                 video_object_detection_path TEXT NULL,
                 is_anomaly BOOLEAN DEFAULT NULL,
                 type_of_anomaly TEXT DEFAULT NULL,
-                logits_per_video BYTEA DEFAULT NULL,
                 timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (video_id) REFERENCES videos(id) ON DELETE CASCADE
             );
@@ -78,12 +77,24 @@ class DatabaseManager:
             );
         """
 
+        create_anomaly_recognition_data_table = """
+            CREATE TABLE IF NOT EXISTS anomaly_recognition_data (
+              video_id INTEGER,
+              detection_id INTEGER,
+              logits_per_video BYTEA DEFAULT NULL,
+              timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+              FOREIGN KEY (video_id) REFERENCES videos(id) ON DELETE CASCADE,
+              FOREIGN KEY (detection_id) REFERENCES detections(id) ON DELETE CASCADE
+            );
+        """
+
         conn = self.get_connection()
         cursor = conn.cursor()
 
         cursor.execute(create_videos_table)
         cursor.execute(create_detections_table)
         cursor.execute(create_bounding_boxes_table)
+        cursor.execute(create_anomaly_recognition_data_table)
         conn.commit()
 
         self.release_connection(conn)
@@ -92,11 +103,13 @@ class DatabaseManager:
         delete_bounding_boxes = "DELETE FROM bounding_boxes;"
         delete_detections = "DELETE FROM detections;"
         delete_videos = "DELETE FROM videos;"
+        delete_anomaly_recognition_data = "DELETE FROM anomaly_recognition_data;"
 
 
         conn = self.get_connection()
         cursor = conn.cursor()
 
+        cursor.execute(delete_anomaly_recognition_data)
         cursor.execute(delete_bounding_boxes)
         cursor.execute(delete_detections)
         cursor.execute(delete_videos)
@@ -108,10 +121,12 @@ class DatabaseManager:
         drop_videos_table = "DROP TABLE IF EXISTS videos;"
         drop_detections_table = "DROP TABLE IF EXISTS detections;"
         drop_bounding_boxes_table = "DROP TABLE IF EXISTS bounding_boxes;"
+        drop_anomaly_recognition_data_table = "DROP TABLE IF EXISTS anomaly_recognition_data;"
         
         conn = self.get_connection()
         cursor = conn.cursor()
 
+        cursor.execute(drop_anomaly_recognition_data_table)
         cursor.execute(drop_bounding_boxes_table)
         cursor.execute(drop_detections_table)
         cursor.execute(drop_videos_table)
@@ -221,7 +236,7 @@ class DatabaseManager:
         cursor = conn.cursor()
 
         query = """
-            SELECT id, video_id, start_frame, end_frame, class_id, confidence, track_id, video_object_detection_path, is_anomaly, type_of_anomaly, logits_per_video
+            SELECT id, video_id, start_frame, end_frame, class_id, confidence, track_id, video_object_detection_path, is_anomaly, type_of_anomaly
             FROM detections WHERE id = %s;
         """
         cursor.execute(query, (detection_id,))
@@ -239,8 +254,7 @@ class DatabaseManager:
                 'track_id': result[6],
                 'video_object_detection_path': result[7],
                 'is_anomaly': result[8],
-                'type_of_anomaly': result[9],
-                'logits_per_video': result[10]
+                'type_of_anomaly': result[9]
             }
         else:
             return None
@@ -273,7 +287,7 @@ class DatabaseManager:
       cursor = conn.cursor()
 
       query = """
-          SELECT id, video_id, start_frame, end_frame, class_id, confidence, track_id, video_object_detection_path, is_anomaly, type_of_anomaly, logits_per_video
+          SELECT id, video_id, start_frame, end_frame, class_id, confidence, track_id, video_object_detection_path, is_anomaly, type_of_anomaly
           FROM detections WHERE video_id = %s;
       """
       cursor.execute(query, (video_id,))
@@ -292,8 +306,7 @@ class DatabaseManager:
               'track_id': row[6],
               'video_object_detection_path': row[7],
               'is_anomaly': row[8],
-              'type_of_anomaly': row[9],
-              'logits_per_video': row[10]
+              'type_of_anomaly': row[9]
           })
 
       return detections
@@ -304,7 +317,7 @@ class DatabaseManager:
         cursor = conn.cursor()
 
         query = """
-            SELECT id, video_id, start_frame, end_frame, class_id, confidence, track_id, video_object_detection_path, is_anomaly, type_of_anomaly, logits_per_video
+            SELECT id, video_id, start_frame, end_frame, class_id, confidence, track_id, video_object_detection_path, is_anomaly, type_of_anomaly
             FROM detections WHERE video_id = %s AND (end_frame - start_frame) > %s;
         """
         cursor.execute(query, (video_id, duration,))
@@ -323,22 +336,43 @@ class DatabaseManager:
                 'track_id': row[6],
                 'video_object_detection_path': row[7],
                 'is_anomaly': row[8],
-                'type_of_anomaly': row[9],
-                'logits_per_video': row[10]
+                'type_of_anomaly': row[9]
             })
 
         return detections
     
-    def update_detection_logits(self, detection_id, logits_per_video):
+    def insert_anomaly_recognition_data(self, video_id, detection_id, logits_per_video):
+        query = """
+            INSERT INTO anomaly_recognition_data (video_id, detection_id, logits_per_video)
+            VALUES (%s, %s, %s);
+        """
         conn = self.get_connection()
         cursor = conn.cursor()
-
-        update_query = """
-            UPDATE detections 
-            SET logits_per_video = %s 
-            WHERE id = %s;
-        """
-        cursor.execute(update_query, (logits_per_video, detection_id))
+        
+        cursor.execute(query, (video_id, detection_id, logits_per_video))
         conn.commit()
 
         self.release_connection(conn)
+
+    def get_anomaly_recognition_data_by_video_id(self, video_id):
+        query = """
+            SELECT logits_per_video, detection_id
+            FROM anomaly_recognition_data
+            WHERE video_id = %s;
+        """
+        conn = self.get_connection()
+        cursor = conn.cursor()
+
+        cursor.execute(query, (video_id,))
+        result = cursor.fetchall()
+
+        self.release_connection(conn)
+
+        anomaly_recognition_data = []
+        for row in result:
+            anomaly_recognition_data.append({
+                'detection_id': row[1],
+                'logits_per_video': row[0]
+            })
+
+        return anomaly_recognition_data
