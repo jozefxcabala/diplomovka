@@ -71,9 +71,19 @@ def crop_video_for_detection(args):
     cap = cv2.VideoCapture(input_video_path)
     output_video_path = os.path.join(output_dir, f"{video_id}_{detection['id']}.mp4")
     
+    init_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)) 
+    init_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+
+    x1, y1, x2, y2 = map(int, max_bb)
+        
+    x1 = max(0, x1 - offset_x)
+    y1 = max(0, y1 - offset_y)
+    x2 = min(init_width, x2 + offset_x)
+    y2 = min(init_height, y2 + offset_y)
+    
     fps = cap.get(cv2.CAP_PROP_FPS) 
-    width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)) 
-    height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    width = abs(x2-x1)
+    height = abs(y2-y1)
         
     fourcc = cv2.VideoWriter_fourcc(*'mp4v')
     out = cv2.VideoWriter(output_video_path, fourcc, fps, (width, height))
@@ -87,23 +97,10 @@ def crop_video_for_detection(args):
         ret, frame = cap.read()
         if not ret:
             break 
-
-        x1, y1, x2, y2 = map(int, max_bb)
-        
-        x1 = max(0, x1 - offset_x)
-        y1 = max(0, y1 - offset_y)
-        x2 = min(width, x2 + offset_x)
-        y2 = min(height, y2 + offset_y)
         
         cropped_frame = frame[y1:y2, x1:x2]
         
-        black_frame = frame.copy()
-        black_frame[:] = 0
-
-        cropped_height, cropped_width = cropped_frame.shape[:2]
-        black_frame[y1:y1+cropped_height, x1:x1+cropped_width] = cropped_frame
-        
-        out.write(black_frame)
+        out.write(cropped_frame)
             
     cap.release()
     out.release()
