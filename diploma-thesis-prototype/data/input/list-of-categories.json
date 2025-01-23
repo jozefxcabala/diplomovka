@@ -1,22 +1,3 @@
 [
-  "person walking in an area", 
-  "person waiting in place", 
-  "person crossing the street", 
-  "person using a device", 
-  "person carrying something", 
-  "person talking to someone", 
-  "person sitting on a bench", 
-  "person holding something", 
-  "person riding a vehicle", 
-  "person interacting with an object", 
-  "person using public transport", 
-  "person waiting for transport", 
-  "person drinking", 
-  "person shopping", 
-  "person looking at something", 
-  "person eating", 
-  "person wearing something", 
-  "person walking with someone", 
-  "person with a companion", 
-  "person performing physical activity"
+  "person riding bicycle"
 ]

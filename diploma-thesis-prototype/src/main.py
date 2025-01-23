@@ -5,7 +5,7 @@ from object_detection_processor import main as object_detection_processor
 from anomaly_recognition_preprocessor import main as anomaly_recognition_preprocessor
 from anomaly_recognition import main as anomaly_recognition
 from result_interpreter import main as result_interpreter
-from helpers import create_folders
+from helpers import create_folders, show_anomalies_in_video
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Prepare video data for analysis.")
@@ -21,7 +21,8 @@ if __name__ == "__main__":
         create_folders(f'../data/output/{video_id}/anomaly_recognition_preprocessor')
         anomaly_recognition_preprocessor(video_id, args.video_path, f'../data/output/{video_id}/anomaly_recognition_preprocessor', 50, 200, 200)
         anomaly_recognition(video_id, "../data/input/list-of-categories.json")
-        result_interpreter(video_id)
+        result_interpreter(video_id, 22, "../data/input/list-of-categories.json")
+        show_anomalies_in_video(video_id)
 
     except Exception as e:
         print(f"An unexpected error occurred: {e}")

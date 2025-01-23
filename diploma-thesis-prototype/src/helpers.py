@@ -1,6 +1,7 @@
 # This script contains helper functions.
 
 import os
+from database_manager import DatabaseManager
 
 # The `print_detections_from_object_detection_processor` function prints details of detections from multiple segments,
 # including frame ID, track ID (if available), confidence, and the bounding box coordinates.
@@ -29,7 +30,17 @@ def display_results_from_anomaly_recognition(videos, list_of_categories, probabi
 def create_folders(path):
     os.makedirs(path, exist_ok=True)
 
-# from database_manager import DatabaseManager
+def show_anomalies_in_video(video_id):
+    results = []
+    try:
+        db_manager = DatabaseManager(db_name="diploma_thesis_prototype_db", user="postgres", password="postgres")
+        db_manager.connect()
+        results = db_manager.fetch_anomalies_by_video_id(video_id)
+    except Exception as e:
+        print(f"Database error: {e}")
+    finally:
+        db_manager.close()
+        print(f"I FIND OUT THESE ANOMALIES IN VIDEO: {results}")
 
 # db_manager = DatabaseManager(db_name="diploma_thesis_prototype_db", user="postgres", password="postgres")
 # db_manager.connect()

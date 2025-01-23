@@ -376,3 +376,38 @@ class DatabaseManager:
             })
 
         return anomaly_recognition_data
+    
+    def update_detction_about_anomaly_information(self, detection_id, is_anomaly, type_of_anomaly):
+      conn = self.get_connection()
+      cursor = conn.cursor()
+
+      update_query = "UPDATE detections SET is_anomaly = %s, type_of_anomaly = %s WHERE id = %s;"
+      cursor.execute(update_query, (is_anomaly, type_of_anomaly, detection_id))
+      conn.commit()
+
+      self.release_connection(conn)
+
+    def fetch_anomalies_by_video_id(self, video_id):
+      conn = self.get_connection()
+      cursor = conn.cursor()
+
+      query = """
+          SELECT id, video_id, start_frame, end_frame, is_anomaly, type_of_anomaly
+          FROM detections WHERE video_id = %s and is_anomaly=true;
+      """
+      cursor.execute(query, (video_id,))
+      result = cursor.fetchall()
+      self.release_connection(conn)
+
+      anomalies = []
+      for row in result:
+          anomalies.append({
+              'id': row[0],
+              'video_id': row[1],
+              'start_frame': row[2],
+              'end_frame': row[3],
+              'is_anomaly': row[4],
+              'type_of_anomaly': row[5]
+          })
+
+      return anomalies
