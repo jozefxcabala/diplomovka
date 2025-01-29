@@ -5,3 +5,15 @@
 *.mov
 __pycache__/
 *.DS_Store
+data/
+courses/
+open-clip/
+progress/
+source-of-informations/
+ultralytics/
+CONNECT-TO-EXTERNAL-PC.md
+CREATE-ULTRALYTICIS-ENV.md
+environment.yml
+install-conda.sh
+ODKAZY.md
+README.md
