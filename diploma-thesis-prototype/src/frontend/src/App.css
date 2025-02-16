@@ -81,3 +81,80 @@
   justify-content: center;
   background-color: #2F2F2E;;;
 }
+
+/* Bottom panel (full-width, expandable, collapsible) */
+.bottom-panel {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%; /* Celá šírka obrazovky */
+  background-color: #1e1e2e;
+  color: white;
+  box-shadow: 0px -4px 10px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease-in-out;
+  text-align: center;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Panel header (always visible) */
+.panel-header {
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+  background: #282832;
+  width: 100%;
+}
+
+/* When closed, show only the header */
+.bottom-panel.closed {
+  height: 50px;
+  transform: translateY(0);
+  opacity: 1;
+  visibility: visible;
+}
+
+/* When open, expand the panel */
+.bottom-panel.open {
+  height: 250px;
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Panel content (only visible when open) */
+.panel-content {
+  display: none; /* Skryté v zavretom stave */
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #1e1e2e;
+  overflow-y: auto;
+}
+
+/* Show content only when panel is open */
+.bottom-panel.open .panel-content {
+  display: flex;
+}
+
+/* Select button (visible only when panel is open) */
+.select-button {
+  background-color: white;
+  color: black;
+  border: 1px solid black;
+  padding: 10px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background 0.3s ease-in-out;
+  margin-top: 10px;
+  width: 80%;
+}
+
+.select-button:hover {
+  background-color: lightgray;
+}

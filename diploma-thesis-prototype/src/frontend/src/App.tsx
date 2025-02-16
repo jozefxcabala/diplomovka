@@ -1,8 +1,82 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import VideoInput from "./components/VideoInput";
 import CategoryModal from "./components/CategoryModal";
 import PrototypeSettingModal from "./components/PrototypeSettingsModal";
 import "./App.css"; // Import CSS styles
+import DetectionsView from "./components/DetectionsView";
+
+const detections = [
+  {
+    id: "123",
+    type: "Person",
+    timestamp: "12:45:10",
+    probability: 0.98,
+    imageUrl: "https://placehold.co/50x50"
+  },
+  {
+    id: "124",
+    type: "Car",
+    timestamp: "12:46:20",
+    probability: 0.85,
+    imageUrl: "https://placehold.co/50x50"
+  },
+  {
+    id: "125",
+    type: "Bike",
+    timestamp: "12:47:30",
+    probability: 0.75,
+    imageUrl: "https://placehold.co/50x50"
+  },
+  {
+    id: "126",
+    type: "Dog",
+    timestamp: "12:48:45",
+    probability: 0.92,
+    imageUrl: "https://placehold.co/50x50",
+  },
+  {
+    id: "127",
+    type: "Fire",
+    timestamp: "12:50:10",
+    probability: 0.99,
+    imageUrl: "https://placehold.co/50x50"
+  },
+  {
+    id: "123",
+    type: "Person",
+    timestamp: "12:45:10",
+    probability: 0.98,
+    imageUrl: "https://placehold.co/50x50"
+  },
+  {
+    id: "124",
+    type: "Car",
+    timestamp: "12:46:20",
+    probability: 0.85,
+    imageUrl: "https://placehold.co/50x50"
+  },
+  {
+    id: "125",
+    type: "Bike",
+    timestamp: "12:47:30",
+    probability: 0.75,
+    imageUrl: "https://placehold.co/50x50"
+  },
+  {
+    id: "126",
+    type: "Dog",
+    timestamp: "12:48:45",
+    probability: 0.92,
+    imageUrl: "https://placehold.co/50x50",
+  },
+  {
+    id: "127",
+    type: "Fire",
+    timestamp: "12:50:10",
+    probability: 0.99,
+    imageUrl: "https://placehold.co/50x50"
+  },
+];
 
 const App: React.FC = () => {
   const [videoFile, setVideoFile] = useState<File | null>(null);
@@ -10,19 +84,38 @@ const App: React.FC = () => {
   const [settings, setSettings] = useState<Record<string, any> | null>(null);
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState<boolean>(false);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState<boolean>(false);
+  const [isAnalysisRunning, setIsAnalysisRunning] = useState<boolean>(false);
+  const [isBottomPanelOpen, setIsBottomPanelOpen] = useState<boolean>(false);
   const [windowHeight, setWindowHeight] = useState(window.innerHeight);
 
-  // Maintain the correct video height when resizing the window
+  const panelRef = useRef<HTMLDivElement | null>(null);
+
   useEffect(() => {
     const handleResize = () => setWindowHeight(window.innerHeight);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Condition to enable the "Start Analysis" button
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (panelRef.current && !panelRef.current.contains(event.target as Node)) {
+        setIsBottomPanelOpen(false);
+      }
+    };
+
+    if (isBottomPanelOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isBottomPanelOpen]);
+
   const isAnalysisReady = videoFile !== null && categories.length > 0 && settings !== null;
 
-  // Function to start the analysis
   const startAnalysis = () => {
     if (!isAnalysisReady) return;
 
@@ -31,7 +124,16 @@ const App: React.FC = () => {
     console.log("📌 Categories:", categories);
     console.log("⚙️ Settings:", settings);
 
-    // Here you can add a fetch/axios request to the backend (e.g., POST to an API endpoint)
+    setIsAnalysisRunning(true);
+    setIsBottomPanelOpen(true);
+  };
+
+  const toggleBottomPanel = () => {
+    setIsBottomPanelOpen((prev) => !prev);
+  };
+
+  const handleSelectClick = () => {
+    console.log("Select");
   };
 
   return (
@@ -40,51 +142,48 @@ const App: React.FC = () => {
       <nav className="navbar">
         <h1 className="app-title">🎥 The Prototype</h1>
         <div className="navbar-buttons">
-          <button
-            className="button category-button"
-            onClick={() => setIsCategoryModalOpen(true)}
-            disabled={!videoFile}
-            title={
-              videoFile
-                ? "Click to select categories for searching"
-                : "❌ You must upload a video before clicking this button"
-            }
-          >
-            📂 Select Categories
+          <button className="button category-button" onClick={() => setIsCategoryModalOpen(true)} disabled={!videoFile}>
+            📂 Change Categories
           </button>
-          <button
-            className="button settings-button"
-            onClick={() => setIsSettingsModalOpen(true)}
-            disabled={!videoFile}
-            title={
-              videoFile
-                ? "Click to select settings to be used in the analysis"
-                : "❌ You must upload a video before clicking this button"
-            }
-          >
-            ⚙️ Set Configuration
+          <button className="button settings-button" onClick={() => setIsSettingsModalOpen(true)} disabled={!videoFile}>
+            ⚙️ Change Configuration
           </button>
           <button
             className={`button start-button ${isAnalysisReady ? "enabled" : "disabled"}`}
             onClick={startAnalysis}
             disabled={!isAnalysisReady}
-            title={
-              isAnalysisReady
-                ? "Click to start the analysis"
-                : "❌ You must upload a video, select categories, and set configuration before starting the analysis"
-            }
           >
-            🚀 Start Analysis
+            🚀 Run Analysis
           </button>
         </div>
       </nav>
 
-      {/* Main panel for video playback */}
-      <div className="video-container">
-        <VideoInput width={window.innerWidth} height={windowHeight - 64} onVideoUpload={setVideoFile} />
+      {/* Main Content */}
+      <div className="main-content">
+        {false ? (
+          <div className="video-container">
+            <VideoInput width={window.innerWidth} height={windowHeight - 64} onVideoUpload={setVideoFile} />
+          </div>
+        ) : (
+          <div className="analysis-screen">
+            <h2>🔍 Analysis in Progress...</h2>
+            <p>Processing the video...</p>
+          </div>
+        )}
       </div>
 
-      {/* Category Modal */}
+      {/* Clickable Bottom Panel */}
+      <div ref={panelRef} className={`bottom-panel ${isBottomPanelOpen ? "open" : "closed"}`} onClick={toggleBottomPanel}>
+        <div className="panel-drag-bar"></div>
+        {isBottomPanelOpen ? <div className="detection-header">Hide Detections 🔥</div> : <div className="detection-header">Show Detections 🔥</div>}
+        {isBottomPanelOpen && (
+          <div className="panel-content">
+            <DetectionsView detections={detections} />
+          </div>
+        )}
+      </div>
+
+      {/* Modals */}
       <CategoryModal
         isOpen={isCategoryModalOpen}
         onClose={() => setIsCategoryModalOpen(false)}
@@ -94,7 +193,6 @@ const App: React.FC = () => {
         }}
       />
 
-      {/* Prototype Setting Modal */}
       <PrototypeSettingModal
         isOpen={isSettingsModalOpen}
         onClose={() => setIsSettingsModalOpen(false)}
