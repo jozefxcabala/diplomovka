@@ -1,0 +1,51 @@
+/* Video input kontajner */
+.video-input {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Skrytý input na nahranie súboru */
+.video-input-hidden {
+  display: none;
+}
+
+/* Upload tlačidlo */
+.upload-button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: #28a745; /* Zelená */
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  border: 2px solid #218838; /* Tmavšia zelená */
+  padding: 12px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0px 4px 8px rgba(40, 167, 69, 0.4); /* Zelený tieň */
+}
+
+/* Hover efekt */
+.upload-button:hover {
+  background-color: #218838; /* Tmavšia zelená */
+  border-color: #1e7e34;
+}
+
+/* Ikona v upload tlačidle */
+.upload-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid white;
+  padding: 5px;
+  border-radius: 4px;
+}
+
+/* Video preview */
+.video-preview {
+  display: block;
+  margin-top: 10px;
+}
