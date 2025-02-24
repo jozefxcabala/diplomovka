@@ -4,6 +4,11 @@
 source backend/venv/bin/activate  # macOS/Linux
 # source backend/venv/Scripts/activate  # Windows (ak používaš Git Bash)
 
+echo "📂 Spúšťam HTTP server na poskytovanie videí..."
+cd ../data/input
+python3 -m http.server 8000 2>&1 | tee ../../http_server.log & 
+cd ../../src
+
 echo "🚀 Spúšťam FastAPI backend..."
 cd backend
 uvicorn main:app --host 127.0.0.1 --port 8000 --reload 2>&1 | tee ../backend.log & 
