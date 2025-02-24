@@ -1,26 +1,34 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./CategoryModal.css"; // Import CSS súboru
 
 interface CategoryModalProps {
   isOpen: boolean;
   onClose: () => void;
   onUseCategories: (categories: string[]) => void;
+  existingCategories?: string[]; // 🔥 Pridali sme tento prop
 }
 
-const CategoryModal: React.FC<CategoryModalProps> = ({ isOpen, onClose, onUseCategories }) => {
+const CategoryModal: React.FC<CategoryModalProps> = ({ isOpen, onClose, onUseCategories, existingCategories }) => {
   const [jsonText, setJsonText] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
-  const [selectedFileName, setSelectedFileName] = useState<string>("No file selected"); // Uchová meno súboru
+  const [selectedFileName, setSelectedFileName] = useState<string>("No file selected");
+
+  // ✅ Keď modal dostane nové kategórie, zobrazíme ich v `jsonText`
+  useEffect(() => {
+    if (isOpen && existingCategories && existingCategories.length > 0) {
+      setJsonText(JSON.stringify(existingCategories, null, 2)); // Formátované JSON
+    }
+  }, [isOpen, existingCategories]);
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      setSelectedFileName(file.name); // Uchová meno vybraného súboru
+      setSelectedFileName(file.name);
       const reader = new FileReader();
       reader.onload = (e) => {
         try {
           const text = e.target?.result as string;
-          JSON.parse(text); // Overíme, či je to validný JSON
+          JSON.parse(text);
           setJsonText(text);
           setError(null);
         } catch (err) {
@@ -51,7 +59,7 @@ const CategoryModal: React.FC<CategoryModalProps> = ({ isOpen, onClose, onUseCat
       <div className="modal-content">
         <h2 className="modal-title">📂 Category List</h2>
 
-        {/* Input na JSON */}
+        {/* ✅ Zobrazíme kategórie v JSON formáte */}
         <textarea
           className="modal-textarea"
           rows={6}
@@ -67,7 +75,6 @@ const CategoryModal: React.FC<CategoryModalProps> = ({ isOpen, onClose, onUseCat
           <span className="file-chosen">{selectedFileName}</span>
         </div>
 
-        {/* Error hláška */}
         {error && <p className="modal-error">{error}</p>}
 
         <div className="modal-actions">

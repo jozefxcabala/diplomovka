@@ -142,6 +142,7 @@ const SecondScreen: React.FC<SecondScreenProps> = ({ categoriesFromFirstScreen, 
           setCategories(selectedCategories);
           setIsCategoryModalOpen(false);
         }}
+        existingCategories={categories} // 🔥 Teraz modal dostane už existujúce kategórie
       />
   
       <PrototypeSettingModal
@@ -151,6 +152,7 @@ const SecondScreen: React.FC<SecondScreenProps> = ({ categoriesFromFirstScreen, 
           setSettings(loadedSettings);
           setIsSettingsModalOpen(false);
         }}
+        existingSettings={settings}
       />
     </div>
   );

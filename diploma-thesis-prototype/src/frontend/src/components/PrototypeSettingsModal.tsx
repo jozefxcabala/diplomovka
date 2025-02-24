@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import yaml from "js-yaml";
 import "./PrototypeSettingsModal.css"; // Import CSS súboru
 
@@ -6,17 +6,30 @@ interface PrototypeSettingModalProps {
   isOpen: boolean;
   onClose: () => void;
   onUseSettings: (settings: any) => void;
+  existingSettings?: any; // 🔥 Pridali sme nový prop
 }
 
-const PrototypeSettingModal: React.FC<PrototypeSettingModalProps> = ({ isOpen, onClose, onUseSettings }) => {
+const PrototypeSettingModal: React.FC<PrototypeSettingModalProps> = ({ isOpen, onClose, onUseSettings, existingSettings }) => {
   const [yamlText, setYamlText] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const [selectedFileName, setSelectedFileName] = useState<string>("No file chosen"); // Default text
 
+  // ✅ Keď modal dostane nové nastavenia, zobrazíme ich v `yamlText`
+  useEffect(() => {
+    if (isOpen && existingSettings) {
+      try {
+        const yamlString = yaml.dump(existingSettings); // Konvertujeme existujúce nastavenia na YAML
+        setYamlText(yamlString);
+      } catch (err) {
+        console.error("Failed to convert settings to YAML:", err);
+      }
+    }
+  }, [isOpen, existingSettings]);
+
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      setSelectedFileName(file.name); // Uloží názov vybraného súboru
+      setSelectedFileName(file.name);
       const reader = new FileReader();
       reader.onload = (e) => {
         try {
@@ -49,7 +62,7 @@ const PrototypeSettingModal: React.FC<PrototypeSettingModalProps> = ({ isOpen, o
       <div className="modal-content">
         <h2 className="modal-title">⚙️ Prototype Settings</h2>
 
-        {/* Textarea na YAML konfiguráciu */}
+        {/* ✅ Zobrazíme existujúce nastavenia v textarea */}
         <textarea
           className="modal-textarea"
           rows={6}
