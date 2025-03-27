@@ -10,9 +10,9 @@ python3 -m http.server 8000 2>&1 | tee ../../http_server.log &
 cd ../../src
 
 echo "🚀 Spúšťam FastAPI backend..."
-cd backend
+cd backend/app
 uvicorn main:app --host 127.0.0.1 --port 8000 --reload 2>&1 | tee ../backend.log & 
-cd ..
+cd ../..
 
 echo "🌍 Spúšťam React frontend..."
 cd frontend
