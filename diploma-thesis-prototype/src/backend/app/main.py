@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.api import detection
+
 app = FastAPI()
 
 app.add_middleware(
@@ -16,6 +18,9 @@ app_version = "Prototype 1.0.0"
 @app.get("/ping")
 async def return_version():
     return {"message": app_version}
+
+app.include_router(detection.router, prefix="/api")
+
 
 if __name__ == "__main__":
     import uvicorn

@@ -6,7 +6,7 @@ source backend/venv/bin/activate  # macOS/Linux
 
 echo "📂 Spúšťam HTTP server na poskytovanie videí..."
 cd ../data/input
-python3 -m http.server 8000 2>&1 | tee ../../http_server.log & 
+python3 -m http.server 8001 2>&1 | tee ../../http_server.log & 
 cd ../../src
 
 echo "🚀 Spúšťam FastAPI backend..."
