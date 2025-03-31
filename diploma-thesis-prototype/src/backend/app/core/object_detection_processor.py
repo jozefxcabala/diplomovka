@@ -13,13 +13,13 @@
 
 import argparse
 import time
-from app.core.video_processor import split_video
-from app.core.database_manager import DatabaseManager
+from backend.app.core.video_processor import split_video
+from backend.app.core.database_manager import DatabaseManager
 import cv2
 import os
 from threading import Thread, Event
 from queue import Queue
-from app.core.yolo_handler import YOLOHandler
+from backend.app.core.yolo_handler import YOLOHandler
 
 class DetectionInterruptedError(Exception):
     pass

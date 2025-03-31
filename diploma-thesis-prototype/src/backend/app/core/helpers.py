@@ -1,7 +1,7 @@
 # This script contains helper functions.
 
 import os
-from database_manager import DatabaseManager
+from backend.app.core.database_manager import DatabaseManager
 
 # The `print_detections_from_object_detection_processor` function prints details of detections from multiple segments,
 # including frame ID, track ID (if available), confidence, and the bounding box coordinates.

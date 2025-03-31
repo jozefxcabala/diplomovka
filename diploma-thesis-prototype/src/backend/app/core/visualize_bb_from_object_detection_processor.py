@@ -8,7 +8,7 @@
 
 import cv2
 import argparse
-from database_manager import DatabaseManager
+from backend.app.core.database_manager import DatabaseManager
 
 """It assigns bounding boxes for all detections in the given video and saves the entire video."""
 def assign_bounding_boxes_to_video(video_id, video_path, output_video_path, skip_frames, num_of_skip_frames):

@@ -1,6 +1,6 @@
 import os
 import cv2
-from database_manager import DatabaseManager
+from backend.app.core.database_manager import DatabaseManager
 import argparse
 import time
 from multiprocessing import Pool

@@ -1,8 +1,8 @@
-from xclip_handler import XCLIPHandler
+from backend.app.core.xclip_handler import XCLIPHandler
 import time
 import argparse
 import json
-from database_manager import DatabaseManager
+from backend.app.core.database_manager import DatabaseManager
 from multiprocessing import Pool
 import os
 import torch

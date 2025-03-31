@@ -1,5 +1,5 @@
-from app.models.detection_models import DetectionRequest, DetectionResponse
-from app.core.object_detection_processor import main as object_detection_main
+from backend.app.models.detection_models import DetectionRequest, DetectionResponse
+from backend.app.core.object_detection_processor import main as object_detection_main
 
 def run_object_detection(request: DetectionRequest) -> DetectionResponse:
     video_id = object_detection_main(

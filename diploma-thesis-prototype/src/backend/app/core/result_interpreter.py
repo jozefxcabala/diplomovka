@@ -2,7 +2,7 @@ import time
 import argparse
 import torch
 import numpy as np
-from database_manager import DatabaseManager
+from backend.app.core.database_manager import DatabaseManager
 import json
 
 def get_logits_per_video(db_manager: DatabaseManager, video_id):
