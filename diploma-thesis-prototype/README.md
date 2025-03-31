@@ -30,6 +30,28 @@ Run the prototype with:
 ./run_prototype.sh --video_path path_to_input_video
 ```
 
+
+Run the prototype with UI:
+```bash
+# Starts the full prototype: HTTP video server, FastAPI backend, and React frontend
+./run_prototype_ui.sh
+```
+
+```bash
+# Starts only the backend (including the HTTP video server)
+./run_prototype_ui.sh --backend
+```
+
+```bash
+# Starts only the frontend
+./run_prototype_ui.sh --frontend
+```
+
+```bash
+# Stops all running components (HTTP server, backend, frontend)
+./run_prototype_ui.sh --stop
+```
+
 ## Notes
 
 - Place the input video in the `data/input` folder before running the prototype.
