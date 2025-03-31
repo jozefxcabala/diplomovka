@@ -7,3 +7,7 @@ class AnomalyPreprocessRequest(BaseModel):
     target_width: int = 200
     target_height: int = 200
     max_frames: int = 50
+
+class AnomalyRecognitionRequest(BaseModel):
+    video_id: int
+    category_list_path: str

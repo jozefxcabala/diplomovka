@@ -1,6 +1,7 @@
-from backend.app.models.anomaly_models import AnomalyPreprocessRequest
+from backend.app.models.anomaly_models import AnomalyPreprocessRequest, AnomalyRecognitionRequest
 from backend.app.core.helpers import create_folders
 from backend.app.core.anomaly_recognition_preprocessor import main as preprocess_main
+from backend.app.core.anomaly_recognition import main as recognition_main
 
 def run_anomaly_preprocessing(request: AnomalyPreprocessRequest):
     create_folders(request.output_path)
@@ -13,3 +14,10 @@ def run_anomaly_preprocessing(request: AnomalyPreprocessRequest):
         request.target_height
     )
     return {"message": "Anomaly preprocessing completed."}
+
+def run_anomaly_recognition(request: AnomalyRecognitionRequest):
+    recognition_main(
+        video_id=request.video_id,
+        categories_json=request.category_list_path
+    )
+    return {"message": "Anomaly recognition completed."}
