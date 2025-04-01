@@ -43,14 +43,15 @@ def save_anomalies(threshold, list_of_categories, db_manager: DatabaseManager, l
     finally:
         db_manager.close()
 
-def main(video_id, threshold, categories_json_path):
+def main(video_id, threshold, categories_json):
     print(f"The result interpreter program has started.")
 
     db_manager = DatabaseManager(db_name="diploma_thesis_prototype_db", user="postgres", password="postgres")
 
     # Load categories from the provided JSON file
-    with open(categories_json_path, 'r') as f:
-        list_of_categories = json.load(f)
+    # with open(categories_json_path, 'r') as f:
+    #     list_of_categories = json.load(f)
+    list_of_categories = categories_json
     
     start_time = time.time()
 

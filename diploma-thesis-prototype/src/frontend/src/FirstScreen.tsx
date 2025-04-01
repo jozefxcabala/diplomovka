@@ -30,18 +30,125 @@ const FirstScreen: React.FC<FirstScreenProps> = ({
 
   const isAnalysisReady = videoFile !== null && categories.length > 0 && settings !== null;
 
-  const startAnalysis = () => {
-    if (!isAnalysisReady) return;
+  const startAnalysis = async () => {
+    if (!isAnalysisReady || !videoFile || !settings) return;
+  
+    console.log("🔍 Starting analysis...");
+    setCategories(categories);
+    setSettings(settings);
+  
+    try {
+      // 1️⃣ Upload video
+      console.log("📤 Uploading video...");
+      const formData = new FormData();
+      formData.append("video", videoFile);
+  
+      const uploadRes = await fetch("http://localhost:8000/api/video/upload", {
+        method: "POST",
+        body: formData,
+      });
+  
+      if (!uploadRes.ok) throw new Error("Video upload failed");
+      const { video_path, video_filename }: { video_path: string, video_filename: string } = await uploadRes.json();
+      console.log("✅ Video uploaded. Name:", video_filename);
+  
+      // 2️⃣ Object Detection
+      console.log("🧠 Running object detection...");
+      const detectRes = await fetch("http://localhost:8000/api/object-detection", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          video_path,
+          ...settings,
+        }),
+      });
+  
+      if (!detectRes.ok) throw new Error("Object detection failed");
+      const { video_id }: { video_id: number } = await detectRes.json();
+      const output_path = `../data/output/${video_id}/anomaly_recognition_preprocessor`;
+      console.log("✅ Object detection complete.");
+  
+      // 3️⃣ Anomaly Preprocessing
+      console.log("⚙️ Running anomaly preprocessing...");
+      const preprocRes = await fetch("http://localhost:8000/api/anomaly/preprocess", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          video_path,
+          video_id,
+          output_path
+        }),
+      });
+  
+      if (!preprocRes.ok) throw new Error("Anomaly preprocessing failed");
+      console.log("✅ Anomaly preprocessing complete.");
+  
+      // 4️⃣ Anomaly Recognition
+      console.log("🔎 Running anomaly recognition...");
+      const recogRes = await fetch("http://localhost:8000/api/anomaly/recognition", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          video_id,
+          categories,
+        }),
+      });
+  
+      if (!recogRes.ok) throw new Error("Anomaly recognition failed");
+      console.log("🎉 Anomaly recognition complete!");
 
-    console.log("🔍 Starting analysis with the following parameters:");
-    console.log("🎥 Video:", videoFile?.name);
-    console.log("📌 Categories:", categories);
-    console.log("⚙️ Settings:", settings);
+      if (!preprocRes.ok) throw new Error("Anomaly preprocessing failed");
+      console.log("✅ Anomaly preprocessing complete.");
+  
+      // 5 Result Interpreter
+      console.log("🔎 Running result interpretation...");
+      const threshold = settings?.threshold;
+      console.log(threshold);
+      const resIntRes = await fetch("http://localhost:8000/api/result-interpreter", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          video_id,
+          threshold,
+          categories
+        }),
+      });
+  
+      if (!resIntRes.ok) throw new Error("Result interpretation failed");
+      console.log("🎉 Result interpretation complete!");
 
-    setCategories(categories); // Posielame do App.tsx
-    setSettings(settings); // Posielame do App.tsx
-    setIsAnalysisRunning(true); // Prepne na SecondScreen
+      // 6 Video Visualization
+      console.log("🔎 Running video visualization...");
+      const resVisRes = await fetch("http://localhost:8000/api/video/visualization", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          video_id,
+        }),
+      });
+  
+      if (!resVisRes.ok) throw new Error("Video visualization failed");
+      console.log("🎉 Video visualization complete!");
+  
+    } catch (error: unknown) {
+      const err = error as Error;
+      console.error("❌ Error during analysis:", err);
+      alert(`Analysis failed: ${err.message}`);
+    } finally {
+      setIsAnalysisRunning(true);
+    }
   };
+  
 
   return (
     <div className="app-container">

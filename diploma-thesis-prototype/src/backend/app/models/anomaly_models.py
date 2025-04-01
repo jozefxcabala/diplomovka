@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import List
 
 class AnomalyPreprocessRequest(BaseModel):
     video_id: int
@@ -10,4 +11,4 @@ class AnomalyPreprocessRequest(BaseModel):
 
 class AnomalyRecognitionRequest(BaseModel):
     video_id: int
-    category_list_path: str
+    categories: List[str]

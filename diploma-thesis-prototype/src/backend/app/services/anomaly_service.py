@@ -18,6 +18,6 @@ def run_anomaly_preprocessing(request: AnomalyPreprocessRequest):
 def run_anomaly_recognition(request: AnomalyRecognitionRequest):
     recognition_main(
         video_id=request.video_id,
-        categories_json=request.category_list_path
+        categories_json=request.categories
     )
     return {"message": "Anomaly recognition completed."}

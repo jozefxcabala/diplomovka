@@ -1,6 +1,7 @@
 from pydantic import BaseModel
+from typing import List
 
 class ResultInterpreterRequest(BaseModel):
     video_id: int
     threshold: int
-    category_list_path: str
+    categories: List[str]

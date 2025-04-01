@@ -29,7 +29,7 @@ const SecondScreen: React.FC<SecondScreenProps> = ({ categoriesFromFirstScreen, 
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const panelRef = useRef<HTMLDivElement | null>(null);
 
-  const outputVideoPath = "http://localhost:8000/uvoz2.mp4"; // 🔥 Načítanie videa zo servera
+  const outputVideoPath = "http://localhost:8001/uvoz2.mp4"; // 🔥 Načítanie videa zo servera
 
   const isAnalysisReady = categories.length > 0 && settings !== null;
 

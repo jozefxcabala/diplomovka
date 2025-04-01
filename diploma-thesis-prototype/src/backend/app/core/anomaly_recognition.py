@@ -42,8 +42,9 @@ def main(video_id, categories_json):
     start_time = time.time()
 
     # Load categories from the provided JSON file
-    with open(categories_json, 'r') as f:
-        list_of_categories = json.load(f)
+    # with open(categories_json, 'r') as f:
+    #     list_of_categories = json.load(f)
+    list_of_categories = categories_json
 
     # Initialize XCLIP handler
     handler = XCLIPHandler(list_of_categories)
