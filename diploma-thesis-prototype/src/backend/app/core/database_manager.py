@@ -411,3 +411,13 @@ class DatabaseManager:
           })
 
       return anomalies
+    
+    def fetch_video_path(self, video_id: int) -> str:
+        conn = self.get_connection()
+        cursor = conn.cursor()
+        
+        cursor.execute("SELECT video_path FROM videos WHERE id = %s", (video_id,))
+        result = cursor.fetchone()
+        cursor.close()
+        
+        return result[0] if result else None

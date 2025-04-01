@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from backend.app.api import detection, anomaly, result
+from backend.app.api import detection, anomaly, result, video
 
 app = FastAPI()
 
@@ -22,6 +22,7 @@ async def return_version():
 app.include_router(detection.router, prefix="/api")
 app.include_router(anomaly.router, prefix="/api")
 app.include_router(result.router, prefix="/api")
+app.include_router(video.router, prefix="/api")
 
 
 if __name__ == "__main__":
