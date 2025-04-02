@@ -5,15 +5,17 @@ import PrototypeSettingModal from "./components/PrototypeSettingsModal";
 import "./App.css"; // Import CSS styles
 
 interface FirstScreenProps {
-  setIsAnalysisRunning: (value: boolean) => void;
   setCategories: (categories: string[]) => void;
   setSettings: (settings: Record<string, any>) => void;
+  startRunningAnalysis: () => void;
+  updateStageStatus: (stageKey: string, status: "pending" | "in-progress" | "done") => void;
 }
 
 const FirstScreen: React.FC<FirstScreenProps> = ({
-  setIsAnalysisRunning,
   setCategories,
-  setSettings
+  setSettings,
+  startRunningAnalysis,
+  updateStageStatus,
 }) => {
   const [videoFile, setVideoFile] = useState<File | null>(null);
   const [categories, updateCategories] = useState<string[]>([]);
@@ -36,10 +38,12 @@ const FirstScreen: React.FC<FirstScreenProps> = ({
     console.log("🔍 Starting analysis...");
     setCategories(categories);
     setSettings(settings);
+    startRunningAnalysis();
   
     try {
       // 1️⃣ Upload video
       console.log("📤 Uploading video...");
+      updateStageStatus("upload", "in-progress");
       const formData = new FormData();
       formData.append("video", videoFile);
   
@@ -50,10 +54,12 @@ const FirstScreen: React.FC<FirstScreenProps> = ({
   
       if (!uploadRes.ok) throw new Error("Video upload failed");
       const { video_path, video_filename }: { video_path: string, video_filename: string } = await uploadRes.json();
+      updateStageStatus("upload", "done");
       console.log("✅ Video uploaded. Name:", video_filename);
   
       // 2️⃣ Object Detection
       console.log("🧠 Running object detection...");
+      updateStageStatus("detection", "in-progress");
       const detectRes = await fetch("http://localhost:8000/api/object-detection", {
         method: "POST",
         headers: {
@@ -68,10 +74,12 @@ const FirstScreen: React.FC<FirstScreenProps> = ({
       if (!detectRes.ok) throw new Error("Object detection failed");
       const { video_id }: { video_id: number } = await detectRes.json();
       const output_path = `../data/output/${video_id}/anomaly_recognition_preprocessor`;
+      updateStageStatus("detection", "done");
       console.log("✅ Object detection complete.");
   
       // 3️⃣ Anomaly Preprocessing
       console.log("⚙️ Running anomaly preprocessing...");
+      updateStageStatus("preprocess", "in-progress");
       const preprocRes = await fetch("http://localhost:8000/api/anomaly/preprocess", {
         method: "POST",
         headers: {
@@ -85,10 +93,12 @@ const FirstScreen: React.FC<FirstScreenProps> = ({
       });
   
       if (!preprocRes.ok) throw new Error("Anomaly preprocessing failed");
+      updateStageStatus("preprocess", "done");
       console.log("✅ Anomaly preprocessing complete.");
   
       // 4️⃣ Anomaly Recognition
       console.log("🔎 Running anomaly recognition...");
+      updateStageStatus("recognition", "in-progress");
       const recogRes = await fetch("http://localhost:8000/api/anomaly/recognition", {
         method: "POST",
         headers: {
@@ -101,13 +111,12 @@ const FirstScreen: React.FC<FirstScreenProps> = ({
       });
   
       if (!recogRes.ok) throw new Error("Anomaly recognition failed");
+      updateStageStatus("recognition", "done");
       console.log("🎉 Anomaly recognition complete!");
-
-      if (!preprocRes.ok) throw new Error("Anomaly preprocessing failed");
-      console.log("✅ Anomaly preprocessing complete.");
   
       // 5 Result Interpreter
       console.log("🔎 Running result interpretation...");
+      updateStageStatus("interpreter", "in-progress");
       const threshold = settings?.threshold;
       console.log(threshold);
       const resIntRes = await fetch("http://localhost:8000/api/result-interpreter", {
@@ -123,10 +132,12 @@ const FirstScreen: React.FC<FirstScreenProps> = ({
       });
   
       if (!resIntRes.ok) throw new Error("Result interpretation failed");
+      updateStageStatus("interpreter", "done");
       console.log("🎉 Result interpretation complete!");
 
       // 6 Video Visualization
       console.log("🔎 Running video visualization...");
+      updateStageStatus("visualization", "in-progress");
       const resVisRes = await fetch("http://localhost:8000/api/video/visualization", {
         method: "POST",
         headers: {
@@ -138,14 +149,13 @@ const FirstScreen: React.FC<FirstScreenProps> = ({
       });
   
       if (!resVisRes.ok) throw new Error("Video visualization failed");
+      updateStageStatus("visualization", "done");
       console.log("🎉 Video visualization complete!");
   
     } catch (error: unknown) {
       const err = error as Error;
       console.error("❌ Error during analysis:", err);
       alert(`Analysis failed: ${err.message}`);
-    } finally {
-      setIsAnalysisRunning(true);
     }
   };
   
