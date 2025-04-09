@@ -29,9 +29,9 @@ fi
 # 📂 Start HTTP server for video hosting
 if [ "$MODE" == "backend" ] || [ "$MODE" == "all" ]; then
     echo "📂 Starting HTTP server for video hosting..."
-    cd ../data/input || exit
+    cd ../data || exit
     python3 -m http.server 8001 2>&1 | tee ../../http_server.log &
-    cd ../../src || exit
+    cd ../src || exit
 fi
 
 # 🚀 Start FastAPI backend (from src/ so that app imports work)

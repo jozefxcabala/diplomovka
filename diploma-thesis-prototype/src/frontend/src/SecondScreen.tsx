@@ -25,18 +25,20 @@ const SecondScreen: React.FC<SecondScreenProps> = ({ categoriesFromFirstScreen, 
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState<boolean>(false);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState<boolean>(false);
   const [isBottomPanelOpen, setIsBottomPanelOpen] = useState<boolean>(false);
-  const [isAnalysisCompleted, setIsAnalysisCompleted] = useState<boolean>(true);
+  const [isAnalysisCompleted, setIsAnalysisCompleted] = useState<boolean>(false);
+  const [outputVideoPath, setOutputVideoPath] = useState<string>("");
   const [videoError, setVideoError] = useState<boolean>(false);
   const [detections, setDetections] = useState<Detection[]>([]);
   const [fps, setFPS] = useState<number>(1);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const panelRef = useRef<HTMLDivElement | null>(null);
 
-  const outputVideoPath = "http://localhost:8001/uvoz2.mp4";
-
   const isAnalysisReady = categories.length > 0 && settings !== null;
 
   useEffect(() => {
+    setOutputVideoPath(`http://localhost:8001/output/${videoId}/final_output.mp4`);
+    setIsAnalysisCompleted(true);
+
     const fetchVideoData = async () => {
       try {
         const response = await fetch(`http://localhost:8000/api/video/${videoId}`);

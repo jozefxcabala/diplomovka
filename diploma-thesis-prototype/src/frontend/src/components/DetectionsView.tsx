@@ -23,7 +23,7 @@ const DetectionsView: React.FC<DetectionViewProps> = ({ detections, onDetectionC
           <div className="detection-info">
             <h3 className="detection-title">{detection.typeOfAnomaly}</h3>
             <p className="detection-id">ID: {detection.id}</p>
-            <p className="detection-time">Time: {detection.timestamp / fps}s</p>
+            <p className="detection-time">Time: {Math.floor(detection.timestamp / fps)}s</p>
           </div>
         </div>
       ))}
