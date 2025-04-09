@@ -45,7 +45,7 @@ const FirstScreen: React.FC<FirstScreenProps> = ({
     try {
       // 1️⃣ Upload video
       console.log("📤 Uploading video...");
-      updateStageStatus("upload", "in-progress");
+      updateStageStatus("Upload", "in-progress");
       const formData = new FormData();
       formData.append("video", videoFile);
   
@@ -56,12 +56,12 @@ const FirstScreen: React.FC<FirstScreenProps> = ({
   
       if (!uploadRes.ok) throw new Error("Video upload failed");
       const { video_path, video_filename }: { video_path: string, video_filename: string } = await uploadRes.json();
-      updateStageStatus("upload", "done");
+      updateStageStatus("Upload", "done");
       console.log("✅ Video uploaded. Name:", video_filename);
   
       // 2️⃣ Object Detection
       console.log("🧠 Running object detection...");
-      updateStageStatus("detection", "in-progress");
+      updateStageStatus("Detection", "in-progress");
       const detectRes = await fetch("http://localhost:8000/api/object-detection", {
         method: "POST",
         headers: {
@@ -77,12 +77,12 @@ const FirstScreen: React.FC<FirstScreenProps> = ({
       const { video_id }: { video_id: number } = await detectRes.json();
       setVideoId(video_id);
       const output_path = `../data/output/${video_id}/anomaly_recognition_preprocessor`;
-      updateStageStatus("detection", "done");
+      updateStageStatus("Detection", "done");
       console.log("✅ Object detection complete.");
   
       // 3️⃣ Anomaly Preprocessing
       console.log("⚙️ Running anomaly preprocessing...");
-      updateStageStatus("preprocess", "in-progress");
+      updateStageStatus("Preprocess", "in-progress");
       const preprocRes = await fetch("http://localhost:8000/api/anomaly/preprocess", {
         method: "POST",
         headers: {
@@ -96,12 +96,12 @@ const FirstScreen: React.FC<FirstScreenProps> = ({
       });
   
       if (!preprocRes.ok) throw new Error("Anomaly preprocessing failed");
-      updateStageStatus("preprocess", "done");
+      updateStageStatus("Preprocess", "done");
       console.log("✅ Anomaly preprocessing complete.");
   
       // 4️⃣ Anomaly Recognition
       console.log("🔎 Running anomaly recognition...");
-      updateStageStatus("recognition", "in-progress");
+      updateStageStatus("Recognition", "in-progress");
       const recogRes = await fetch("http://localhost:8000/api/anomaly/recognition", {
         method: "POST",
         headers: {
@@ -114,12 +114,12 @@ const FirstScreen: React.FC<FirstScreenProps> = ({
       });
   
       if (!recogRes.ok) throw new Error("Anomaly recognition failed");
-      updateStageStatus("recognition", "done");
+      updateStageStatus("Recognition", "done");
       console.log("🎉 Anomaly recognition complete!");
   
       // 5 Result Interpreter
       console.log("🔎 Running result interpretation...");
-      updateStageStatus("interpreter", "in-progress");
+      updateStageStatus("Interpreter", "in-progress");
       const threshold = settings?.threshold;
       console.log(threshold);
       const resIntRes = await fetch("http://localhost:8000/api/result-interpreter", {
@@ -135,12 +135,12 @@ const FirstScreen: React.FC<FirstScreenProps> = ({
       });
   
       if (!resIntRes.ok) throw new Error("Result interpretation failed");
-      updateStageStatus("interpreter", "done");
+      updateStageStatus("Interpreter", "done");
       console.log("🎉 Result interpretation complete!");
 
       // 6 Video Visualization
       console.log("🔎 Running video visualization...");
-      updateStageStatus("visualization", "in-progress");
+      updateStageStatus("Visualization", "in-progress");
       const resVisRes = await fetch("http://localhost:8000/api/video/visualization", {
         method: "POST",
         headers: {
@@ -152,7 +152,7 @@ const FirstScreen: React.FC<FirstScreenProps> = ({
       });
   
       if (!resVisRes.ok) throw new Error("Video visualization failed");
-      updateStageStatus("visualization", "done");
+      updateStageStatus("Visualization", "done");
       console.log("🎉 Video visualization complete!");
   
     } catch (error: unknown) {
