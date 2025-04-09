@@ -28,7 +28,7 @@ const App: React.FC = () => {
       const updated = prevStages.map((stage) =>
         stage.name === stageName ? { ...stage, status } : stage
       );
-      if (stageName === "visualization" && status === "done") {
+      if (stageName === "Visualization" && status === "done") {
         setTimeout(() => setScreen("second"), 1000);
       }
       return updated;

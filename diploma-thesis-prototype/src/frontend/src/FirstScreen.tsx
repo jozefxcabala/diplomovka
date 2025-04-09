@@ -121,7 +121,6 @@ const FirstScreen: React.FC<FirstScreenProps> = ({
       console.log("🔎 Running result interpretation...");
       updateStageStatus("Interpreter", "in-progress");
       const threshold = settings?.threshold;
-      console.log(threshold);
       const resIntRes = await fetch("http://localhost:8000/api/result-interpreter", {
         method: "POST",
         headers: {
