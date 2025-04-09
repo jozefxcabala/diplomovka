@@ -46,6 +46,7 @@ class DatabaseManager:
                 id SERIAL PRIMARY KEY,
                 video_path TEXT NOT NULL,
                 duration INTEGER,
+                fps FLOAT,
                 date_processed TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );
         """
@@ -139,19 +140,20 @@ class DatabaseManager:
         video = cv2.VideoCapture(video_path)
         if not video.isOpened():
             raise Exception("Error opening video file")
-        duration = video.get(cv2.CAP_PROP_FRAME_COUNT) / video.get(cv2.CAP_PROP_FPS)
-        return duration
+        fps = video.get(cv2.CAP_PROP_FPS)
+        duration = video.get(cv2.CAP_PROP_FRAME_COUNT) / fps
+        return duration, fps
 
     def insert_video(self, video_path):
-        duration = self.get_video_duration(video_path)
+        duration, fps = self.get_video_duration(video_path)
         insert_query = sql.SQL("""
-            INSERT INTO videos (video_path, duration)
-            VALUES (%s, %s) RETURNING id
+            INSERT INTO videos (video_path, duration, fps)
+            VALUES (%s, %s, %s) RETURNING id
         """)
         conn = self.get_connection()
         cursor = conn.cursor()
 
-        cursor.execute(insert_query, (video_path, duration))
+        cursor.execute(insert_query, (video_path, duration, fps))
         conn.commit()
 
         video_id = cursor.fetchone()[0]
@@ -421,3 +423,27 @@ class DatabaseManager:
         cursor.close()
         
         return result[0] if result else None
+    
+    def fetch_video_by_id(self, video_id: int):
+        conn = self.get_connection()
+        cursor = conn.cursor()
+
+        query = """
+            SELECT id, video_path, duration, fps, date_processed
+            FROM videos
+            WHERE id = %s;
+        """
+        cursor.execute(query, (video_id,))
+        result = cursor.fetchone()
+
+        self.release_connection(conn)
+
+        if result:
+            return {
+                'id': result[0],
+                'video_path': result[1],
+                'duration': result[2],
+                'fps': result[3],
+                'date_processed': result[4]
+            }
+        return None

@@ -4,21 +4,22 @@ import "./components/VideoInput.css";
 import DetectionsView from "./components/DetectionsView";
 import CategoryModal from "./components/CategoryModal";
 import PrototypeSettingModal from "./components/PrototypeSettingsModal";
+import { time } from "node:console";
 
-const detections = [
-  { id: "123", type: "Person", timestamp: 10, probability: 0.98, imageUrl: "https://placehold.co/50x50" },
-  { id: "124", type: "Car", timestamp: 20, probability: 0.85, imageUrl: "https://placehold.co/50x50" },
-  { id: "125", type: "Bike", timestamp: 30, probability: 0.75, imageUrl: "https://placehold.co/50x50" },
-  { id: "126", type: "Dog", timestamp: 40, probability: 0.92, imageUrl: "https://placehold.co/50x50" },
-  { id: "127", type: "Fire", timestamp: 70, probability: 0.99, imageUrl: "https://placehold.co/50x50" }
-];
-
+interface Detection {
+  id: string;
+  timestamp: number;
+  confidence: number;
+  isAnomaly: boolean;
+  typeOfAnomaly: string;
+}
 interface SecondScreenProps {
   categoriesFromFirstScreen: string[];
   settingsFromFirstScreen: Record<string, any> | null;
+  videoId: number;
 }
 
-const SecondScreen: React.FC<SecondScreenProps> = ({ categoriesFromFirstScreen, settingsFromFirstScreen }) => {
+const SecondScreen: React.FC<SecondScreenProps> = ({ categoriesFromFirstScreen, settingsFromFirstScreen, videoId }) => {
   const [categories, setCategories] = useState<string[]>([]);
   const [settings, setSettings] = useState<Record<string, any> | null>([]);
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState<boolean>(false);
@@ -26,12 +27,50 @@ const SecondScreen: React.FC<SecondScreenProps> = ({ categoriesFromFirstScreen, 
   const [isBottomPanelOpen, setIsBottomPanelOpen] = useState<boolean>(false);
   const [isAnalysisCompleted, setIsAnalysisCompleted] = useState<boolean>(true);
   const [videoError, setVideoError] = useState<boolean>(false);
+  const [detections, setDetections] = useState<Detection[]>([]);
+  const [fps, setFPS] = useState<number>(1);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const panelRef = useRef<HTMLDivElement | null>(null);
 
-  const outputVideoPath = "http://localhost:8001/uvoz2.mp4"; // 🔥 Načítanie videa zo servera
+  const outputVideoPath = "http://localhost:8001/uvoz2.mp4";
 
   const isAnalysisReady = categories.length > 0 && settings !== null;
+
+  useEffect(() => {
+    const fetchVideoData = async () => {
+      try {
+        const response = await fetch(`http://localhost:8000/api/video/${videoId}`);
+        if (!response.ok) {
+          throw new Error("Video not found");
+        }
+        const data = await response.json();
+        setFPS(data.fps);
+      } catch (error) {
+        console.error("Failed to fetch video data:", error);
+      }
+    };
+
+    const fetchDetections = async () => {
+      try {
+        const res = await fetch(`http://localhost:8000/api/detections/${videoId}`);
+        const data = await res.json();
+        const formatted = data.detections
+          .filter((det: any) => det.is_anomaly === true) 
+          .map((det: any) => ({
+            id: det.id.toString(),
+            timestamp: det.start_frame,
+            confidence: det.confidence || 1.0,
+            isAnomaly: det.is_anomaly,
+            typeOfAnomaly: det.type_of_anomaly
+          }));
+        setDetections(formatted);
+      } catch (err) {
+        console.error("❌ Failed to fetch detections:", err);
+      }
+    };
+    fetchVideoData();
+    fetchDetections();
+  }, [videoId]);
 
   useEffect(() => {
     setCategories(categoriesFromFirstScreen);
@@ -70,7 +109,9 @@ const SecondScreen: React.FC<SecondScreenProps> = ({ categoriesFromFirstScreen, 
 
   const handleDetectionClick = (timestamp: number) => {
     if (videoRef.current) {
-      videoRef.current.currentTime = timestamp;
+      console.log("HANDLE DETECTION FPS:", fps);
+      console.log("HANDLE DETECTION TIMESTAMP:", timestamp);
+      videoRef.current.currentTime = timestamp / fps;
       // videoRef.current.play(); // Automaticky spustí video
     }
   };
@@ -129,7 +170,7 @@ const SecondScreen: React.FC<SecondScreenProps> = ({ categoriesFromFirstScreen, 
         {isBottomPanelOpen ? <div className="detection-header">Hide Detections 🔥</div> : <div className="detection-header">Show Detections 🔥</div>}
         {isBottomPanelOpen && (
           <div className="panel-content">
-            <DetectionsView detections={detections} onDetectionClick={handleDetectionClick}/>
+            <DetectionsView detections={detections} onDetectionClick={handleDetectionClick} fps={fps}/>
           </div>
         )}
       </div>

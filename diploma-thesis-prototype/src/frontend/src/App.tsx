@@ -12,6 +12,7 @@ interface Stage {
 const App: React.FC = () => {
   const [screen, setScreen] = useState<"first" | "running" | "second">("first");
   const [categories, setCategories] = useState<string[]>([]);
+  const [videoId, setVideoId] = useState<number>(-1);
   const [settings, setSettings] = useState<Record<string, any> | null>(null);
   const [stages, setStages] = useState<Stage[]>([
     { name: "Upload", status: "pending" },
@@ -37,6 +38,7 @@ const App: React.FC = () => {
   if (screen === "first") {
     return (
       <FirstScreen
+        setVideoId={setVideoId}
         setCategories={setCategories}
         setSettings={setSettings}
         startRunningAnalysis={() => setScreen("running")}
@@ -49,7 +51,7 @@ const App: React.FC = () => {
     return <RunningAnalysisScreen stages={stages} />;
   }
 
-  return <SecondScreen categoriesFromFirstScreen={categories} settingsFromFirstScreen={settings} />;
+  return <SecondScreen categoriesFromFirstScreen={categories} settingsFromFirstScreen={settings} videoId={videoId}/>;
 };
 
 export default App;

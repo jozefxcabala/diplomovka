@@ -6,6 +6,7 @@ import "./App.css"; // Import CSS styles
 
 interface FirstScreenProps {
   setCategories: (categories: string[]) => void;
+  setVideoId: (videoId: number) => void;
   setSettings: (settings: Record<string, any>) => void;
   startRunningAnalysis: () => void;
   updateStageStatus: (stageKey: string, status: "pending" | "in-progress" | "done") => void;
@@ -14,6 +15,7 @@ interface FirstScreenProps {
 const FirstScreen: React.FC<FirstScreenProps> = ({
   setCategories,
   setSettings,
+  setVideoId,
   startRunningAnalysis,
   updateStageStatus,
 }) => {
@@ -73,6 +75,7 @@ const FirstScreen: React.FC<FirstScreenProps> = ({
   
       if (!detectRes.ok) throw new Error("Object detection failed");
       const { video_id }: { video_id: number } = await detectRes.json();
+      setVideoId(video_id);
       const output_path = `../data/output/${video_id}/anomaly_recognition_preprocessor`;
       updateStageStatus("detection", "done");
       console.log("✅ Object detection complete.");
