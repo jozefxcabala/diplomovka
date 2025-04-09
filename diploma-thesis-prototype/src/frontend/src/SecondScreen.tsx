@@ -109,8 +109,6 @@ const SecondScreen: React.FC<SecondScreenProps> = ({ categoriesFromFirstScreen, 
 
   const handleDetectionClick = (timestamp: number) => {
     if (videoRef.current) {
-      console.log("HANDLE DETECTION FPS:", fps);
-      console.log("HANDLE DETECTION TIMESTAMP:", timestamp);
       videoRef.current.currentTime = timestamp / fps;
       // videoRef.current.play(); // Automaticky spustí video
     }
