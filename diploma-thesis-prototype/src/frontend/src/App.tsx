@@ -10,7 +10,7 @@ interface Stage {
 }
 
 const App: React.FC = () => {
-  const [screen, setScreen] = useState<"first" | "running" | "second">("first");
+  const [screen, setScreen] = useState<"first" | "running" | "second" | "partialRunning">("first");
   const [categories, setCategories] = useState<string[]>([]);
   const [videoId, setVideoId] = useState<number>(-1);
   const [settings, setSettings] = useState<Record<string, any> | null>(null);
@@ -22,6 +22,7 @@ const App: React.FC = () => {
     { name: "Interpreter", status: "pending" },
     { name: "Visualization", status: "pending" },
   ]);
+  const [partialStages, setPartialStages] = useState<Stage[]>([]);
 
   const updateStageStatus = (stageName: string, status: "pending" | "in-progress" | "done") => {
     setStages((prevStages) => {
@@ -33,6 +34,25 @@ const App: React.FC = () => {
       }
       return updated;
     });
+
+    setPartialStages((prevPartialStages) => {
+      const updated = prevPartialStages.map((stage) =>
+        stage.name === stageName ? { ...stage, status } : stage
+      );
+      if (stageName === "Visualization" && status === "done") {
+        setTimeout(() => setScreen("second"), 1000);
+      }
+      return updated;
+    });
+  };
+
+  const startPartialAnalysis = () => {
+    setPartialStages([
+      { name: "Recognition", status: "pending" },
+      { name: "Interpreter", status: "pending" },
+      { name: "Visualization", status: "pending" },
+    ]);
+    setScreen("partialRunning");
   };
 
   if (screen === "first") {
@@ -51,7 +71,15 @@ const App: React.FC = () => {
     return <RunningAnalysisScreen stages={stages} />;
   }
 
-  return <SecondScreen categoriesFromFirstScreen={categories} settingsFromFirstScreen={settings} videoId={videoId}/>;
+  if (screen === "partialRunning") {
+    return (
+      <RunningAnalysisScreen
+        stages={partialStages}
+      />
+    );
+  }
+
+  return <SecondScreen categoriesFromFirstScreen={categories} settingsFromFirstScreen={settings} video_id={videoId} startRunningAnalysis={startPartialAnalysis} updateStageStatus={updateStageStatus}/>;
 };
 
 export default App;

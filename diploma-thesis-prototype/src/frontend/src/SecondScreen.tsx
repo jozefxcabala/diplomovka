@@ -4,7 +4,6 @@ import "./components/VideoInput.css";
 import DetectionsView from "./components/DetectionsView";
 import CategoryModal from "./components/CategoryModal";
 import PrototypeSettingModal from "./components/PrototypeSettingsModal";
-import { time } from "node:console";
 
 interface Detection {
   id: string;
@@ -16,10 +15,12 @@ interface Detection {
 interface SecondScreenProps {
   categoriesFromFirstScreen: string[];
   settingsFromFirstScreen: Record<string, any> | null;
-  videoId: number;
+  video_id: number;
+  startRunningAnalysis: () => void;
+  updateStageStatus: (stageKey: string, status: "pending" | "in-progress" | "done") => void;
 }
 
-const SecondScreen: React.FC<SecondScreenProps> = ({ categoriesFromFirstScreen, settingsFromFirstScreen, videoId }) => {
+const SecondScreen: React.FC<SecondScreenProps> = ({ categoriesFromFirstScreen, settingsFromFirstScreen, video_id, startRunningAnalysis, updateStageStatus }) => {
   const [categories, setCategories] = useState<string[]>([]);
   const [settings, setSettings] = useState<Record<string, any> | null>([]);
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState<boolean>(false);
@@ -36,12 +37,12 @@ const SecondScreen: React.FC<SecondScreenProps> = ({ categoriesFromFirstScreen, 
   const isAnalysisReady = categories.length > 0 && settings !== null;
 
   useEffect(() => {
-    setOutputVideoPath(`http://localhost:8001/output/${videoId}/final_output.mp4`);
+    setOutputVideoPath(`http://localhost:8001/output/${video_id}/final_output.mp4`);
     setIsAnalysisCompleted(true);
 
     const fetchVideoData = async () => {
       try {
-        const response = await fetch(`http://localhost:8000/api/video/${videoId}`);
+        const response = await fetch(`http://localhost:8000/api/video/${video_id}`);
         if (!response.ok) {
           throw new Error("Video not found");
         }
@@ -54,7 +55,7 @@ const SecondScreen: React.FC<SecondScreenProps> = ({ categoriesFromFirstScreen, 
 
     const fetchDetections = async () => {
       try {
-        const res = await fetch(`http://localhost:8000/api/detections/${videoId}`);
+        const res = await fetch(`http://localhost:8000/api/detections/${video_id}`);
         const data = await res.json();
         const formatted = data.detections
           .filter((det: any) => det.is_anomaly === true) 
@@ -72,19 +73,85 @@ const SecondScreen: React.FC<SecondScreenProps> = ({ categoriesFromFirstScreen, 
     };
     fetchVideoData();
     fetchDetections();
-  }, [videoId]);
+  }, [video_id]);
 
   useEffect(() => {
     setCategories(categoriesFromFirstScreen);
     setSettings(settingsFromFirstScreen);
   }, [categoriesFromFirstScreen, settingsFromFirstScreen]);
 
-  const startAnalysis = () => {
+  const rerunAnalysis = async () => {
     if (!isAnalysisReady) return;
 
-    console.log("🔍 Starting analysis with the following parameters:");
+    console.log("🔍 Rerun analysis with the following parameters:");
     console.log("📌 Categories:", categories);
     console.log("⚙️ Settings:", settings);
+    setCategories(categories);
+    setSettings(settings);
+
+    startRunningAnalysis();
+  
+    try {
+      // 4️⃣ Anomaly Recognition
+      console.log("🔎 Running anomaly recognition...");
+      updateStageStatus("Recognition", "in-progress");
+      const recogRes = await fetch("http://localhost:8000/api/anomaly/recognition", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          video_id,
+          categories,
+        }),
+      });
+  
+      if (!recogRes.ok) throw new Error("Anomaly recognition failed");
+      updateStageStatus("Recognition", "done");
+      console.log("🎉 Anomaly recognition complete!");
+  
+      // 5 Result Interpreter
+      console.log("🔎 Running result interpretation...");
+      updateStageStatus("Interpreter", "in-progress");
+      const threshold = settings?.threshold;
+      const resIntRes = await fetch("http://localhost:8000/api/result-interpreter", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          video_id,
+          threshold,
+          categories
+        }),
+      });
+  
+      if (!resIntRes.ok) throw new Error("Result interpretation failed");
+      updateStageStatus("Interpreter", "done");
+      console.log("🎉 Result interpretation complete!");
+
+      // 6 Video Visualization
+      console.log("🔎 Running video visualization...");
+      updateStageStatus("Visualization", "in-progress");
+      const resVisRes = await fetch("http://localhost:8000/api/video/visualization", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          video_id,
+        }),
+      });
+  
+      if (!resVisRes.ok) throw new Error("Video visualization failed");
+      updateStageStatus("Visualization", "done");
+      console.log("🎉 Video visualization complete!");
+  
+    } catch (error: unknown) {
+      const err = error as Error;
+      console.error("❌ Error during analysis:", err);
+      alert(`Analysis failed: ${err.message}`);
+    }
   };
 
   useEffect(() => {
@@ -130,7 +197,7 @@ const SecondScreen: React.FC<SecondScreenProps> = ({ categoriesFromFirstScreen, 
           </button>
           <button
             className={`button start-button ${isAnalysisReady ? "enabled" : "disabled"}`}
-            onClick={startAnalysis}
+            onClick={rerunAnalysis}
             disabled={!isAnalysisReady}
           >
             🚀 Run Analysis
