@@ -1,29 +1,37 @@
 import React, { useState, useEffect } from "react";
-import "./CategoryModal.css"; // Import CSS súboru
+import "./CategoryModal.css";
 
 interface CategoryModalProps {
   isOpen: boolean;
   onClose: () => void;
   onUseCategories: (categories: string[]) => void;
-  existingCategories?: string[]; // 🔥 Pridali sme tento prop
+  existingCategories?: string[];
+  existingSelectedFileName?: string;
+  setSelectedCategoryFileName?: (selectedFileName: string) => void;
 }
 
-const CategoryModal: React.FC<CategoryModalProps> = ({ isOpen, onClose, onUseCategories, existingCategories }) => {
+const CategoryModal: React.FC<CategoryModalProps> = ({ isOpen, onClose, onUseCategories, existingCategories, existingSelectedFileName, setSelectedCategoryFileName}) => {
   const [jsonText, setJsonText] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const [selectedFileName, setSelectedFileName] = useState<string>("No file selected");
 
-  // ✅ Keď modal dostane nové kategórie, zobrazíme ich v `jsonText`
   useEffect(() => {
     if (isOpen && existingCategories && existingCategories.length > 0) {
-      setJsonText(JSON.stringify(existingCategories, null, 2)); // Formátované JSON
+      setJsonText(JSON.stringify(existingCategories, null, 2));
     }
   }, [isOpen, existingCategories]);
+
+  useEffect(() => {
+    if (isOpen && existingSelectedFileName) {
+      setSelectedFileName(existingSelectedFileName);
+    }
+  }, [isOpen, existingSelectedFileName]);
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
       setSelectedFileName(file.name);
+      setSelectedCategoryFileName && setSelectedCategoryFileName(file.name);
       const reader = new FileReader();
       reader.onload = (e) => {
         try {
@@ -59,7 +67,6 @@ const CategoryModal: React.FC<CategoryModalProps> = ({ isOpen, onClose, onUseCat
       <div className="modal-content">
         <h2 className="modal-title">📂 Category List</h2>
 
-        {/* ✅ Zobrazíme kategórie v JSON formáte */}
         <textarea
           className="modal-textarea"
           rows={6}
@@ -68,7 +75,6 @@ const CategoryModal: React.FC<CategoryModalProps> = ({ isOpen, onClose, onUseCat
           onChange={(e) => setJsonText(e.target.value)}
         />
 
-        {/* Minimalistický input na súbor */}
         <div className="modal-file-upload">
           <input id="actual-btn" type="file" accept=".json" onChange={handleFileUpload} hidden />
           <label htmlFor="actual-btn" className="file-label">Choose File</label>

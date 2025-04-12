@@ -10,6 +10,8 @@ interface Stage {
 }
 
 const App: React.FC = () => {
+  const [selectedCategoryFileName, setSelectedCategoryFileName] = useState<string>("");
+  const [selectedSettingsFileName, setSelectedSettingsFileName] = useState<string>("");
   const [screen, setScreen] = useState<"first" | "running" | "second" | "partialRunning">("first");
   const [categories, setCategories] = useState<string[]>([]);
   const [videoId, setVideoId] = useState<number>(-1);
@@ -63,6 +65,8 @@ const App: React.FC = () => {
         setSettings={setSettings}
         startRunningAnalysis={() => setScreen("running")}
         updateStageStatus={updateStageStatus}
+        setSelectedCategoryFileName={setSelectedCategoryFileName}
+        setSelectedSettingsFileName={setSelectedSettingsFileName}
       />
     );
   }
@@ -79,7 +83,19 @@ const App: React.FC = () => {
     );
   }
 
-  return <SecondScreen categoriesFromFirstScreen={categories} settingsFromFirstScreen={settings} video_id={videoId} startRunningAnalysis={startPartialAnalysis} updateStageStatus={updateStageStatus}/>;
+  return <SecondScreen
+    categories={categories}
+    settings={settings}
+    setCategories={setCategories}
+    setSettings={setSettings}
+    video_id={videoId}
+    startRunningAnalysis={startPartialAnalysis}
+    updateStageStatus={updateStageStatus}
+    selectedCategoryFileName={selectedCategoryFileName}
+    selectedSettingsFileName={selectedSettingsFileName}
+    setSelectedCategoryFileName={setSelectedCategoryFileName}
+    setSelectedSettingsFileName={setSelectedSettingsFileName}
+  /> 
 };
 
 export default App;

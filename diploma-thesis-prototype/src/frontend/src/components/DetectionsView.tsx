@@ -1,6 +1,5 @@
 import React from "react";
-import "./DetectionsView.css"; // Import CSS styles
-
+import "./DetectionsView.css"; 
 interface Detection {
   id: string;
   timestamp: number;

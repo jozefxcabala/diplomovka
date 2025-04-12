@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import "./App.css"; // Import CSS styles
+import "./App.css";
 import "./components/VideoInput.css";
 import DetectionsView from "./components/DetectionsView";
 import CategoryModal from "./components/CategoryModal";
@@ -13,16 +13,22 @@ interface Detection {
   typeOfAnomaly: string;
 }
 interface SecondScreenProps {
-  categoriesFromFirstScreen: string[];
-  settingsFromFirstScreen: Record<string, any> | null;
+  categories: string[];
+  settings: Record<string, any> | null;
+  setCategories: (categories: string[]) => void;
+  setSettings: (settings: Record<string, any>) => void;
+  setSelectedCategoryFileName: (selectedFileName: string) => void;
+  setSelectedSettingsFileName: (selectedFileName: string) => void;
   video_id: number;
   startRunningAnalysis: () => void;
   updateStageStatus: (stageKey: string, status: "pending" | "in-progress" | "done") => void;
+  selectedCategoryFileName: string;
+  selectedSettingsFileName: string;
 }
 
-const SecondScreen: React.FC<SecondScreenProps> = ({ categoriesFromFirstScreen, settingsFromFirstScreen, video_id, startRunningAnalysis, updateStageStatus }) => {
-  const [categories, setCategories] = useState<string[]>([]);
-  const [settings, setSettings] = useState<Record<string, any> | null>([]);
+const SecondScreen: React.FC<SecondScreenProps> = ({ categories, settings, video_id, startRunningAnalysis, updateStageStatus, setCategories, setSettings, selectedCategoryFileName, selectedSettingsFileName, setSelectedCategoryFileName, setSelectedSettingsFileName }) => {
+  const [categoriesSecondScreen, setCategoriesSecondScreen] = useState<string[]>([]);
+  const [settingsSecondScreen, setSettingsSecondScreen] = useState<Record<string, any> | null>([]);
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState<boolean>(false);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState<boolean>(false);
   const [isBottomPanelOpen, setIsBottomPanelOpen] = useState<boolean>(false);
@@ -34,7 +40,7 @@ const SecondScreen: React.FC<SecondScreenProps> = ({ categoriesFromFirstScreen, 
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const panelRef = useRef<HTMLDivElement | null>(null);
 
-  const isAnalysisReady = categories.length > 0 && settings !== null;
+  const isAnalysisReady = categoriesSecondScreen.length > 0 && settingsSecondScreen !== null;
 
   useEffect(() => {
     setOutputVideoPath(`http://localhost:8001/output/${video_id}/final_output.mp4`);
@@ -76,18 +82,18 @@ const SecondScreen: React.FC<SecondScreenProps> = ({ categoriesFromFirstScreen, 
   }, [video_id]);
 
   useEffect(() => {
-    setCategories(categoriesFromFirstScreen);
-    setSettings(settingsFromFirstScreen);
-  }, [categoriesFromFirstScreen, settingsFromFirstScreen]);
+    setCategoriesSecondScreen(categories);
+    setSettingsSecondScreen(settings);
+  }, [categories, settings]);
 
   const rerunAnalysis = async () => {
     if (!isAnalysisReady) return;
 
     console.log("🔍 Rerun analysis with the following parameters:");
-    console.log("📌 Categories:", categories);
+    console.log("📌 Categories:", categoriesSecondScreen);
     console.log("⚙️ Settings:", settings);
-    setCategories(categories);
-    setSettings(settings);
+    setCategoriesSecondScreen(categoriesSecondScreen);
+    setSettingsSecondScreen(settings);
 
     startRunningAnalysis();
   
@@ -102,7 +108,7 @@ const SecondScreen: React.FC<SecondScreenProps> = ({ categoriesFromFirstScreen, 
         },
         body: JSON.stringify({
           video_id,
-          categories,
+          categories: categoriesSecondScreen,
         }),
       });
   
@@ -122,7 +128,7 @@ const SecondScreen: React.FC<SecondScreenProps> = ({ categoriesFromFirstScreen, 
         body: JSON.stringify({
           video_id,
           threshold,
-          categories
+          categories: categoriesSecondScreen
         }),
       });
   
@@ -185,7 +191,6 @@ const SecondScreen: React.FC<SecondScreenProps> = ({ categoriesFromFirstScreen, 
 
   return (
     <div className="app-container">
-      {/* Top navigation bar */}
       <nav className="navbar">
         <h1 className="app-title">🎥 The Prototype</h1>
         <div className="navbar-buttons">
@@ -205,7 +210,6 @@ const SecondScreen: React.FC<SecondScreenProps> = ({ categoriesFromFirstScreen, 
         </div>
       </nav>
   
-      {/* Main Content */}
       <div className="main-content">
           {isAnalysisCompleted ? (
             <div className="video-container">
@@ -231,7 +235,6 @@ const SecondScreen: React.FC<SecondScreenProps> = ({ categoriesFromFirstScreen, 
           )}
       </div>
   
-      {/* Clickable Bottom Panel */}
       <div ref={panelRef} className={`bottom-panel ${isBottomPanelOpen ? "open" : "closed"}`} onClick={toggleBottomPanel}>
         <div className="panel-drag-bar"></div>
         {isBottomPanelOpen ? <div className="detection-header">Hide Detections 🔥</div> : <div className="detection-header">Show Detections 🔥</div>}
@@ -242,7 +245,6 @@ const SecondScreen: React.FC<SecondScreenProps> = ({ categoriesFromFirstScreen, 
         )}
       </div>
   
-      {/* Modals */}
       <CategoryModal
         isOpen={isCategoryModalOpen}
         onClose={() => setIsCategoryModalOpen(false)}
@@ -250,7 +252,9 @@ const SecondScreen: React.FC<SecondScreenProps> = ({ categoriesFromFirstScreen, 
           setCategories(selectedCategories);
           setIsCategoryModalOpen(false);
         }}
-        existingCategories={categories} // 🔥 Teraz modal dostane už existujúce kategórie
+        existingCategories={categoriesSecondScreen}
+        existingSelectedFileName={selectedCategoryFileName}
+        setSelectedCategoryFileName={setSelectedCategoryFileName}
       />
   
       <PrototypeSettingModal
@@ -261,6 +265,8 @@ const SecondScreen: React.FC<SecondScreenProps> = ({ categoriesFromFirstScreen, 
           setIsSettingsModalOpen(false);
         }}
         existingSettings={settings}
+        existingSelectedFileName={selectedSettingsFileName}
+        setSelectedSettingsFileName={setSelectedSettingsFileName}
       />
     </div>
   );

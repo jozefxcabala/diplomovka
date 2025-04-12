@@ -1,4 +1,3 @@
-/* Základný overlay, ktorý prekryje celú obrazovku */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -12,7 +11,6 @@
   z-index: 9999;
 }
 
-/* Hlavné okno modalu */
 .modal-content {
   background: white;
   color: black;
@@ -27,7 +25,6 @@
   align-items: stretch;
 }
 
-/* Nadpis modalu */
 .modal-title {
   font-size: 1.5rem;
   font-weight: bold;
@@ -37,7 +34,6 @@
   gap: 8px;
 }
 
-/* Textové pole */
 .modal-textarea {
   width: 100%;
   max-height: 250px;
@@ -51,19 +47,16 @@
   margin-bottom: 10px;
 }
 
-/* Minimalistický input na súbor */
 .modal-file-upload {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-/* Skrytie pôvodného inputu */
 #actual-btn {
   display: none;
 }
 
-/* Minimalistické tlačidlo na výber súboru */
 .file-label {
   background: none;
   color: black;
@@ -80,20 +73,17 @@
   background: rgba(0, 0, 0, 0.1);
 }
 
-/* Zobrazenie názvu vybraného súboru */
 .file-chosen {
   font-size: 14px;
   color: #333;
 }
 
-/* Chybová správa */
 .modal-error {
   color: red;
   font-size: 0.9rem;
   margin-bottom: 10px;
 }
 
-/* Akcie (tlačidlá) */
 .modal-actions {
   display: flex;
   justify-content: space-between;
@@ -101,7 +91,6 @@
   margin-top: 10px;
 }
 
-/* Štýly tlačidiel */
 .modal-button {
   flex: 1;
   padding: 10px 16px;
@@ -113,7 +102,6 @@
   font-weight: bold;
 }
 
-/* Červené tlačidlo na zatvorenie */
 .modal-button.close {
   background: #dc3545;
   color: white;
@@ -123,7 +111,6 @@
   background: #c82333;
 }
 
-/* Zelené tlačidlo na potvrdenie */
 .modal-button.confirm {
   background: #28a745;
   color: white;

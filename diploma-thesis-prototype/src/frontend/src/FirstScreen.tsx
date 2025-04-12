@@ -2,10 +2,12 @@ import { useState, useEffect } from "react";
 import VideoInput from "./components/VideoInput";
 import CategoryModal from "./components/CategoryModal";
 import PrototypeSettingModal from "./components/PrototypeSettingsModal";
-import "./App.css"; // Import CSS styles
+import "./App.css"; 
 
 interface FirstScreenProps {
   setCategories: (categories: string[]) => void;
+  setSelectedCategoryFileName: (selectedFileName: string) => void;
+  setSelectedSettingsFileName: (selectedFileName: string) => void;
   setVideoId: (videoId: number) => void;
   setSettings: (settings: Record<string, any>) => void;
   startRunningAnalysis: () => void;
@@ -18,6 +20,8 @@ const FirstScreen: React.FC<FirstScreenProps> = ({
   setVideoId,
   startRunningAnalysis,
   updateStageStatus,
+  setSelectedCategoryFileName,
+  setSelectedSettingsFileName
 }) => {
   const [videoFile, setVideoFile] = useState<File | null>(null);
   const [categories, updateCategories] = useState<string[]>([]);
@@ -194,6 +198,7 @@ const FirstScreen: React.FC<FirstScreenProps> = ({
           updateCategories(selectedCategories);
           setIsCategoryModalOpen(false);
         }}
+        setSelectedCategoryFileName={setSelectedCategoryFileName}
       />
 
       <PrototypeSettingModal
@@ -203,6 +208,7 @@ const FirstScreen: React.FC<FirstScreenProps> = ({
           updateSettings(loadedSettings);
           setIsSettingsModalOpen(false);
         }}
+        setSelectedSettingsFileName={setSelectedSettingsFileName}
       />
     </div>
   );

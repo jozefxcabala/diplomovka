@@ -1,7 +1,7 @@
 .detection-panel {
   display: flex;
   flex-direction: column;
-  height: 100%; /* Zabezpečí, že panel využije celú výšku */
+  height: 100%;
   width: 100%;
 }
 
@@ -19,11 +19,11 @@
 
 .detection-view {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* Dva pevné stĺpce */
+  grid-template-columns: repeat(2, 1fr);
   gap: 16px;
   padding: 16px;
   flex-grow: 1;
-  overflow-y: auto; /* Scrollovanie len v rámci panelu */
+  overflow-y: auto;
   width: 100%;
   box-sizing: border-box;
 }
@@ -63,9 +63,8 @@
   margin: 2px 0;
 }
 
-/* Prispôsobenie pre menšie obrazovky */
 @media (max-width: 768px) {
   .detection-view {
-    grid-template-columns: 1fr; /* Pri menších obrazovkách len jeden stĺpec */
+    grid-template-columns: 1fr;
   }
 }

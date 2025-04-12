@@ -1,11 +1,11 @@
 import React, { useRef, useState } from "react";
-import { FaPlay } from "react-icons/fa"; // Import play ikony
-import "./VideoInput.css"; // Import CSS súboru
+import { FaPlay } from "react-icons/fa";
+import "./VideoInput.css";
 
 interface VideoInputProps {
   width?: number;
   height?: number;
-  onVideoUpload: (file: File | null) => void; // Callback na nastavenie videa
+  onVideoUpload: (file: File | null) => void;
 }
 
 const VideoInput: React.FC<VideoInputProps> = ({ width = 640, height = 360, onVideoUpload }) => {
@@ -17,7 +17,7 @@ const VideoInput: React.FC<VideoInputProps> = ({ width = 640, height = 360, onVi
     if (file) {
       const url = URL.createObjectURL(file);
       setSource(url);
-      onVideoUpload(file); // Nastaví nahrané video v rodičovskom komponente
+      onVideoUpload(file);
     }
   };
 
