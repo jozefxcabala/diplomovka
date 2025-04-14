@@ -1,12 +1,13 @@
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import JSONResponse
 from typing import List
-from backend.app.models.configuration_models import AnalysisConfigIn, AnalysisConfigOut
+from backend.app.models.configuration_models import AnalysisConfigIn, AnalysisConfigOut, UpdateAnalysisConfigRequest
 from backend.app.services.configuration_service import (
     save_analysis_config,
     get_all_analysis_configs,
     get_analysis_config_by_id,
-    delete_configuration_by_id
+    delete_configuration_by_id,
+    update_analysis_config
 )
 
 router = APIRouter()
@@ -48,6 +49,20 @@ async def delete_configuration(config_id: int):
         return {
             "status": "success",
             "message": f"Configuration '{config['name']}' deleted"
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.put("/configuration/{config_id}")
+async def update_configuration(config_id: int, update: UpdateAnalysisConfigRequest):
+    try:
+        updated = update_analysis_config(config_id, update)
+        if not updated:
+            raise HTTPException(status_code=404, detail="Configuration not found")
+        return {
+            "status": "success",
+            "message": f"Configuration '{update.name}' updated"
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

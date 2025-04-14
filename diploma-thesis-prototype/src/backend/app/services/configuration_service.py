@@ -21,3 +21,8 @@ def delete_configuration_by_id(config_id: int) -> Optional[dict]:
     db = DatabaseManager(db_name="diploma_thesis_prototype_db", user="postgres", password="postgres")
     db.connect()
     return db.delete_analysis_configuration_by_id(config_id)
+
+def update_analysis_config(config_id: int, config: AnalysisConfigIn) -> bool:
+    db = DatabaseManager(db_name="diploma_thesis_prototype_db", user="postgres", password="postgres")
+    db.connect()
+    return db.update_analysis_configuration(config_id, config.name, config.categories, config.settings)

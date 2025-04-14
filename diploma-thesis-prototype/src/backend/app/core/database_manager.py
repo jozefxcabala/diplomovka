@@ -547,3 +547,17 @@ class DatabaseManager:
                 "created_at": deleted[4]
             }
         return None
+
+    def update_analysis_configuration(self, config_id: int, name: str, categories: list[str], settings: dict) -> bool:
+        query = """
+            UPDATE analysis_configurations
+            SET name = %s, categories = %s, settings = %s
+            WHERE id = %s
+        """
+        conn = self.get_connection()
+        cursor = conn.cursor()
+        cursor.execute(query, (name, categories, json.dumps(settings), config_id))
+        conn.commit()
+        updated = cursor.rowcount > 0
+        self.release_connection(conn)
+        return updated

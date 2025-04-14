@@ -50,24 +50,67 @@
   margin-bottom: 12px;
 }
 
-.close-button {
-  margin-top: 20px;
-  background-color: transparent;
-  color: #333;
-  border: 2px solid #ccc;
-  padding: 10px 16px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: all 0.2s ease-in-out;
-}
-
-.close-button:hover {
-  background-color: #f7f7f7;
-}
-
 .error {
   color: red;
   font-size: 0.9rem;
   margin-bottom: 10px;
+}
+
+.config-edit-area {
+  width: 100%;
+  font-family: monospace;
+  font-size: 0.95rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 12px;
+  margin-bottom: 10px;
+  resize: vertical;
+  min-height: 300px;
+  box-sizing: border-box;
+  overflow-wrap: break-word;
+  overflow-x: auto;
+}
+
+/* Footer buttons */
+.config-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.footer-button {
+  flex: 1;
+  padding: 14px 0;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  text-align: center;
+  display: inline-block;
+}
+
+/* Cancel Button */
+.footer-button.cancel {
+  background-color: #f5f5f5;
+  color: #333;
+  border: 1px solid #ccc;
+}
+
+.footer-button.cancel:hover {
+  background-color: #e0e0e0;
+}
+
+/* Edit/Save Button */
+.footer-button.edit,
+.footer-button.save {
+  background-color: #f7931e;
+  color: white;
+  border: none;
+}
+
+.footer-button.edit:hover,
+.footer-button.save:hover {
+  background-color: #e67e00;
 }

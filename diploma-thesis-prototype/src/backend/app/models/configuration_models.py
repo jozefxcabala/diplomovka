@@ -10,3 +10,9 @@ class AnalysisConfigIn(BaseModel):
 class AnalysisConfigOut(AnalysisConfigIn):
     id: int
     created_at: datetime
+
+class UpdateAnalysisConfigRequest(BaseModel):
+    name: str
+    categories: List[str]
+    settings: Dict[str, Any]
+
