@@ -89,6 +89,16 @@ class DatabaseManager:
             );
         """
 
+        create_analysis_configurations_table = """
+            CREATE TABLE IF NOT EXISTS analysis_configurations (
+                id SERIAL PRIMARY KEY,
+                name TEXT NOT NULL,
+                categories TEXT[] NOT NULL,
+                settings JSONB NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
+        """
+
         conn = self.get_connection()
         cursor = conn.cursor()
 
@@ -96,6 +106,8 @@ class DatabaseManager:
         cursor.execute(create_detections_table)
         cursor.execute(create_bounding_boxes_table)
         cursor.execute(create_anomaly_recognition_data_table)
+        cursor.execute(create_analysis_configurations_table)
+
         conn.commit()
 
         self.release_connection(conn)
@@ -445,5 +457,68 @@ class DatabaseManager:
                 'duration': result[2],
                 'fps': result[3],
                 'date_processed': result[4]
+            }
+        return None
+
+    def insert_analysis_configuration(self, name: str, categories: list[str], settings: dict) -> int:
+        query = """
+            INSERT INTO analysis_configurations (name, categories, settings)
+            VALUES (%s, %s, %s)
+            RETURNING id;
+        """
+        conn = self.get_connection()
+        cursor = conn.cursor()
+
+        cursor.execute(query, (name, categories, json.dumps(settings)))
+        config_id = cursor.fetchone()[0]
+        conn.commit()
+        self.release_connection(conn)
+        
+        return config_id
+
+    def fetch_all_analysis_configurations(self):
+        query = """
+            SELECT id, name, categories, settings, created_at
+            FROM analysis_configurations
+            ORDER BY created_at DESC;
+        """
+        conn = self.get_connection()
+        cursor = conn.cursor()
+
+        cursor.execute(query)
+        configs = cursor.fetchall()
+        self.release_connection(conn)
+
+        return [
+            {
+                "id": row[0],
+                "name": row[1],
+                "categories": row[2],
+                "settings": row[3],
+                "created_at": row[4]
+            }
+            for row in configs
+        ]
+
+    def fetch_analysis_configuration_by_id(self, config_id: int):
+        query = """
+            SELECT id, name, categories, settings, created_at
+            FROM analysis_configurations
+            WHERE id = %s;
+        """
+        conn = self.get_connection()
+        cursor = conn.cursor()
+
+        cursor.execute(query, (config_id,))
+        row = cursor.fetchone()
+        self.release_connection(conn)
+
+        if row:
+            return {
+                "id": row[0],
+                "name": row[1],
+                "categories": row[2],
+                "settings": row[3],
+                "created_at": row[4]
             }
         return None

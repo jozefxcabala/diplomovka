@@ -3,6 +3,7 @@ import FirstScreen from "./FirstScreen";
 import SecondScreen from "./SecondScreen";
 import RunningAnalysisScreen from "./RunningAnalysisScreen";
 import "./App.css";
+import StartupScreen from "./StartupScreen";
 
 interface Stage {
   name: string;
@@ -12,10 +13,11 @@ interface Stage {
 const App: React.FC = () => {
   const [selectedCategoryFileName, setSelectedCategoryFileName] = useState<string>("");
   const [selectedSettingsFileName, setSelectedSettingsFileName] = useState<string>("");
-  const [screen, setScreen] = useState<"first" | "running" | "second" | "partialRunning">("first");
+  const [screen, setScreen] = useState<"startup" | "first" | "running" | "second" | "partialRunning">("startup");
   const [categories, setCategories] = useState<string[]>([]);
   const [videoId, setVideoId] = useState<number>(-1);
   const [settings, setSettings] = useState<Record<string, any> | null>(null);
+  const [loadedConfig, setLoadedConfig] = useState<{ categories: string[]; settings: Record<string, any> } | null>(null);
   const [stages, setStages] = useState<Stage[]>([
     { name: "Upload", status: "pending" },
     { name: "Detection", status: "pending" },
@@ -57,6 +59,21 @@ const App: React.FC = () => {
     setScreen("partialRunning");
   };
 
+  const onLoadConfig = (config: { categories: string[]; settings: Record<string, any> }) => {
+    setLoadedConfig(config);
+    setCategories(config.categories);
+    setSettings(config.settings);
+    setScreen("first");
+  };
+
+  if (screen === "startup") {
+    return ( <StartupScreen
+      onStartNewAnalysis={() => setScreen("first")}
+      onLoadConfig={onLoadConfig}
+      onViewResults={() => console.log("TODO: implement ViewResults")}
+    />);
+  }
+
   if (screen === "first") {
     return (
       <FirstScreen
@@ -67,6 +84,8 @@ const App: React.FC = () => {
         updateStageStatus={updateStageStatus}
         setSelectedCategoryFileName={setSelectedCategoryFileName}
         setSelectedSettingsFileName={setSelectedSettingsFileName}
+        categories={categories}
+        settings={settings}
       />
     );
   }
@@ -76,26 +95,24 @@ const App: React.FC = () => {
   }
 
   if (screen === "partialRunning") {
-    return (
-      <RunningAnalysisScreen
-        stages={partialStages}
-      />
-    );
+    return <RunningAnalysisScreen stages={partialStages} />;
   }
 
-  return <SecondScreen
-    categories={categories}
-    settings={settings}
-    setCategories={setCategories}
-    setSettings={setSettings}
-    video_id={videoId}
-    startRunningAnalysis={startPartialAnalysis}
-    updateStageStatus={updateStageStatus}
-    selectedCategoryFileName={selectedCategoryFileName}
-    selectedSettingsFileName={selectedSettingsFileName}
-    setSelectedCategoryFileName={setSelectedCategoryFileName}
-    setSelectedSettingsFileName={setSelectedSettingsFileName}
-  /> 
+  return (
+    <SecondScreen
+      categories={categories}
+      settings={settings}
+      setCategories={setCategories}
+      setSettings={setSettings}
+      video_id={videoId}
+      startRunningAnalysis={startPartialAnalysis}
+      updateStageStatus={updateStageStatus}
+      selectedCategoryFileName={selectedCategoryFileName}
+      selectedSettingsFileName={selectedSettingsFileName}
+      setSelectedCategoryFileName={setSelectedCategoryFileName}
+      setSelectedSettingsFileName={setSelectedSettingsFileName}
+    />
+  );
 };
 
 export default App;

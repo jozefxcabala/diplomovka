@@ -3,8 +3,11 @@ import VideoInput from "./components/VideoInput";
 import CategoryModal from "./components/CategoryModal";
 import PrototypeSettingModal from "./components/PrototypeSettingsModal";
 import "./App.css"; 
+import SaveConfigButton from "./components/SaveConfigurationButton";
 
 interface FirstScreenProps {
+  categories?: string[];
+  settings?: Record<string, any> | null;
   setCategories: (categories: string[]) => void;
   setSelectedCategoryFileName: (selectedFileName: string) => void;
   setSelectedSettingsFileName: (selectedFileName: string) => void;
@@ -15,6 +18,8 @@ interface FirstScreenProps {
 }
 
 const FirstScreen: React.FC<FirstScreenProps> = ({
+  categories,
+  settings,
   setCategories,
   setSettings,
   setVideoId,
@@ -24,8 +29,8 @@ const FirstScreen: React.FC<FirstScreenProps> = ({
   setSelectedSettingsFileName
 }) => {
   const [videoFile, setVideoFile] = useState<File | null>(null);
-  const [categories, updateCategories] = useState<string[]>([]);
-  const [settings, updateSettings] = useState<Record<string, any> | null>(null);
+  const [categoriesFirstScreen, setCategoriesFirstScreen] = useState<string[]>([]);
+  const [settingsFirstScreen, setSettingsFirstScreen] = useState<Record<string, any> | null>(null);
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState<boolean>(false);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState<boolean>(false);
   const [windowHeight, setWindowHeight] = useState(window.innerHeight);
@@ -36,14 +41,19 @@ const FirstScreen: React.FC<FirstScreenProps> = ({
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const isAnalysisReady = videoFile !== null && categories.length > 0 && settings !== null;
+  useEffect(() => {
+    categories && setCategoriesFirstScreen(categories);
+    settings && setSettingsFirstScreen(settings);
+  }, [categories, settings]);
+
+  const isAnalysisReady = videoFile !== null && categoriesFirstScreen.length > 0 && settingsFirstScreen !== null;
 
   const startAnalysis = async () => {
-    if (!isAnalysisReady || !videoFile || !settings) return;
+    if (!isAnalysisReady || !videoFile || !settingsFirstScreen) return;
   
     console.log("🔍 Starting analysis...");
-    setCategories(categories);
-    setSettings(settings);
+    setCategories(categoriesFirstScreen);
+    setSettings(settingsFirstScreen);
     startRunningAnalysis();
   
     try {
@@ -73,7 +83,7 @@ const FirstScreen: React.FC<FirstScreenProps> = ({
         },
         body: JSON.stringify({
           video_path,
-          ...settings,
+          ...settingsFirstScreen,
         }),
       });
   
@@ -113,7 +123,7 @@ const FirstScreen: React.FC<FirstScreenProps> = ({
         },
         body: JSON.stringify({
           video_id,
-          categories,
+          categories: categoriesFirstScreen,
         }),
       });
   
@@ -124,7 +134,7 @@ const FirstScreen: React.FC<FirstScreenProps> = ({
       // 5 Result Interpreter
       console.log("🔎 Running result interpretation...");
       updateStageStatus("Interpreter", "in-progress");
-      const threshold = settings?.threshold;
+      const threshold = settingsFirstScreen?.threshold;
       const resIntRes = await fetch("http://localhost:8000/api/result-interpreter", {
         method: "POST",
         headers: {
@@ -133,7 +143,7 @@ const FirstScreen: React.FC<FirstScreenProps> = ({
         body: JSON.stringify({
           video_id,
           threshold,
-          categories
+          categories: categoriesFirstScreen
         }),
       });
   
@@ -177,6 +187,11 @@ const FirstScreen: React.FC<FirstScreenProps> = ({
           <button className="button settings-button" onClick={() => setIsSettingsModalOpen(true)} disabled={!videoFile}>
             ⚙️ Set Configuration
           </button>
+          <SaveConfigButton
+            categories={categoriesFirstScreen}
+            settings={settingsFirstScreen}
+            disabled={!isAnalysisReady}
+          />
           <button
             className={`button start-button ${isAnalysisReady ? "enabled" : "disabled"}`}
             onClick={startAnalysis}
@@ -195,20 +210,22 @@ const FirstScreen: React.FC<FirstScreenProps> = ({
         isOpen={isCategoryModalOpen}
         onClose={() => setIsCategoryModalOpen(false)}
         onUseCategories={(selectedCategories: string[]) => {
-          updateCategories(selectedCategories);
+          setCategoriesFirstScreen(selectedCategories);
           setIsCategoryModalOpen(false);
         }}
         setSelectedCategoryFileName={setSelectedCategoryFileName}
+        existingCategories={categoriesFirstScreen}
       />
 
       <PrototypeSettingModal
         isOpen={isSettingsModalOpen}
         onClose={() => setIsSettingsModalOpen(false)}
         onUseSettings={(loadedSettings: Record<string, any>) => {
-          updateSettings(loadedSettings);
+          setSettingsFirstScreen(loadedSettings);
           setIsSettingsModalOpen(false);
         }}
         setSelectedSettingsFileName={setSelectedSettingsFileName}
+        existingSettings={settingsFirstScreen}
       />
     </div>
   );

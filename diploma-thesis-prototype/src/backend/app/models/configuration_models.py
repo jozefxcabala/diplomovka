@@ -1,0 +1,12 @@
+from pydantic import BaseModel
+from typing import List, Dict, Any
+from datetime import datetime
+
+class AnalysisConfigIn(BaseModel):
+    name: str
+    categories: List[str]
+    settings: Dict[str, Any]
+
+class AnalysisConfigOut(AnalysisConfigIn):
+    id: int
+    created_at: datetime

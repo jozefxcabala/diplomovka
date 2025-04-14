@@ -1,0 +1,153 @@
+.flip-card {
+  perspective: 1000px;
+  width: 100%;
+  height: 140px;
+}
+
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+}
+
+.flip-card.flipped .flip-card-inner {
+  transform: rotateY(180deg);
+}
+
+.flip-card-front,
+.flip-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  background: #f2f2f2;
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.flip-card-front {
+  z-index: 2;
+}
+
+/* -------------------- Front -------------------- */
+.flip-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.config-name {
+  font-size: 1.1rem;
+  font-weight: bold;
+  flex-grow: 1;
+  margin-right: 1rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.config-actions {
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.config-actions button {
+  padding: 10px 16px;
+  font-size: 0.95rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s ease-in-out;
+  color: white;
+}
+
+.config-actions .use {
+  background-color: #28a745;
+}
+.config-actions .use:hover {
+  background-color: #218838;
+}
+
+.config-actions .delete {
+  background-color: #dc3545;
+}
+.config-actions .delete:hover {
+  background-color: #c82333;
+}
+
+.config-actions .info {
+  background-color: #ff9800;
+}
+.config-actions .info:hover {
+  background-color: #e08900;
+}
+
+/* -------------------- Back -------------------- */
+.flip-card-back {
+  transform: rotateY(180deg);
+  background: #f2f2f2;
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+  box-sizing: border-box;
+  gap: 20px;
+}
+
+.back-info {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex-grow: 1;
+  overflow: hidden;
+}
+
+.config-categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.category-badge {
+  background: #d9d9d9;
+  padding: 6px 12px;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #222;
+}
+
+.category-badge:hover,
+.config-meta span:hover {
+  background: #d0d0d0;
+  transition: background 0.2s ease-in-out;
+  cursor: default;
+}
+
+.config-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  font-size: 0.95rem;
+  color: #333;
+}
+
+.config-meta span {
+  background: #efefef;
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-weight: 500;
+}

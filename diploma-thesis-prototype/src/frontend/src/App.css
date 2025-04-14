@@ -42,13 +42,15 @@
 }
 
 .category-button,
-.settings-button {
+.settings-button,
+.save-config-button {
   background-color: #ff9800;
   color: white;
 }
 
 .category-button:disabled,
-.settings-button:disabled {
+.settings-button:disabled,
+.save-config-button:disabled {
   background-color: #4f4f4f;
   cursor: not-allowed;
 }

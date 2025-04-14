@@ -4,6 +4,7 @@ import "./components/VideoInput.css";
 import DetectionsView from "./components/DetectionsView";
 import CategoryModal from "./components/CategoryModal";
 import PrototypeSettingModal from "./components/PrototypeSettingsModal";
+import SaveConfigButton from "./components/SaveConfigurationButton";
 
 interface Detection {
   id: string;
@@ -200,6 +201,11 @@ const SecondScreen: React.FC<SecondScreenProps> = ({ categories, settings, video
           <button className="button settings-button" onClick={() => setIsSettingsModalOpen(true)}>
             ⚙️ Change Configuration
           </button>
+          <SaveConfigButton
+            categories={categories}
+            settings={settings}
+            disabled={!isAnalysisReady}
+          />
           <button
             className={`button start-button ${isAnalysisReady ? "enabled" : "disabled"}`}
             onClick={rerunAnalysis}
