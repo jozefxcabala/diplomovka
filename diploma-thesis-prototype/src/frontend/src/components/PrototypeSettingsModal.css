@@ -125,3 +125,11 @@
   color: #333;
 }
 
+.modal-button.default {
+  background: #f39c12;
+  color: white;
+}
+
+.modal-button.default:hover {
+  background: #e67e22;
+}

@@ -52,6 +52,8 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  max-width: 50%; 
+  text-align: center;
 }
 
 .config-actions {

@@ -11,7 +11,21 @@ interface PrototypeSettingModalProps {
   setSelectedSettingsFileName?: (selectedFileName: string) => void;
 }
 
-const PrototypeSettingModal: React.FC<PrototypeSettingModalProps> = ({ isOpen, onClose, onUseSettings, existingSettings, existingSelectedFileName, setSelectedSettingsFileName }) => {
+const defaultYaml = `model_path: "/Users/caby/diplomovka/diploma-thesis-prototype/data/models/yolo11n.pt"
+num_segments: 8
+processing_mode: "parallel"
+classes_to_detect:
+  - 0
+threshold: 22`;
+
+const PrototypeSettingModal: React.FC<PrototypeSettingModalProps> = ({
+  isOpen,
+  onClose,
+  onUseSettings,
+  existingSettings,
+  existingSelectedFileName,
+  setSelectedSettingsFileName,
+}) => {
   const [yamlText, setYamlText] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const [selectedFileName, setSelectedFileName] = useState<string>("No file chosen");
@@ -63,6 +77,12 @@ const PrototypeSettingModal: React.FC<PrototypeSettingModalProps> = ({ isOpen, o
     }
   };
 
+  const handleUseDefault = () => {
+    setYamlText(defaultYaml);
+    setSelectedFileName("Default loaded");
+    setError(null);
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -88,6 +108,7 @@ const PrototypeSettingModal: React.FC<PrototypeSettingModalProps> = ({ isOpen, o
 
         <div className="modal-actions">
           <button onClick={onClose} className="modal-button close">Close</button>
+          <button onClick={handleUseDefault} className="modal-button default">Use Default</button>
           <button onClick={handleUseSettings} className="modal-button confirm">Use Settings</button>
         </div>
       </div>
