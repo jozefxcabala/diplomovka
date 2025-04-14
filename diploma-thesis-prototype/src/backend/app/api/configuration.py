@@ -5,7 +5,8 @@ from backend.app.models.configuration_models import AnalysisConfigIn, AnalysisCo
 from backend.app.services.configuration_service import (
     save_analysis_config,
     get_all_analysis_configs,
-    get_analysis_config_by_id
+    get_analysis_config_by_id,
+    delete_configuration_by_id
 )
 
 router = APIRouter()
@@ -35,5 +36,18 @@ def get_config_by_id(config_id: int):
         if config is None:
             raise HTTPException(status_code=404, detail="Configuration not found")
         return config
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.delete("/configuration/{config_id}", status_code=200)
+async def delete_configuration(config_id: int):
+    try:
+        config = delete_configuration_by_id(config_id)
+        if config is None:
+            raise HTTPException(status_code=404, detail="Configuration not found")
+        return {
+            "status": "success",
+            "message": f"Configuration '{config['name']}' deleted"
+        }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

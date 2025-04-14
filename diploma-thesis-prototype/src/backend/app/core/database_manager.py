@@ -522,3 +522,28 @@ class DatabaseManager:
                 "created_at": row[4]
             }
         return None
+    
+    def delete_analysis_configuration_by_id(self, config_id: int):
+        """Deletes an analysis configuration by ID and returns the deleted row."""
+        query = """
+            DELETE FROM analysis_configurations
+            WHERE id = %s
+            RETURNING id, name, categories, settings, created_at;
+        """
+        conn = self.get_connection()
+        cursor = conn.cursor()
+
+        cursor.execute(query, (config_id,))
+        deleted = cursor.fetchone()
+        conn.commit()
+        self.release_connection(conn)
+
+        if deleted:
+            return {
+                "id": deleted[0],
+                "name": deleted[1],
+                "categories": deleted[2],
+                "settings": deleted[3],
+                "created_at": deleted[4]
+            }
+        return None
