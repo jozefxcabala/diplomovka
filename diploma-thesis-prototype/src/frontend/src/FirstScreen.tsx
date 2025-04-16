@@ -97,6 +97,34 @@ const FirstScreen: React.FC<FirstScreenProps> = ({
       const output_path = `../data/output/${video_id}/anomaly_recognition_preprocessor`;
       updateStageStatus("Detection", "done");
       console.log("✅ Object detection complete.");
+
+      // Save Configuration connected with running analysis
+      console.log("🧠 Running save of configuration connected with analysis...");
+      const config_name = `Config for first part of analysis video with id ${video_id}`;
+      const configRes = await fetch("http://localhost:8000/api/configuration", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 
+          name: config_name, 
+          categories: categoriesFirstScreen, 
+          settings: settingsFirstScreen 
+        }),
+      });
+
+      if (!configRes.ok) throw new Error("Failed to save configuration");
+
+      const data = await configRes.json();
+      const config_id = data.config_id;
+
+      const linkRes = await fetch("http://localhost:8000/api/configuration/link", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ video_id, config_id }),
+      });
+
+      if (!linkRes.ok) throw new Error("Failed to link configuration and analysis");
+
+      console.log("✅ Saving configuration connected with analysis complete.");
   
       // 3️⃣ Anomaly Preprocessing
       console.log("⚙️ Running anomaly preprocessing...");

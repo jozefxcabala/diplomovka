@@ -17,6 +17,7 @@ interface AnalyzedVideo {
   fps: number;
   date_processed: string;
   name_of_analysis: string;
+  config: ConfigItem;
 }
 
 interface StartupScreenProps {

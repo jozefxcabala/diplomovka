@@ -1,5 +1,5 @@
 from typing import List, Optional
-from backend.app.models.configuration_models import AnalysisConfigIn
+from backend.app.models.configuration_models import AnalysisConfigIn, LinkIn
 from backend.app.core.database_manager import DatabaseManager
 
 def save_analysis_config(config: AnalysisConfigIn) -> int:
@@ -26,3 +26,8 @@ def update_analysis_config(config_id: int, config: AnalysisConfigIn) -> bool:
     db = DatabaseManager(db_name="diploma_thesis_prototype_db", user="postgres", password="postgres")
     db.connect()
     return db.update_analysis_configuration(config_id, config.name, config.categories, config.settings)
+
+def link_analysis_with_config(link: LinkIn) -> dict:
+    db = DatabaseManager(db_name="diploma_thesis_prototype_db", user="postgres", password="postgres")
+    db.connect()
+    return db.link_analysis_with_config(link.video_id, link.config_id)

@@ -100,6 +100,15 @@ class DatabaseManager:
             );
         """
 
+        create_analysis_configurations_link_table = """
+            CREATE TABLE IF NOT EXISTS analysis_configurations_link (
+                video_id INTEGER PRIMARY KEY,
+                config_id INTEGER,
+                FOREIGN KEY (video_id) REFERENCES videos(id) ON DELETE CASCADE,
+                FOREIGN KEY (config_id) REFERENCES analysis_configurations(id) ON DELETE SET NULL
+            );
+        """
+
         conn = self.get_connection()
         cursor = conn.cursor()
 
@@ -108,6 +117,7 @@ class DatabaseManager:
         cursor.execute(create_bounding_boxes_table)
         cursor.execute(create_anomaly_recognition_data_table)
         cursor.execute(create_analysis_configurations_table)
+        cursor.execute(create_analysis_configurations_link_table)
 
         conn.commit()
 
@@ -118,11 +128,15 @@ class DatabaseManager:
         delete_detections = "DELETE FROM detections;"
         delete_videos = "DELETE FROM videos;"
         delete_anomaly_recognition_data = "DELETE FROM anomaly_recognition_data;"
+        delete_analysis_configurations_data = "DELETE FROM analysis_configurations;"
+        delete_analysis_configurations_link_data = "DELETE FROM analysis_configurations_link;"
 
 
         conn = self.get_connection()
         cursor = conn.cursor()
 
+        cursor.execute(delete_analysis_configurations_link_data)
+        cursor.execute(delete_analysis_configurations_data)
         cursor.execute(delete_anomaly_recognition_data)
         cursor.execute(delete_bounding_boxes)
         cursor.execute(delete_detections)
@@ -136,10 +150,14 @@ class DatabaseManager:
         drop_detections_table = "DROP TABLE IF EXISTS detections;"
         drop_bounding_boxes_table = "DROP TABLE IF EXISTS bounding_boxes;"
         drop_anomaly_recognition_data_table = "DROP TABLE IF EXISTS anomaly_recognition_data;"
+        drop_analysis_configurations_link_table = "DROP TABLE IF EXISTS analysis_configurations_link;"
+        drop_analysis_configurations_table = "DROP TABLE IF EXISTS analysis_configurations;"
         
         conn = self.get_connection()
         cursor = conn.cursor()
 
+        cursor.execute(drop_analysis_configurations_link_table)
+        cursor.execute(drop_analysis_configurations_table)
         cursor.execute(drop_anomaly_recognition_data_table)
         cursor.execute(drop_bounding_boxes_table)
         cursor.execute(drop_detections_table)
@@ -166,10 +184,8 @@ class DatabaseManager:
         conn = self.get_connection()
         cursor = conn.cursor()
 
-        print("SOM TU")
         cursor.execute(insert_query, (video_path, duration, fps, name_of_analysis))
         conn.commit()
-        print("SOM TU 2")
 
         video_id = cursor.fetchone()[0]
         self.release_connection(conn)
@@ -485,24 +501,36 @@ class DatabaseManager:
         cursor = conn.cursor()
 
         query = """
-            SELECT id, video_path, duration, fps, date_processed, name_of_analysis
-            FROM videos;
+            SELECT v.id, v.video_path, v.duration, v.fps, v.date_processed, v.name_of_analysis,
+                acl.config_id
+            FROM videos v
+            LEFT JOIN analysis_configurations_link acl ON v.id = acl.video_id;
         """
         cursor.execute(query)
         results = cursor.fetchall()
 
-        self.release_connection(conn)
-
-        if results:
-            return [{
+        videos = []
+        for row in results:
+            video_data = {
                 'id': row[0],
                 'video_path': row[1],
                 'duration': row[2],
                 'fps': row[3],
                 'date_processed': row[4],
                 'name_of_analysis': row[5],
-            } for row in results ]
-        return None
+            }
+
+            config_id = row[6]
+            if config_id is not None:
+                config = self.fetch_analysis_configuration_by_id(config_id)
+                video_data['config'] = config
+            else:
+                video_data['config'] = None
+
+            videos.append(video_data)
+
+        self.release_connection(conn)
+        return videos if videos else None
 
     def fetch_all_analysis_configurations(self):
         query = """
@@ -599,3 +627,22 @@ class DatabaseManager:
         conn.commit()
         self.release_connection(conn)
         return deleted
+    
+    def link_analysis_with_config(self, video_id: int, config_id: int):
+        query = """
+            INSERT INTO analysis_configurations_link (video_id, config_id)
+            VALUES (%s, %s)
+            RETURNING video_id, config_id;
+        """
+        conn = self.get_connection()
+        cursor = conn.cursor()
+
+        cursor.execute(query, (video_id, config_id))
+        conn.commit()
+        result = cursor.fetchone()
+        self.release_connection(conn)
+
+        return {
+            "video_id": result[0],
+            "config_id": result[1]
+        }

@@ -68,9 +68,9 @@ const App: React.FC = () => {
 
   const onViewResults = (video: any) => {
     setVideoId(video.id);
-    // setLoadedConfig(config);
-    // setCategories(config.categories);
-    // setSettings(config.settings);
+    setLoadedConfig(video.config);
+    setCategories(video.config.categories);
+    setSettings(video.config.settings);
     setScreen("second");
   };
 

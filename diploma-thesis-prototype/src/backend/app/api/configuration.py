@@ -1,13 +1,14 @@
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import JSONResponse
 from typing import List
-from backend.app.models.configuration_models import AnalysisConfigIn, AnalysisConfigOut, UpdateAnalysisConfigRequest
+from backend.app.models.configuration_models import AnalysisConfigIn, AnalysisConfigOut, UpdateAnalysisConfigRequest, LinkIn
 from backend.app.services.configuration_service import (
     save_analysis_config,
     get_all_analysis_configs,
     get_analysis_config_by_id,
     delete_configuration_by_id,
-    update_analysis_config
+    update_analysis_config,
+    link_analysis_with_config
 )
 
 router = APIRouter()
@@ -64,5 +65,19 @@ async def update_configuration(config_id: int, update: UpdateAnalysisConfigReque
             "status": "success",
             "message": f"Configuration '{update.name}' updated"
         }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
+@router.post("/configuration/link", response_model=None, status_code=201)
+def link(link: LinkIn):
+    try:
+        response = link_analysis_with_config(link)
+        return JSONResponse(
+            status_code=201,
+            content={
+                "config_id": response["config_id"],
+                "video_id": response["video_id"],
+            }
+        )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

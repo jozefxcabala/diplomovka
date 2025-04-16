@@ -16,3 +16,6 @@ class UpdateAnalysisConfigRequest(BaseModel):
     categories: List[str]
     settings: Dict[str, Any]
 
+class LinkIn(BaseModel):
+    video_id: int
+    config_id: int

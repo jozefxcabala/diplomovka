@@ -1,23 +1,30 @@
 import React, { useEffect, useState } from "react";
 import "./LoadAnalysisModal.css";
 
-interface VideoResult {
+interface ConfigItem {
+  id: number;
+  name: string;
+  categories: string[];
+  settings: Record<string, any>;
+}
+
+interface AnalyzedVideo {
   id: number;
   video_path: string;
   duration: number;
   fps: number;
   date_processed: string;
   name_of_analysis: string;
+  config: ConfigItem;
 }
-
 interface LoadAnalysisModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSelect: (video: VideoResult) => void;
+  onSelect: (video: AnalyzedVideo) => void;
 }
 
 const LoadAnalysisModal: React.FC<LoadAnalysisModalProps> = ({ isOpen, onClose, onSelect }) => {
-  const [results, setResults] = useState<VideoResult[]>([]);
+  const [results, setResults] = useState<AnalyzedVideo[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
