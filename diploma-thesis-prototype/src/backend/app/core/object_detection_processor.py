@@ -153,14 +153,14 @@ def process_segment(video_path, start_frame, end_frame, yolo_handler, stop_event
     return detections
 
 
-def main(video_path, num_segments, processing_mode, model_path, classes_to_detect):
+def main(video_path, num_segments, processing_mode, model_path, classes_to_detect, name_of_analysis):
     # Initialization of the database manager
     db_manager = DatabaseManager(db_name="diploma_thesis_prototype_db", user="postgres", password="postgres")
     
     try:
         db_manager.connect()
         db_manager.create_tables()
-        video_id = db_manager.insert_video(video_path)
+        video_id = db_manager.insert_video(video_path, name_of_analysis)
 
         start_time = time.time()
 

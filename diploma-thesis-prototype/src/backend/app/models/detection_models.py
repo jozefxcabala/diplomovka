@@ -7,6 +7,7 @@ class DetectionRequest(BaseModel):
     num_segments: int = 8
     processing_mode: str = "parallel"
     classes_to_detect: List[int] = [0]
+    name_of_analysis: str
 
 class DetectionResponse(BaseModel):
     video_id: int

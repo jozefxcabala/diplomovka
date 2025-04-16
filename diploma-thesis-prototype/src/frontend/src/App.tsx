@@ -66,11 +66,19 @@ const App: React.FC = () => {
     setScreen("first");
   };
 
+  const onViewResults = (video: any) => {
+    setVideoId(video.id);
+    // setLoadedConfig(config);
+    // setCategories(config.categories);
+    // setSettings(config.settings);
+    setScreen("second");
+  };
+
   if (screen === "startup") {
     return ( <StartupScreen
       onStartNewAnalysis={() => setScreen("first")}
       onLoadConfig={onLoadConfig}
-      onViewResults={() => console.log("TODO: implement ViewResults")}
+      onViewResults={onViewResults}
     />);
   }
 

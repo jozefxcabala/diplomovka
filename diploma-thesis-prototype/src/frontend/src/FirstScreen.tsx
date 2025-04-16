@@ -50,6 +50,9 @@ const FirstScreen: React.FC<FirstScreenProps> = ({
 
   const startAnalysis = async () => {
     if (!isAnalysisReady || !videoFile || !settingsFirstScreen) return;
+
+    const name_of_analysis = prompt("Enter name for the analysis:");
+    if (!name_of_analysis) return;
   
     console.log("🔍 Starting analysis...");
     setCategories(categoriesFirstScreen);
@@ -83,6 +86,7 @@ const FirstScreen: React.FC<FirstScreenProps> = ({
         },
         body: JSON.stringify({
           video_path,
+          name_of_analysis,
           ...settingsFirstScreen,
         }),
       });

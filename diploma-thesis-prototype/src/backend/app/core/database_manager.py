@@ -47,7 +47,8 @@ class DatabaseManager:
                 video_path TEXT NOT NULL,
                 duration INTEGER,
                 fps FLOAT,
-                date_processed TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                date_processed TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                name_of_analysis TEXT DEFAULT 'Unnamed analysis'
             );
         """
 
@@ -156,27 +157,29 @@ class DatabaseManager:
         duration = video.get(cv2.CAP_PROP_FRAME_COUNT) / fps
         return duration, fps
 
-    def insert_video(self, video_path):
+    def insert_video(self, video_path, name_of_analysis):
         duration, fps = self.get_video_duration(video_path)
-        insert_query = sql.SQL("""
-            INSERT INTO videos (video_path, duration, fps)
-            VALUES (%s, %s, %s) RETURNING id
-        """)
+        insert_query = """
+                INSERT INTO videos (video_path, duration, fps, name_of_analysis)
+                VALUES (%s, %s, %s, %s) RETURNING id;
+            """
         conn = self.get_connection()
         cursor = conn.cursor()
 
-        cursor.execute(insert_query, (video_path, duration, fps))
+        print("SOM TU")
+        cursor.execute(insert_query, (video_path, duration, fps, name_of_analysis))
         conn.commit()
+        print("SOM TU 2")
 
         video_id = cursor.fetchone()[0]
         self.release_connection(conn)
         return video_id
 
     def insert_detection(self, video_id, start_frame, end_frame, class_id, confidence, track_id, video_type="mp4"):
-        insert_query = sql.SQL("""
+        insert_query = """
             INSERT INTO detections (video_id, start_frame, end_frame, class_id, confidence, track_id)
-            VALUES (%s, %s, %s, %s, %s, %s) RETURNING id
-        """)
+            VALUES (%s, %s, %s, %s, %s, %s) RETURNING id;
+        """
         
         conn = self.get_connection()
         cursor = conn.cursor()
@@ -188,11 +191,11 @@ class DatabaseManager:
         
         video_object_detection_path = f"data/output/{video_id}/anomaly_recognition_preprocessor/{video_id}_{detection_id}.{video_type}"
 
-        update_query = sql.SQL("""
+        update_query = """
             UPDATE detections
             SET video_object_detection_path = %s
             WHERE id = %s
-        """)
+        """
         
         cursor.execute(update_query, (video_object_detection_path, detection_id))
         conn.commit()
@@ -202,10 +205,10 @@ class DatabaseManager:
         return detection_id
 
     def insert_bounding_box(self, detection_id, frame_id, bbox):
-        insert_query = sql.SQL("""
+        insert_query = """
             INSERT INTO bounding_boxes (detection_id, frame_id, bbox)
             VALUES (%s, %s, %s)
-        """)
+        """
         conn = self.get_connection()
         cursor = conn.cursor()
 
@@ -441,7 +444,7 @@ class DatabaseManager:
         cursor = conn.cursor()
 
         query = """
-            SELECT id, video_path, duration, fps, date_processed
+            SELECT id, video_path, duration, fps, date_processed, name_of_analysis
             FROM videos
             WHERE id = %s;
         """
@@ -456,7 +459,8 @@ class DatabaseManager:
                 'video_path': result[1],
                 'duration': result[2],
                 'fps': result[3],
-                'date_processed': result[4]
+                'date_processed': result[4],
+                'name_of_analysis': result[5],
             }
         return None
 
@@ -475,6 +479,30 @@ class DatabaseManager:
         self.release_connection(conn)
         
         return config_id
+    
+    def fetch_videos(self):
+        conn = self.get_connection()
+        cursor = conn.cursor()
+
+        query = """
+            SELECT id, video_path, duration, fps, date_processed, name_of_analysis
+            FROM videos;
+        """
+        cursor.execute(query)
+        results = cursor.fetchall()
+
+        self.release_connection(conn)
+
+        if results:
+            return [{
+                'id': row[0],
+                'video_path': row[1],
+                'duration': row[2],
+                'fps': row[3],
+                'date_processed': row[4],
+                'name_of_analysis': row[5],
+            } for row in results ]
+        return None
 
     def fetch_all_analysis_configurations(self):
         query = """
@@ -561,3 +589,13 @@ class DatabaseManager:
         updated = cursor.rowcount > 0
         self.release_connection(conn)
         return updated
+    
+    def delete_video_by_id(self, video_id: int) -> bool:
+        """Deletes a video and cascades to related detections, boxes, and anomaly data."""
+        conn = self.get_connection()
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM videos WHERE id = %s;", (video_id,))
+        deleted = cursor.rowcount > 0
+        conn.commit()
+        self.release_connection(conn)
+        return deleted
