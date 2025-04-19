@@ -1,0 +1,98 @@
+.experiments-container {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  background-color: #2F2F2E;
+  color: white;
+  overflow: hidden;
+}
+
+.experiments-navbar {
+  height: 64px;
+  background-color: #3C3C3B;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+.app-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #f8f8f8;
+}
+
+/* Wraps entire content below navbar */
+.experiments-content {
+  flex: 1;
+  overflow-y: auto;
+  padding-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Metrics */
+.results-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  padding: 24px;
+}
+
+.result-block {
+  background-color: #3a3a3a;
+  padding: 14px 20px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.result-block strong {
+  color: #ff9800;
+}
+
+/* Graphs */
+.charts-section {
+  display: flex;
+  gap: 32px;
+  padding: 0 24px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.chart-box {
+  width: 400px;
+  background-color: #1e1e1e;
+  padding: 16px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Save button */
+.navbar-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.button {
+  padding: 10px 16px;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  border: none;
+  transition: all 0.3s ease-in-out;
+}
+
+.save-config-button {
+  background-color: #ff9800;
+  color: white;
+}
+
+.save-config-button:hover {
+  background-color: #e48c00;
+}
