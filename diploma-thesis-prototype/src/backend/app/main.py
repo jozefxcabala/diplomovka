@@ -7,10 +7,13 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # Povolenie frontend domény
+    allow_origins=[
+        "http://localhost:3000",
+        "http://localhost:3001"
+    ],
     allow_credentials=True,
-    allow_methods=["*"],  # Povolenie všetkých HTTP metód (GET, POST, PUT, DELETE)
-    allow_headers=["*"],  # Povolenie všetkých hlavičiek
+    allow_methods=["*"], 
+    allow_headers=["*"], 
 )
 
 app_version = "Prototype 1.0.0"
