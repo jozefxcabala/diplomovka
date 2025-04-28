@@ -11,6 +11,11 @@ def split_video(video_path, num_segments):
     cap.release()
 
     segment_length = total_frames // num_segments
+
+    if segment_length < 1000:
+        segment_length = total_frames
+        num_segments = 1
+
     segments = []
 
     for i in range(num_segments):

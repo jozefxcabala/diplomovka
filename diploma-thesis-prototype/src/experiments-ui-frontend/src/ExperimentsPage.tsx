@@ -27,20 +27,31 @@ const ExperimentsPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    setLoading(true);
-    setTimeout(() => {
-      const mockData: ExperimentResults = {
-        total_detections: 150,
-        true_positives: 120,
-        false_positives: 20,
-        false_negatives: 10,
-        precision: 0.86,
-        recall: 0.92,
-        f1_score: 0.89,
-      };
-      setResults(mockData);
-      setLoading(false);
-    }, 1000);
+    const fetchExperimentResults = async () => {
+      setLoading(true);
+      try {
+        const response = await fetch("http://localhost:8000/api/experiments/ubnormal/run", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          }
+        });
+  
+        if (!response.ok) {
+          throw new Error("Failed to fetch experiment results");
+        }
+  
+        const data = await response.json();
+        const statistics: ExperimentResults = data.statistics
+        setResults(statistics);
+      } catch (error) {
+        console.error("❌ Error fetching experiment results:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+  
+    fetchExperimentResults();
   }, []);
 
   const handleSave = () => {

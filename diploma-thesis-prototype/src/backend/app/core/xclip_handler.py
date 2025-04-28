@@ -54,7 +54,7 @@ class XCLIPHandler:
 
     def classify_batch(self, frames, descriptions):
         # Preprocessing of frames and descriptions
-        inputs = self.processor(text=descriptions, videos=list(frames), return_tensors="pt")
+        inputs = self.processor(text=descriptions, videos=list(frames), return_tensors="pt", padding=True, truncation=True)
 
         # Prediction
         with torch.no_grad():
