@@ -1,103 +1,5 @@
 import os
 import re
-import pickle
-from collections import defaultdict
-
-def load_object_names_per_video(pkl_path: str) -> dict[str, dict[str, str]]:
-    with open(pkl_path, 'rb') as f:
-        loaded = pickle.load(f)
-    result = defaultdict(dict)
-    for video_id, object_map in loaded.items():
-        for object_id, name in object_map.items():
-            result[video_id][str(object_id)] = name
-    return dict(result)
-
-def parse_track_line(line: str):
-    parts = re.split(r'[,\s]+', line.strip(), maxsplit=3)
-    
-    if len(parts) >= 4:
-        try:
-            obj_id = str(int(float(parts[0])))
-            start = int(float(parts[1]))
-            end = int(float(parts[2]))
-            activity = parts[3].strip()
-            return obj_id, start, end, activity
-        except ValueError:
-            return None
-    elif len(parts) == 3:
-        try:
-            obj_id = str(int(float(parts[0])))
-            start = int(float(parts[1]))
-            end = int(float(parts[2]))
-            activity = "undefined"
-            return obj_id, start, end, activity
-        except ValueError:
-            return None
-    return None
-
-def load_analyzed_filenames_with_objects_and_anomalies(video_root_path: str, object_pkl_path: str) -> dict[str, dict[str, list[dict]]]:
-    object_data = load_object_names_per_video(object_pkl_path)
-    pattern = re.compile(r'^(abnormal|normal)_scene_(\d+)_scenario_[\d_]+(?:_[a-zA-Z0-9]+)*\.mp4$')
-    temp_result = defaultdict(lambda: {"abnormal": [], "normal": []})
-    
-    for root, _, files in os.walk(video_root_path):
-        for file in files:
-            match = pattern.match(file)
-            if match:
-                label = match.group(1)
-                scene_num = match.group(2)
-                scene_key = f"scene_{scene_num}"
-                video_name = file.rsplit('.', 1)[0]  # bez prípony
-                full_path = os.path.join(root, file)
-
-                # základný objektový slovník (len meno objektu, bez anomálií zatiaľ)
-                object_entries = {}
-                
-                for object_id in object_data.get(video_name, {}):
-                    object_entries[object_id] = {
-                        "name": object_data[video_name][object_id],
-                        "anomalies": []
-                    }
-
-                # track file pre abnormal video
-                if label == "abnormal":
-                    annotation_file = os.path.join(root, f"{video_name}_annotations/{video_name}_tracks.txt")
-                    if os.path.exists(annotation_file):
-                        with open(annotation_file, 'r') as f:
-                            for line in f:
-                                parsed = parse_track_line(line)
-                                if parsed:
-                                    obj_id, start, end, activity = parsed
-                                    if obj_id not in object_entries:
-                                        object_entries[obj_id] = {
-                                            "name": "person",
-                                            "anomalies": []
-                                        }
-                                    object_entries[obj_id]["anomalies"].append({
-                                        "start": start, 
-                                        "end": end,
-                                        "activity": activity
-                                    })
-
-                video_info = {
-                    "path": full_path,
-                    "objects": object_entries
-                }
-
-                temp_result[scene_key][label].append(video_info)
-
-    # zoradenie
-    sorted_result = {}
-    for scene_key in sorted(temp_result.keys(), key=lambda k: int(k.split('_')[1])):
-        sorted_result[scene_key] = {
-            "abnormal": sorted(temp_result[scene_key]["abnormal"], key=lambda x: x["path"]),
-            "normal": sorted(temp_result[scene_key]["normal"], key=lambda x: x["path"]),
-        }
-
-    return sorted_result
-
-import os
-import re
 from collections import defaultdict
 
 def safe_parse(value):
@@ -118,7 +20,13 @@ def parse_annotation_line(line: str):
         try:
             scene_num = int(scene)
             scenario_num = int(scenario)
-            part_num = int(part) if part != "unset" else "unset"
+            
+            if part == "-":
+                part_num = "unset"
+            elif part.isdigit():
+                part_num = int(part)
+            else:
+                part_num = part
 
             start_frame = int(float(start)) if start != "unset" else "unset"
             end_frame = int(float(end)) if end != "unset" else "unset"
@@ -190,7 +98,7 @@ def load_analyzed_filenames_with_objects_and_anomalies_from_annotations(video_ro
 
                 # vytvoríme video entries
                 for (scene_num, scenario_num, label, part_num), objects in video_entries.items():
-                    if isinstance(part_num, int) and part_num != "unset":
+                    if (isinstance(part_num, int) or part_num in ["fire", "fog", "smoke"]) and part_num != "unset":
                         video_filename = f"{label}_scene_{scene_num}_scenario_{scenario_num}_{part_num}.mp4"
                     else:
                         video_filename = f"{label}_scene_{scene_num}_scenario_{scenario_num}.mp4"
@@ -275,6 +183,6 @@ def evaluate_results(all_results, scenes, categories):
                 "decision": decision
             })
 
-    # print("Detailed results: ", detailed_results)
+    print("Detailed results: ", detailed_results)
 
     return tp, fp, fn, tn

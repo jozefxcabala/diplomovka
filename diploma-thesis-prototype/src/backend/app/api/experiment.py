@@ -16,14 +16,22 @@ def run_experiment_pipeline():
     start_time = time.time()
 
     scenes = load_analyzed_filenames_with_objects_and_anomalies_from_annotations(
-        "/Users/caby/Downloads/UBnormal"
+        "/Users/caby/annotation-app/UBnormal"
     )
 
     categories = [
         "a person wearing a helmet and an orange vest is walking",
+        "a person wearing a helmet and an orange vest is dancing",
         "a person wearing a helmet and an orange vest is standing in place",
-        "a person wearing a helmet and an orange vest is lying on the ground",
-        "a person wearing a helmet and an orange vest fell to the ground"
+        "a person wearing a helmet and an orange vest is jumping",
+        "a person wearing a helmet and an orange vest is running",
+        "a person wearing a helmet and an orange vest is fighting",
+        "a person wearing a helmet and an orange vest have something in hand",
+        "a person wearing a helmet and an orange vest is lying in the ground",
+        "a person wearing a helmet and an orange vest is limping",
+        "a person wearing a helmet and an orange vest fell to the ground",
+        "a person wearing a helmet and an orange vest is sitting",
+        "a person wearing a helmet and an orange vest is riding motocycle",
     ]
 
     threshold = 21
@@ -31,7 +39,13 @@ def run_experiment_pipeline():
     normal_video_analysis_results = []
     abnormal_video_analysis_results = []
 
+    counter = 0
+
     for scene_name, scene_data in scenes.items():
+        if counter != 1:
+            counter += 1
+            continue
+        
         normals = scene_data["normal"]
         for normal_entry in normals:
             normal_full_analysis_response = run_full_analysis(
@@ -59,8 +73,10 @@ def run_experiment_pipeline():
                 threshold=threshold
             )
             abnormal_video_analysis_results.append(abnormal_full_analysis_response)
-          
-        break
+        counter += 1
+        
+        if counter == 3:
+          break
 
     end_time = time.time()
     total_duration = round(end_time - start_time, 2)
@@ -77,7 +93,7 @@ def run_experiment_pipeline():
     f1_score = (2 * precision * recall) / (precision + recall) if (precision + recall) > 0 else 0
 
     return {
-        # **all_results,
+        **all_results,
         "total_videos_analyzed": len(normal_video_analysis_results) + len(abnormal_video_analysis_results),
         "total_duration_seconds": total_duration,
         "statistics": {
