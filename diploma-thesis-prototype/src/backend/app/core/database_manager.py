@@ -62,8 +62,6 @@ class DatabaseManager:
                 confidence FLOAT,
                 track_id INTEGER,
                 video_object_detection_path TEXT NULL,
-                is_anomaly BOOLEAN DEFAULT NULL,
-                type_of_anomaly TEXT DEFAULT NULL,
                 timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (video_id) REFERENCES videos(id) ON DELETE CASCADE
             );
@@ -109,6 +107,16 @@ class DatabaseManager:
             );
         """
 
+        create_detection_anomalies_table = """
+            CREATE TABLE IF NOT EXISTS detection_anomalies (
+                id SERIAL PRIMARY KEY,
+                detection_id INTEGER REFERENCES detections(id) ON DELETE CASCADE,
+                anomaly_label TEXT NOT NULL,
+                anomaly_score FLOAT NOT NULL,
+                timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
+        """
+
         conn = self.get_connection()
         cursor = conn.cursor()
 
@@ -118,6 +126,7 @@ class DatabaseManager:
         cursor.execute(create_anomaly_recognition_data_table)
         cursor.execute(create_analysis_configurations_table)
         cursor.execute(create_analysis_configurations_link_table)
+        cursor.execute(create_detection_anomalies_table)
 
         conn.commit()
 
@@ -130,11 +139,13 @@ class DatabaseManager:
         delete_anomaly_recognition_data = "DELETE FROM anomaly_recognition_data;"
         delete_analysis_configurations_data = "DELETE FROM analysis_configurations;"
         delete_analysis_configurations_link_data = "DELETE FROM analysis_configurations_link;"
+        delete_detection_anomalies = "DELETE FROM detection_anomalies;"
 
 
         conn = self.get_connection()
         cursor = conn.cursor()
 
+        cursor.execute(delete_detection_anomalies)
         cursor.execute(delete_analysis_configurations_link_data)
         cursor.execute(delete_analysis_configurations_data)
         cursor.execute(delete_anomaly_recognition_data)
@@ -152,10 +163,12 @@ class DatabaseManager:
         drop_anomaly_recognition_data_table = "DROP TABLE IF EXISTS anomaly_recognition_data;"
         drop_analysis_configurations_link_table = "DROP TABLE IF EXISTS analysis_configurations_link;"
         drop_analysis_configurations_table = "DROP TABLE IF EXISTS analysis_configurations;"
-        
+        drop_detection_anomalies_table = "DROP TABLE IF EXISTS detection_anomalies;"
+
         conn = self.get_connection()
         cursor = conn.cursor()
 
+        cursor.execute(drop_detection_anomalies_table)
         cursor.execute(drop_analysis_configurations_link_table)
         cursor.execute(drop_analysis_configurations_table)
         cursor.execute(drop_anomaly_recognition_data_table)
@@ -269,7 +282,7 @@ class DatabaseManager:
         cursor = conn.cursor()
 
         query = """
-            SELECT id, video_id, start_frame, end_frame, class_id, confidence, track_id, video_object_detection_path, is_anomaly, type_of_anomaly
+            SELECT id, video_id, start_frame, end_frame, class_id, confidence, track_id, video_object_detection_path
             FROM detections WHERE id = %s;
         """
         cursor.execute(query, (detection_id,))
@@ -285,9 +298,7 @@ class DatabaseManager:
                 'class_id': result[4],
                 'confidence': result[5],
                 'track_id': result[6],
-                'video_object_detection_path': result[7],
-                'is_anomaly': result[8],
-                'type_of_anomaly': result[9]
+                'video_object_detection_path': result[7]
             }
         else:
             return None
@@ -315,34 +326,43 @@ class DatabaseManager:
         return bounding_boxes
     
     def fetch_detections_by_video_id(self, video_id):
-      """Získa všetky detekcie pre dané video_id."""
-      conn = self.get_connection()
-      cursor = conn.cursor()
+        conn = self.get_connection()
+        cursor = conn.cursor()
 
-      query = """
-          SELECT id, video_id, start_frame, end_frame, class_id, confidence, track_id, video_object_detection_path, is_anomaly, type_of_anomaly
-          FROM detections WHERE video_id = %s;
-      """
-      cursor.execute(query, (video_id,))
-      result = cursor.fetchall()
-      self.release_connection(conn)
+        query = """
+            SELECT id, video_id, start_frame, end_frame, class_id, confidence, track_id, video_object_detection_path
+            FROM detections WHERE video_id = %s;
+        """
+        cursor.execute(query, (video_id,))
+        result = cursor.fetchall()
 
-      detections = []
-      for row in result:
-          detections.append({
-              'id': row[0],
-              'video_id': row[1],
-              'start_frame': row[2],
-              'end_frame': row[3],
-              'class_id': row[4],
-              'confidence': row[5],
-              'track_id': row[6],
-              'video_object_detection_path': row[7],
-              'is_anomaly': row[8],
-              'type_of_anomaly': row[9]
-          })
+        detections = []
+        for row in result:
+            detection_id = row[0]
 
-      return detections
+            cursor.execute("""
+                SELECT anomaly_label, anomaly_score
+                FROM detection_anomalies
+                WHERE detection_id = %s
+                ORDER BY anomaly_score DESC;
+            """, (detection_id,))
+            anomaly_rows = cursor.fetchall()
+            anomalies = [{"label": a[0], "score": a[1]} for a in anomaly_rows]
+
+            detections.append({
+                'id': detection_id,
+                'video_id': row[1],
+                'start_frame': row[2],
+                'end_frame': row[3],
+                'class_id': row[4],
+                'confidence': row[5],
+                'track_id': row[6],
+                'video_object_detection_path': row[7],
+                'anomalies': anomalies 
+            })
+
+        self.release_connection(conn)
+        return detections
 
     def fetch_detections_by_video_id_and_duration(self, video_id, duration):
         """Získa všetky detekcie pre dané video_id."""
@@ -350,7 +370,7 @@ class DatabaseManager:
         cursor = conn.cursor()
 
         query = """
-            SELECT id, video_id, start_frame, end_frame, class_id, confidence, track_id, video_object_detection_path, is_anomaly, type_of_anomaly
+            SELECT id, video_id, start_frame, end_frame, class_id, confidence, track_id, video_object_detection_path
             FROM detections WHERE video_id = %s AND (end_frame - start_frame) > %s;
         """
         cursor.execute(query, (video_id, duration,))
@@ -367,9 +387,7 @@ class DatabaseManager:
                 'class_id': row[4],
                 'confidence': row[5],
                 'track_id': row[6],
-                'video_object_detection_path': row[7],
-                'is_anomaly': row[8],
-                'type_of_anomaly': row[9]
+                'video_object_detection_path': row[7]
             })
 
         return detections
@@ -409,41 +427,41 @@ class DatabaseManager:
             })
 
         return anomaly_recognition_data
-    
-    def update_detction_about_anomaly_information(self, detection_id, is_anomaly, type_of_anomaly):
-      conn = self.get_connection()
-      cursor = conn.cursor()
-
-      update_query = "UPDATE detections SET is_anomaly = %s, type_of_anomaly = %s WHERE id = %s;"
-      cursor.execute(update_query, (is_anomaly, type_of_anomaly, detection_id))
-      conn.commit()
-
-      self.release_connection(conn)
 
     def fetch_anomalies_by_video_id(self, video_id):
-      conn = self.get_connection()
-      cursor = conn.cursor()
+        conn = self.get_connection()
+        cursor = conn.cursor()
 
-      query = """
-          SELECT id, video_id, start_frame, end_frame, is_anomaly, type_of_anomaly
-          FROM detections WHERE video_id = %s and is_anomaly=true;
-      """
-      cursor.execute(query, (video_id,))
-      result = cursor.fetchall()
-      self.release_connection(conn)
+        query = """
+            SELECT 
+                d.id, d.video_id, d.start_frame, d.end_frame,
+                da.anomaly_label, da.anomaly_score
+            FROM detections d
+            JOIN detection_anomalies da ON d.id = da.detection_id
+            WHERE d.video_id = %s AND da.anomaly_score = (
+                SELECT MAX(sub.anomaly_score)
+                FROM detection_anomalies sub
+                WHERE sub.detection_id = d.id
+            )
+            ORDER BY d.id;
+        """
 
-      anomalies = []
-      for row in result:
-          anomalies.append({
-              'id': row[0],
-              'video_id': row[1],
-              'start_frame': row[2],
-              'end_frame': row[3],
-              'is_anomaly': row[4],
-              'type_of_anomaly': row[5]
-          })
+        cursor.execute(query, (video_id,))
+        rows = cursor.fetchall()
+        self.release_connection(conn)
 
-      return anomalies
+        anomalies = []
+        for row in rows:
+            anomalies.append({
+                'id': row[0],
+                'video_id': row[1],
+                'start_frame': row[2],
+                'end_frame': row[3],
+                'top_anomaly_label': row[4],
+                'top_anomaly_score': row[5],
+            })
+
+        return anomalies
     
     def fetch_video_path(self, video_id: int) -> str:
         conn = self.get_connection()
@@ -646,3 +664,33 @@ class DatabaseManager:
             "video_id": result[0],
             "config_id": result[1]
         }
+    
+    def insert_detection_anomalies(self, detection_id: int, anomalies: list[dict]):
+        query = """
+            INSERT INTO detection_anomalies (detection_id, anomaly_label, anomaly_score)
+            VALUES (%s, %s, %s)
+        """
+        conn = self.get_connection()
+        cursor = conn.cursor()
+
+        for anomaly in anomalies:
+            cursor.execute(query, (detection_id, anomaly["label"], anomaly["score"]))
+        
+        conn.commit()
+        self.release_connection(conn)
+
+    def fetch_detection_anomalies(self, detection_id: int) -> list[dict]:
+        query = """
+            SELECT anomaly_label, anomaly_score
+            FROM detection_anomalies
+            WHERE detection_id = %s
+            ORDER BY anomaly_score DESC;
+        """
+        conn = self.get_connection()
+        cursor = conn.cursor()
+
+        cursor.execute(query, (detection_id,))
+        rows = cursor.fetchall()
+        self.release_connection(conn)
+
+        return [{"label": row[0], "score": row[1]} for row in rows]

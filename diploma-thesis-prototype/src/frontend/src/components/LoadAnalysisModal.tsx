@@ -64,8 +64,17 @@ const LoadAnalysisModal: React.FC<LoadAnalysisModalProps> = ({ isOpen, onClose, 
                 onClick={() => onSelect(video)}
               >
                 <div className="result-details">
-                  <strong>{video.name_of_analysis}</strong>
-                  <p><span>📁</span> {video.video_path}</p>
+                  <strong title={video.name_of_analysis}>
+                    {video.name_of_analysis.length > 30
+                      ? `${video.name_of_analysis.slice(0, 30)}...`
+                      : video.name_of_analysis}
+                  </strong>
+                  <p title={video.video_path}>
+                    <span>📁</span>{" "}
+                    {video.video_path.length > 40
+                      ? `${video.video_path.slice(0, 40)}...`
+                      : video.video_path}
+                  </p>
                   <p><span>⏱️</span> {video.duration}s | {video.fps}fps</p>
                   <p><span>📅</span> {new Date(video.date_processed).toLocaleString()}</p>
                 </div>

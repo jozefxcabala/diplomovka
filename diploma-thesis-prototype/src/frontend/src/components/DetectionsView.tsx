@@ -1,11 +1,14 @@
 import React from "react";
 import "./DetectionsView.css"; 
+
 interface Detection {
   id: string;
   timestamp: number;
   confidence: number;
-  isAnomaly: boolean;
-  typeOfAnomaly: string;
+  anomalies: {
+    label: string;
+    score: number;
+  }[];
 }
 
 interface DetectionViewProps {
@@ -17,15 +20,25 @@ interface DetectionViewProps {
 const DetectionsView: React.FC<DetectionViewProps> = ({ detections, onDetectionClick, fps }) => {
   return (
     <div className="detection-view">
-      {detections.map((detection) => (
-        <div key={detection.id} className="detection-item" onClick={() => onDetectionClick(detection.timestamp)}>
-          <div className="detection-info">
-            <h3 className="detection-title">{detection.typeOfAnomaly}</h3>
-            <p className="detection-id">ID: {detection.id}</p>
-            <p className="detection-time">Time: {Math.floor(detection.timestamp / fps)}s</p>
+      {detections.map((detection) => {
+        const topAnomaly = detection.anomalies.length > 0
+          ? detection.anomalies.reduce((best, current) =>
+              current.score > best.score ? current : best
+            )
+          : null;
+
+        return (
+          <div key={detection.id} className="detection-item" onClick={() => onDetectionClick(detection.timestamp)}>
+            <div className="detection-info">
+              <h3 className="detection-title">
+                {topAnomaly ? `${topAnomaly.label} (${(topAnomaly.score * 100).toFixed(1)}%)` : "No anomaly"}
+              </h3>
+              <p className="detection-id">ID: {detection.id}</p>
+              <p className="detection-time">Time: {Math.floor(detection.timestamp / fps)}s</p>
+            </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 };

@@ -10,8 +10,10 @@ interface Detection {
   id: string;
   timestamp: number;
   confidence: number;
-  isAnomaly: boolean;
-  typeOfAnomaly: string;
+  anomalies: {
+    label: string;
+    score: number;
+  }[];
 }
 interface SecondScreenProps {
   categories: string[];
@@ -65,13 +67,11 @@ const SecondScreen: React.FC<SecondScreenProps> = ({ categories, settings, video
         const res = await fetch(`http://localhost:8000/api/detections/${video_id}`);
         const data = await res.json();
         const formatted = data.detections
-          .filter((det: any) => det.is_anomaly === true) 
           .map((det: any) => ({
             id: det.id.toString(),
             timestamp: det.start_frame,
             confidence: det.confidence || 1.0,
-            isAnomaly: det.is_anomaly,
-            typeOfAnomaly: det.type_of_anomaly
+            anomalies: det.anomalies || [],
           }));
         setDetections(formatted);
       } catch (err) {

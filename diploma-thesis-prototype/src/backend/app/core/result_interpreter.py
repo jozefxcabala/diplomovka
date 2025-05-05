@@ -37,15 +37,22 @@ def save_anomalies(threshold, list_of_categories, db_manager: DatabaseManager, l
         db_manager.connect()
         for value in logits:
             logits_tensor = value['logits_per_video']
-            max_logit, max_index = logits_tensor.max(dim=0)
-            # TODO
-            if max_logit.item() > threshold:
-                detected_category = list_of_categories[max_index.item()]
-                db_manager.update_detction_about_anomaly_information(
-                    int(value['detection_id']),
-                    True,
-                    detected_category
-                )
+            detection_id = int(value['detection_id'])
+
+            topk = min(5, logits_tensor.shape[0])
+            top_scores, top_indices = logits_tensor.topk(topk)
+
+            anomalies = []
+            for score, index in zip(top_scores, top_indices):
+                if score.item() >= threshold:
+                    anomalies.append({
+                        "label": list_of_categories[index.item()],
+                        "score": score.item()
+                    })
+
+            if anomalies:
+                db_manager.insert_detection_anomalies(detection_id, anomalies)
+
     except Exception as e:
         print(f"Database error: {e}")
     finally:
