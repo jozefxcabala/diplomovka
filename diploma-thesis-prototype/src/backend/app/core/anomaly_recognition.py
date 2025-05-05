@@ -23,7 +23,6 @@ def fetch_video_segments(video_id, db_manager: DatabaseManager):
         db_manager.connect()
         detections = db_manager.fetch_detections_by_video_id_and_duration(video_id, 50)
         videos = [(f"../{detection['video_object_detection_path']}", detection['id']) for detection in detections]
-        print(videos)
     except Exception as e:
         print(f"Database error: {e}")
     finally:

@@ -67,12 +67,13 @@ const SecondScreen: React.FC<SecondScreenProps> = ({ categories, settings, video
         const res = await fetch(`http://localhost:8000/api/detections/${video_id}`);
         const data = await res.json();
         const formatted = data.detections
+          .filter((det: any) => Array.isArray(det.anomalies) && det.anomalies.length > 0)
           .map((det: any) => ({
             id: det.id.toString(),
             timestamp: det.start_frame,
             confidence: det.confidence || 1.0,
             anomalies: det.anomalies || [],
-          }));
+        }));
         setDetections(formatted);
       } catch (err) {
         console.error("❌ Failed to fetch detections:", err);

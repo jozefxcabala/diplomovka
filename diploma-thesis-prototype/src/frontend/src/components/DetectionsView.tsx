@@ -31,7 +31,7 @@ const DetectionsView: React.FC<DetectionViewProps> = ({ detections, onDetectionC
           <div key={detection.id} className="detection-item" onClick={() => onDetectionClick(detection.timestamp)}>
             <div className="detection-info">
               <h3 className="detection-title">
-                {topAnomaly ? `${topAnomaly.label} (${(topAnomaly.score * 100).toFixed(1)}%)` : "No anomaly"}
+                {topAnomaly ? `${topAnomaly.label}` : "No anomaly"}
               </h3>
               <p className="detection-id">ID: {detection.id}</p>
               <p className="detection-time">Time: {Math.floor(detection.timestamp / fps)}s</p>
