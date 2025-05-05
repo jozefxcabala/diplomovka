@@ -9,7 +9,7 @@ from backend.app.models.result_models import ResultInterpreterRequest
 
 from backend.app.core.database_manager import DatabaseManager
 
-def run_full_analysis(video_path, model_path, num_segments, processing_mode, classes_to_detect, name_of_analysis, categories, threshold):
+def run_full_analysis(video_path, model_path, num_segments, processing_mode, classes_to_detect, name_of_analysis, categories, threshold, skip_frames, num_of_skip_frames, confidence_threshold):
   # 1 Object Detection (video_path, name_of_analysis, settings)
   detect_res = run_object_detection(DetectionRequest(
         video_path=video_path,
@@ -17,7 +17,10 @@ def run_full_analysis(video_path, model_path, num_segments, processing_mode, cla
         num_segments=num_segments,
         processing_mode=processing_mode,
         classes_to_detect=classes_to_detect,
-        name_of_analysis=name_of_analysis
+        name_of_analysis=name_of_analysis,
+        skip_frames=skip_frames,
+        num_of_skip_frames=num_of_skip_frames,
+        confidence_threshold=confidence_threshold
     ))
   
   video_id = detect_res.video_id

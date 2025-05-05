@@ -24,7 +24,7 @@ from backend.app.core.yolo_handler import YOLOHandler
 class DetectionInterruptedError(Exception):
     pass
 
-def process_segments_parallel(video_path, segments, model_path, classes_to_detect, db_manager, video_id):
+def process_segments_parallel(video_path, segments, model_path, classes_to_detect, db_manager, video_id, skip_frames, num_of_skip_frames, confidence_threshold):
     threads = []
     results_queue = Queue()
     stop_event = Event()
@@ -35,7 +35,7 @@ def process_segments_parallel(video_path, segments, model_path, classes_to_detec
             yolo_handler = YOLOHandler(model_path, classes_to_detect=classes_to_detect)
             thread = Thread(
                 target=process_segment_and_store_results,
-                args=(video_path, start_frame, end_frame, yolo_handler, results_queue, stop_event, db_manager, video_id),
+                args=(video_path, start_frame, end_frame, yolo_handler, results_queue, stop_event, db_manager, video_id, skip_frames, num_of_skip_frames, confidence_threshold),
                 daemon=True  # It will automatically terminate threads when the program ends.
             )
             threads.append(thread)
@@ -61,9 +61,9 @@ def process_segments_parallel(video_path, segments, model_path, classes_to_detec
 
     return all_detections
 
-def process_segment_and_store_results(video_path, start_frame, end_frame, yolo_handler, results_queue, stop_event, db_manager, video_id):
+def process_segment_and_store_results(video_path, start_frame, end_frame, yolo_handler, results_queue, stop_event, db_manager, video_id, skip_frames = True, num_of_skip_frames = 5, confidence_threshold = 0.25):
     try:
-        detections = process_segment(video_path, start_frame, end_frame, yolo_handler, stop_event, True, 5, True, 0.25)
+        detections = process_segment(video_path, start_frame, end_frame, yolo_handler, stop_event, skip_frames, num_of_skip_frames, True, confidence_threshold)
 
         # Get connection to db from connection_pool
         conn = db_manager.get_connection()
@@ -153,7 +153,7 @@ def process_segment(video_path, start_frame, end_frame, yolo_handler, stop_event
     return detections
 
 
-def main(video_path, num_segments, processing_mode, model_path, classes_to_detect, name_of_analysis):
+def main(video_path, num_segments, processing_mode, model_path, classes_to_detect, name_of_analysis, skip_frames, num_of_skip_frames, confidence_threshold):
     # Initialization of the database manager
     db_manager = DatabaseManager(db_name="diploma_thesis_prototype_db", user="postgres", password="postgres")
     
@@ -171,7 +171,7 @@ def main(video_path, num_segments, processing_mode, model_path, classes_to_detec
             
             if processing_mode == 'parallel':
                 all_detections = process_segments_parallel(
-                    video_path, segments, model_path, classes_to_detect, db_manager, video_id
+                    video_path, segments, model_path, classes_to_detect, db_manager, video_id, skip_frames, num_of_skip_frames, confidence_threshold
                 )
 
         except DetectionInterruptedError as e:
@@ -202,7 +202,25 @@ if __name__ == "__main__":
                         help="Processing mode: parallel or sequential.")
     parser.add_argument("--classes_to_detect", type=int, nargs="+", default=[0],
                         help="List of YOLO class IDs to detect (default is person class: [0]).")
+    parser.add_argument("--name_of_analysis", type=str, required=True,
+                        help="A label for the current analysis run, used for database records.")
+    parser.add_argument("--skip_frames", action="store_true",
+                        help="Whether to skip frames during processing (default is False).")
+    parser.add_argument("--num_of_skip_frames", type=int, default=5,
+                        help="Number of frames to skip if skipping is enabled.")
+    parser.add_argument("--confidence_threshold", type=float, default=0.25,
+                        help="Minimum confidence score to accept detections.")
 
     args = parser.parse_args()
 
-    main(args.video_path, args.num_segments, args.processing_mode, args.model_path, args.classes_to_detect)
+    main(
+        args.video_path,
+        args.num_segments,
+        args.processing_mode,
+        args.model_path,
+        args.classes_to_detect,
+        args.name_of_analysis,
+        args.skip_frames,
+        args.num_of_skip_frames,
+        args.confidence_threshold
+    )

@@ -34,7 +34,30 @@ const ExperimentsPage: React.FC = () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
-          }
+          },
+          body: JSON.stringify({
+            "dataset_path": "/Users/caby/annotation-app/UBnormal",
+            "model_path": "/Users/caby/diplomovka/diploma-thesis-prototype/data/models/yolo11n.pt",
+            "num_segments": 8,
+            "categories": [
+              "a person wearing a helmet and an orange vest is walking",
+              "a person wearing a helmet and an orange vest is dancing",
+              "a person wearing a helmet and an orange vest is standing in place",
+              "a person wearing a helmet and an orange vest is jumping",
+              "a person wearing a helmet and an orange vest is running",
+              "a person wearing a helmet and an orange vest is fighting",
+              "a person wearing a helmet and an orange vest have something in hand",
+              "a person wearing a helmet and an orange vest is lying in the ground",
+              "a person wearing a helmet and an orange vest is limping",
+              "a person wearing a helmet and an orange vest fell to the ground",
+              "a person wearing a helmet and an orange vest is sitting",
+              "a person wearing a helmet and an orange vest is riding motocycle"
+            ],
+            "threshold": 21,
+            "skip_frames": true,
+            "num_of_skip_frames": 5,
+            "confidence_threshold": 0.25
+          })
         });
   
         if (!response.ok) {

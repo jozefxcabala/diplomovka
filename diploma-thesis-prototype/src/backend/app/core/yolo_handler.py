@@ -32,7 +32,7 @@ class YOLOHandler:
     
     # https://docs.ultralytics.com/modes/track/#persisting-tracks-loop
     def track(self, frame, confidence_threshold=0.5):
-      results = self.model.track(source=frame, classes=self.classes_to_detect, verbose=self.verbose, tracker="bytetrack.yaml")
+      results = self.model.track(source=frame, classes=self.classes_to_detect, verbose=self.verbose, tracker="bytetrack.yaml", persist=True)
 
       filtered_results = []
       if results and results[0].boxes: 

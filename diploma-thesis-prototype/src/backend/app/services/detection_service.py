@@ -10,7 +10,10 @@ def run_object_detection(request: DetectionRequest) -> DetectionResponse:
         num_segments=request.num_segments,
         processing_mode=request.processing_mode,
         model_path=request.model_path,
-        classes_to_detect=request.classes_to_detect
+        classes_to_detect=request.classes_to_detect,
+        skip_frames=request.skip_frames,
+        num_of_skip_frames=request.num_of_skip_frames,
+        confidence_threshold=request.confidence_threshold
     )
     return DetectionResponse(
         video_id=video_id,

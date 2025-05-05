@@ -183,6 +183,6 @@ def evaluate_results(all_results, scenes, categories):
                 "decision": decision
             })
 
-    print("Detailed results: ", detailed_results)
+    # print("Detailed results: ", detailed_results)
 
     return tp, fp, fn, tn
