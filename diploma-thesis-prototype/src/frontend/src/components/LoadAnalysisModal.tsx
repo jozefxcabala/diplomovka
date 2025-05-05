@@ -57,7 +57,7 @@ const LoadAnalysisModal: React.FC<LoadAnalysisModalProps> = ({ isOpen, onClose, 
 
         <div className="config-list-wrapper">
           <ul className="config-list">
-            {results.map((video) => (
+            {results?.map((video) => (
               <li key={video.id} className="config-item">
               <div
                 className="result-card"

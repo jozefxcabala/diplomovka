@@ -1,5 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import JSONResponse
+from backend.app.core.database_manager import DatabaseManager
 from backend.app.models.result_models import ResultInterpreterRequest
 from backend.app.services.result_interpreter_service import run_result_interpreter, get_results_from_xclip_preprocessing, delete_video_analysis
 
@@ -12,6 +13,10 @@ def result_interpreter(request: ResultInterpreterRequest):
 @router.get("/results/xclip-preprocessing")
 def xclip_preprocessing():
     try:
+        db_manager = DatabaseManager(db_name="diploma_thesis_prototype_db", user="postgres", password="postgres")
+    
+        db_manager.connect()
+        db_manager.create_tables()
         results = get_results_from_xclip_preprocessing()
         return results
     except Exception as e:

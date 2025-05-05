@@ -1,6 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import JSONResponse
 from typing import List
+from backend.app.core.database_manager import DatabaseManager
 from backend.app.models.configuration_models import AnalysisConfigIn, AnalysisConfigOut, UpdateAnalysisConfigRequest, LinkIn
 from backend.app.services.configuration_service import (
     save_analysis_config,
@@ -27,6 +28,10 @@ def create_analysis_config(config: AnalysisConfigIn):
 @router.get("/configuration", response_model=List[AnalysisConfigOut], status_code=200)
 def list_analysis_configs():
     try:
+        db_manager = DatabaseManager(db_name="diploma_thesis_prototype_db", user="postgres", password="postgres")
+    
+        db_manager.connect()
+        db_manager.create_tables()
         return get_all_analysis_configs()
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

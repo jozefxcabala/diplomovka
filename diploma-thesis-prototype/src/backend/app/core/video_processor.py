@@ -12,7 +12,7 @@ def split_video(video_path, num_segments):
 
     segment_length = total_frames // num_segments
 
-    if segment_length < 1000:
+    if segment_length < 100:
         segment_length = total_frames
         num_segments = 1
 
