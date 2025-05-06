@@ -16,6 +16,16 @@ Once the installation is complete, activate the environment:
 conda activate diploma-thesis-prototype-env
 ```
 
+Install node modules:
+
+```bash
+cd frontend
+npm install
+
+cd ../experiments-ui-frontend
+npm install
+```
+
 ## Running the Prototype
 
 Navigate to the `src` directory:
