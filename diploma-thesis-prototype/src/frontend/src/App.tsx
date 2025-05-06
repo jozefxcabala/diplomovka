@@ -28,6 +28,25 @@ const App: React.FC = () => {
   ]);
   const [partialStages, setPartialStages] = useState<Stage[]>([]);
 
+  const resetStateAndGoHome = () => {
+    setScreen("startup");
+    setCategories([]);
+    setSettings(null);
+    setSelectedCategoryFileName("");
+    setSelectedSettingsFileName("");
+    setVideoId(-1);
+    setLoadedConfig(null);
+    setStages([
+      { name: "Upload", status: "pending" },
+      { name: "Detection", status: "pending" },
+      { name: "Preprocess", status: "pending" },
+      { name: "Recognition", status: "pending" },
+      { name: "Interpreter", status: "pending" },
+      { name: "Visualization", status: "pending" }
+    ]);
+    setPartialStages([]);
+  };
+
   const updateStageStatus = (stageName: string, status: "pending" | "in-progress" | "done") => {
     setStages((prevStages) => {
       const updated = prevStages.map((stage) =>
@@ -94,7 +113,7 @@ const App: React.FC = () => {
         setSelectedSettingsFileName={setSelectedSettingsFileName}
         categories={categories}
         settings={settings}
-        goToStartupScreen={() => setScreen("startup")}
+        goToStartupScreen={resetStateAndGoHome}
       />
     );
   }
@@ -120,7 +139,7 @@ const App: React.FC = () => {
       selectedSettingsFileName={selectedSettingsFileName}
       setSelectedCategoryFileName={setSelectedCategoryFileName}
       setSelectedSettingsFileName={setSelectedSettingsFileName}
-      goToStartupScreen={() => setScreen("startup")}
+      goToStartupScreen={resetStateAndGoHome}
     />
   );
 };

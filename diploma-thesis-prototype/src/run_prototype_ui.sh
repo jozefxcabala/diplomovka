@@ -49,6 +49,37 @@ if [ "$MODE" == "backend" ] || [ "$MODE" == "all" ]; then
     cd ../src || exit
 fi
 
+# 🧪 Download UBnormal dataset if running experiments
+if [ "$EXPERIMENTS_MODE" == "true" ]; then
+    cd "$SCRIPT_DIR" || exit
+    DATASET_DIR="../experiments/UBnormal"
+    FILE_ID="1KbfdyasribAMbbKoBU1iywAhtoAt9QI0"
+    ZIP_PATH="../experiments/UBnormal.zip"
+
+    if [ ! -d "$DATASET_DIR" ]; then
+        echo "⬇️  UBnormal dataset not found. Downloading..."
+        
+        # Check for gdown
+        if ! command -v gdown &> /dev/null; then
+            echo "⚠️  gdown not found. Installing..."
+            pip install gdown
+        fi
+
+        gdown "$FILE_ID" -O "$ZIP_PATH"
+
+        if [ -f "$ZIP_PATH" ]; then
+            echo "📦 Unzipping dataset..."
+            unzip "$ZIP_PATH" -d "../experiments/"
+            rm "$ZIP_PATH"
+            echo "✅ UBnormal dataset ready."
+        else
+            echo "❌ Failed to download UBnormal dataset."
+        fi
+    else
+        echo "✅ UBnormal dataset already present."
+    fi
+fi
+
 # 🚀 Start FastAPI backend
 if [ "$MODE" == "backend" ] || [ "$MODE" == "all" ] || [ "$MODE" == "experiments" ]; then
     echo "🚀 Starting FastAPI backend..."
