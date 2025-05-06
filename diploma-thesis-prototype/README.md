@@ -13,7 +13,7 @@ conda env create -f diploma-thesis-prototype-env.yml
 Once the installation is complete, activate the environment:
 
 ```bash
-conda activate diploma-thesis-prototype-env
+conda activate diploma-thesis-prototype
 ```
 
 Install node modules:
