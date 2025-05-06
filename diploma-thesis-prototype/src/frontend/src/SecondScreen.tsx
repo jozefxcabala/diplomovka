@@ -27,9 +27,10 @@ interface SecondScreenProps {
   updateStageStatus: (stageKey: string, status: "pending" | "in-progress" | "done") => void;
   selectedCategoryFileName: string;
   selectedSettingsFileName: string;
+  goToStartupScreen: () => void;
 }
 
-const SecondScreen: React.FC<SecondScreenProps> = ({ categories, settings, video_id, startRunningAnalysis, updateStageStatus, setCategories, setSettings, selectedCategoryFileName, selectedSettingsFileName, setSelectedCategoryFileName, setSelectedSettingsFileName }) => {
+const SecondScreen: React.FC<SecondScreenProps> = ({ categories, settings, video_id, startRunningAnalysis, updateStageStatus, setCategories, setSettings, selectedCategoryFileName, selectedSettingsFileName, setSelectedCategoryFileName, setSelectedSettingsFileName, goToStartupScreen }) => {
   const [categoriesSecondScreen, setCategoriesSecondScreen] = useState<string[]>([]);
   const [settingsSecondScreen, setSettingsSecondScreen] = useState<Record<string, any> | null>([]);
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState<boolean>(false);
@@ -196,6 +197,9 @@ const SecondScreen: React.FC<SecondScreenProps> = ({ categories, settings, video
       <nav className="navbar">
         <h1 className="app-title">🎥 The Prototype</h1>
         <div className="navbar-buttons">
+          <button className="button home-button" onClick={goToStartupScreen}>
+            🏠 Home
+          </button>
           <button className="button category-button" onClick={() => setIsCategoryModalOpen(true)}>
             📂 Change Categories
           </button>

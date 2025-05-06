@@ -11,7 +11,7 @@ interface PrototypeSettingModalProps {
   setSelectedSettingsFileName?: (selectedFileName: string) => void;
 }
 
-const defaultYaml = `model_path: "/Users/caby/diplomovka/diploma-thesis-prototype/data/models/yolo11n.pt"
+const defaultYaml = `model_path: "data/models/yolo11n.pt"
 num_segments: 8
 processing_mode: "parallel"
 classes_to_detect:

@@ -23,7 +23,7 @@ interface ExperimentResults {
   f1_score: number;
 }
 
-interface ExperimentRequest {
+interface UBnormalExperimentRequest {
   dataset_path: string;
   model_path: string;
   num_segments: number;
@@ -35,9 +35,9 @@ interface ExperimentRequest {
   top_k: number;
 }
 
-const defaultRequest: ExperimentRequest = {
-  dataset_path: "/Users/caby/annotation-app/UBnormal",
-  model_path: "/Users/caby/diplomovka/diploma-thesis-prototype/data/models/yolo11n.pt",
+const defaultRequest: UBnormalExperimentRequest = {
+  dataset_path: "experiments/UBnormal",
+  model_path: "data/models/yolo11n.pt",
   num_segments: 8,
   categories: [
     "a person wearing a helmet and an orange vest is walking",
@@ -63,7 +63,7 @@ const defaultRequest: ExperimentRequest = {
 const ExperimentsPage: React.FC = () => {
   const [results, setResults] = useState<ExperimentResults | null>(null);
   const [loading, setLoading] = useState(false);
-  const [request, setRequest] = useState<ExperimentRequest>(defaultRequest);
+  const [request, setRequest] = useState<UBnormalExperimentRequest>(defaultRequest);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const runExperiment = async () => {
@@ -108,7 +108,12 @@ const ExperimentsPage: React.FC = () => {
         </div>
       </header>
 
-      {loading && <p className="loading-text">Running experiments...</p>}
+      {loading && (
+        <div className="loading-overlay">
+          <div className="loading-spinner" />
+          <p className="loading-text">Running experiments...</p>
+        </div>
+      )}
 
       {results && !loading && (
         <div className="experiments-content">

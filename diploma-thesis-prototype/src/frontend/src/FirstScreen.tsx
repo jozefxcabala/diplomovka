@@ -15,6 +15,7 @@ interface FirstScreenProps {
   setSettings: (settings: Record<string, any>) => void;
   startRunningAnalysis: () => void;
   updateStageStatus: (stageKey: string, status: "pending" | "in-progress" | "done") => void;
+  goToStartupScreen: () => void;
 }
 
 const FirstScreen: React.FC<FirstScreenProps> = ({
@@ -26,7 +27,8 @@ const FirstScreen: React.FC<FirstScreenProps> = ({
   startRunningAnalysis,
   updateStageStatus,
   setSelectedCategoryFileName,
-  setSelectedSettingsFileName
+  setSelectedSettingsFileName,
+  goToStartupScreen
 }) => {
   const [videoFile, setVideoFile] = useState<File | null>(null);
   const [categoriesFirstScreen, setCategoriesFirstScreen] = useState<string[]>([]);
@@ -213,6 +215,9 @@ const FirstScreen: React.FC<FirstScreenProps> = ({
       <nav className="navbar">
         <h1 className="app-title">🎥 The Prototype</h1>
         <div className="navbar-buttons">
+          <button className="button home-button" onClick={goToStartupScreen}>
+            🏠 Home
+          </button>
           <button className="button category-button" onClick={() => setIsCategoryModalOpen(true)} disabled={!videoFile}>
             📂 Select Categories
           </button>

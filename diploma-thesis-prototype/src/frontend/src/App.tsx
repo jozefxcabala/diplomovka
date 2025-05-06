@@ -94,6 +94,7 @@ const App: React.FC = () => {
         setSelectedSettingsFileName={setSelectedSettingsFileName}
         categories={categories}
         settings={settings}
+        goToStartupScreen={() => setScreen("startup")}
       />
     );
   }
@@ -119,6 +120,7 @@ const App: React.FC = () => {
       selectedSettingsFileName={selectedSettingsFileName}
       setSelectedCategoryFileName={setSelectedCategoryFileName}
       setSelectedSettingsFileName={setSelectedSettingsFileName}
+      goToStartupScreen={() => setScreen("startup")}
     />
   );
 };

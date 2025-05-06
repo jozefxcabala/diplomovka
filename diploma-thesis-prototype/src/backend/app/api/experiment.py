@@ -1,6 +1,7 @@
 import os
 import time
-from typing import List, Optional
+from typing import List
+from pathlib import Path
 
 from fastapi import APIRouter
 from pydantic import BaseModel
@@ -14,10 +15,14 @@ from backend.app.services.experiment_service import run_full_analysis
 
 router = APIRouter()
 
+# Base directory = root of the project (assuming this script is in diploma-thesis-prototype/src/backend/app/api/)
 
-class ExperimentRequest(BaseModel):
-    dataset_path: str = "/Users/caby/annotation-app/UBnormal"
-    model_path: str = "/Users/caby/diplomovka/diploma-thesis-prototype/data/models/yolo11n.pt"
+BASE_DIR = Path(__file__).resolve().parents[4]
+
+
+class UBnormalExperimentRequest(BaseModel):
+    dataset_path: str = "experiments/UBnormal"
+    model_path: str = "data/models/yolo11n.pt"
     num_segments: int = 8
     categories: List[str] = [
         "a person wearing a helmet and an orange vest is walking",
@@ -41,12 +46,14 @@ class ExperimentRequest(BaseModel):
 
 
 @router.post("/experiments/ubnormal/run")
-def run_experiment_pipeline(request: ExperimentRequest):
-    print("REQUEST:", request)
+def run_experiment_pipeline(request: UBnormalExperimentRequest):
     start_time = time.time()
 
+    dataset_path = str(BASE_DIR / request.dataset_path)
+    model_path = str(BASE_DIR / request.model_path)
+    
     scenes = load_analyzed_filenames_with_objects_and_anomalies_from_annotations(
-        request.dataset_path
+        dataset_path
     )
 
     normal_video_analysis_results = []
@@ -63,7 +70,7 @@ def run_experiment_pipeline(request: ExperimentRequest):
         for normal_entry in normals:
             normal_full_analysis_response = run_full_analysis(
                 video_path=normal_entry["path"],
-                model_path=request.model_path,
+                model_path=model_path,
                 num_segments=request.num_segments,
                 processing_mode="parallel",
                 classes_to_detect=[0],
@@ -81,7 +88,7 @@ def run_experiment_pipeline(request: ExperimentRequest):
         for abnormal_entry in abnormals:
             abnormal_full_analysis_response = run_full_analysis(
                 video_path=abnormal_entry["path"],
-                model_path=request.model_path,
+                model_path=model_path,
                 num_segments=request.num_segments,
                 processing_mode="parallel",
                 classes_to_detect=[0],

@@ -153,3 +153,12 @@
 .select-button:hover {
   background-color: lightgray;
 }
+
+.home-button {
+  background-color: #2196f3;
+  color: white;
+}
+
+.home-button:hover {
+  background-color: #1976d2;
+}
