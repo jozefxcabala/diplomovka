@@ -7,8 +7,11 @@ EXPERIMENTS_MODE="false"
 # Absolute path to logs directory
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 LOG_DIR="$SCRIPT_DIR/../logs"
+NEXTCLOUD_URL="https://nextcloud.fit.vutbr.cz/s/k6JtN8objCS2SHa/download"
+DATASET_DIR="$SCRIPT_DIR/../experiments/UBnormal"
+ZIP_PATH="$SCRIPT_DIR/../experiments/UBnormal.zip"
 
-# Check for argument
+# Parse arguments
 if [ "$1" == "--backend" ]; then
     MODE="backend"
 elif [ "$1" == "--frontend" ]; then
@@ -33,7 +36,6 @@ if [ "$MODE" == "stop" ]; then
     exit 0
 fi
 
-# Create logs directory if it doesn't exist
 mkdir -p "$LOG_DIR"
 
 # Activate virtual environment if it exists
@@ -51,29 +53,18 @@ fi
 
 # 🧪 Download UBnormal dataset if running experiments
 if [ "$EXPERIMENTS_MODE" == "true" ]; then
-    cd "$SCRIPT_DIR" || exit
-    DATASET_DIR="../experiments/UBnormal"
-    FILE_ID="1KbfdyasribAMbbKoBU1iywAhtoAt9QI0"
-    ZIP_PATH="../experiments/UBnormal.zip"
-
+    echo "📦 Checking UBnormal dataset..."
     if [ ! -d "$DATASET_DIR" ]; then
-        echo "⬇️  UBnormal dataset not found. Downloading..."
-        
-        # Check for gdown
-        if ! command -v gdown &> /dev/null; then
-            echo "⚠️  gdown not found. Installing..."
-            pip install gdown
-        fi
-
-        gdown "$FILE_ID" -O "$ZIP_PATH"
-
+        echo "⬇️  UBnormal dataset not found. Downloading from Nextcloud..."
+        curl -L "$NEXTCLOUD_URL" -o "$ZIP_PATH"
         if [ -f "$ZIP_PATH" ]; then
             echo "📦 Unzipping dataset..."
-            unzip "$ZIP_PATH" -d "../experiments/"
+            unzip "$ZIP_PATH" -d "$SCRIPT_DIR/../experiments"
             rm "$ZIP_PATH"
             echo "✅ UBnormal dataset ready."
         else
-            echo "❌ Failed to download UBnormal dataset."
+            echo "❌ Failed to download dataset from Nextcloud."
+            exit 1
         fi
     else
         echo "✅ UBnormal dataset already present."
