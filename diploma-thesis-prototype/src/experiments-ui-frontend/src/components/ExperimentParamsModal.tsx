@@ -12,6 +12,8 @@ interface ExperimentRequest {
   num_of_skip_frames: number;
   confidence_threshold: number;
   top_k: number;
+  batch_size: number;
+  frame_sample_rate: number;
 }
 
 interface ExperimentParamsModalProps {

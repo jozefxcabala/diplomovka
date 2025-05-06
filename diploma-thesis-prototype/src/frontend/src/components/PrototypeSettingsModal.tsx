@@ -16,7 +16,9 @@ num_segments: 8
 processing_mode: "parallel"
 classes_to_detect:
   - 0
-threshold: 22`;
+threshold: 22
+batch_size: 32
+frame_sample_rate: 4`;
 
 const PrototypeSettingModal: React.FC<PrototypeSettingModalProps> = ({
   isOpen,

@@ -21,7 +21,9 @@
     ],
     "threshold": 17,
     "confidence_threshold": 0.3,
-    "top_k": 1
+    "top_k": 1,
+    "batch_size": 32,
+    "frame_sample_rate": 4
   },
   {
     "skip_frames": true,
@@ -45,7 +47,9 @@
     ],
     "threshold": 17,
     "confidence_threshold": 0.3,
-    "top_k": 3
+    "top_k": 3,
+    "batch_size": 32,
+    "frame_sample_rate": 4
   },
   {
     "skip_frames": true,
@@ -69,7 +73,9 @@
     ],
     "threshold": 17,
     "confidence_threshold": 0.3,
-    "top_k": 5
+    "top_k": 5,
+    "batch_size": 32,
+    "frame_sample_rate": 4
   },
   {
     "skip_frames": true,
@@ -93,7 +99,9 @@
     ],
     "threshold": 17,
     "confidence_threshold": 0.45,
-    "top_k": 1
+    "top_k": 1,
+    "batch_size": 32,
+    "frame_sample_rate": 4
   },
   {
     "skip_frames": true,
@@ -117,7 +125,9 @@
     ],
     "threshold": 17,
     "confidence_threshold": 0.45,
-    "top_k": 3
+    "top_k": 3,
+    "batch_size": 32,
+    "frame_sample_rate": 4
   },
   {
     "skip_frames": true,
@@ -141,7 +151,9 @@
     ],
     "threshold": 17,
     "confidence_threshold": 0.45,
-    "top_k": 5
+    "top_k": 5,
+    "batch_size": 32,
+    "frame_sample_rate": 4
   },
   {
     "skip_frames": true,
@@ -165,7 +177,9 @@
     ],
     "threshold": 17,
     "confidence_threshold": 0.6,
-    "top_k": 1
+    "top_k": 1,
+    "batch_size": 32,
+    "frame_sample_rate": 4
   },
   {
     "skip_frames": true,
@@ -189,7 +203,9 @@
     ],
     "threshold": 17,
     "confidence_threshold": 0.6,
-    "top_k": 3
+    "top_k": 3,
+    "batch_size": 32,
+    "frame_sample_rate": 4
   },
   {
     "skip_frames": true,
@@ -213,7 +229,9 @@
     ],
     "threshold": 17,
     "confidence_threshold": 0.6,
-    "top_k": 5
+    "top_k": 5,
+    "batch_size": 32,
+    "frame_sample_rate": 4
   },
   {
     "skip_frames": true,
@@ -237,7 +255,9 @@
     ],
     "threshold": 19,
     "confidence_threshold": 0.3,
-    "top_k": 1
+    "top_k": 1,
+    "batch_size": 32,
+    "frame_sample_rate": 4
   },
   {
     "skip_frames": true,
@@ -261,7 +281,9 @@
     ],
     "threshold": 19,
     "confidence_threshold": 0.3,
-    "top_k": 3
+    "top_k": 3,
+    "batch_size": 32,
+    "frame_sample_rate": 4
   },
   {
     "skip_frames": true,
@@ -285,7 +307,9 @@
     ],
     "threshold": 19,
     "confidence_threshold": 0.3,
-    "top_k": 5
+    "top_k": 5,
+    "batch_size": 32,
+    "frame_sample_rate": 4
   },
   {
     "skip_frames": true,
@@ -309,7 +333,9 @@
     ],
     "threshold": 19,
     "confidence_threshold": 0.45,
-    "top_k": 1
+    "top_k": 1,
+    "batch_size": 32,
+    "frame_sample_rate": 4
   },
   {
     "skip_frames": true,
@@ -333,7 +359,9 @@
     ],
     "threshold": 19,
     "confidence_threshold": 0.45,
-    "top_k": 3
+    "top_k": 3,
+    "batch_size": 32,
+    "frame_sample_rate": 4
   },
   {
     "skip_frames": true,
@@ -357,7 +385,9 @@
     ],
     "threshold": 19,
     "confidence_threshold": 0.45,
-    "top_k": 5
+    "top_k": 5,
+    "batch_size": 32,
+    "frame_sample_rate": 4
   },
   {
     "skip_frames": true,
@@ -381,7 +411,9 @@
     ],
     "threshold": 19,
     "confidence_threshold": 0.6,
-    "top_k": 1
+    "top_k": 1,
+    "batch_size": 32,
+    "frame_sample_rate": 4
   },
   {
     "skip_frames": true,
@@ -405,7 +437,9 @@
     ],
     "threshold": 19,
     "confidence_threshold": 0.6,
-    "top_k": 3
+    "top_k": 3,
+    "batch_size": 32,
+    "frame_sample_rate": 4
   },
   {
     "skip_frames": true,
@@ -429,7 +463,9 @@
     ],
     "threshold": 19,
     "confidence_threshold": 0.6,
-    "top_k": 5
+    "top_k": 5,
+    "batch_size": 32,
+    "frame_sample_rate": 4
   },
   {
     "skip_frames": true,
@@ -453,7 +489,9 @@
     ],
     "threshold": 21,
     "confidence_threshold": 0.3,
-    "top_k": 1
+    "top_k": 1,
+    "batch_size": 32,
+    "frame_sample_rate": 4
   },
   {
     "skip_frames": true,
@@ -477,7 +515,9 @@
     ],
     "threshold": 21,
     "confidence_threshold": 0.3,
-    "top_k": 3
+    "top_k": 3,
+    "batch_size": 32,
+    "frame_sample_rate": 4
   },
   {
     "skip_frames": true,
@@ -501,7 +541,9 @@
     ],
     "threshold": 21,
     "confidence_threshold": 0.3,
-    "top_k": 5
+    "top_k": 5,
+    "batch_size": 32,
+    "frame_sample_rate": 4
   },
   {
     "skip_frames": true,
@@ -525,7 +567,9 @@
     ],
     "threshold": 21,
     "confidence_threshold": 0.45,
-    "top_k": 1
+    "top_k": 1,
+    "batch_size": 32,
+    "frame_sample_rate": 4
   },
   {
     "skip_frames": true,
@@ -549,7 +593,9 @@
     ],
     "threshold": 21,
     "confidence_threshold": 0.45,
-    "top_k": 3
+    "top_k": 3,
+    "batch_size": 32,
+    "frame_sample_rate": 4
   },
   {
     "skip_frames": true,
@@ -573,7 +619,9 @@
     ],
     "threshold": 21,
     "confidence_threshold": 0.45,
-    "top_k": 5
+    "top_k": 5,
+    "batch_size": 32,
+    "frame_sample_rate": 4
   },
   {
     "skip_frames": true,
@@ -597,7 +645,9 @@
     ],
     "threshold": 21,
     "confidence_threshold": 0.6,
-    "top_k": 1
+    "top_k": 1,
+    "batch_size": 32,
+    "frame_sample_rate": 4
   },
   {
     "skip_frames": true,
@@ -621,7 +671,9 @@
     ],
     "threshold": 21,
     "confidence_threshold": 0.6,
-    "top_k": 3
+    "top_k": 3,
+    "batch_size": 32,
+    "frame_sample_rate": 4
   },
   {
     "skip_frames": true,
@@ -645,7 +697,9 @@
     ],
     "threshold": 21,
     "confidence_threshold": 0.6,
-    "top_k": 5
+    "top_k": 5,
+    "batch_size": 32,
+    "frame_sample_rate": 4
   },
   {
     "skip_frames": true,
@@ -669,7 +723,9 @@
     ],
     "threshold": 23,
     "confidence_threshold": 0.3,
-    "top_k": 1
+    "top_k": 1,
+    "batch_size": 32,
+    "frame_sample_rate": 4
   },
   {
     "skip_frames": true,
@@ -693,7 +749,9 @@
     ],
     "threshold": 23,
     "confidence_threshold": 0.3,
-    "top_k": 3
+    "top_k": 3,
+    "batch_size": 32,
+    "frame_sample_rate": 4
   },
   {
     "skip_frames": true,
@@ -717,7 +775,9 @@
     ],
     "threshold": 23,
     "confidence_threshold": 0.3,
-    "top_k": 5
+    "top_k": 5,
+    "batch_size": 32,
+    "frame_sample_rate": 4
   },
   {
     "skip_frames": true,
@@ -741,7 +801,9 @@
     ],
     "threshold": 23,
     "confidence_threshold": 0.45,
-    "top_k": 1
+    "top_k": 1,
+    "batch_size": 32,
+    "frame_sample_rate": 4
   },
   {
     "skip_frames": true,
@@ -765,7 +827,9 @@
     ],
     "threshold": 23,
     "confidence_threshold": 0.45,
-    "top_k": 3
+    "top_k": 3,
+    "batch_size": 32,
+    "frame_sample_rate": 4
   },
   {
     "skip_frames": true,
@@ -789,7 +853,9 @@
     ],
     "threshold": 23,
     "confidence_threshold": 0.45,
-    "top_k": 5
+    "top_k": 5,
+    "batch_size": 32,
+    "frame_sample_rate": 4
   },
   {
     "skip_frames": true,
@@ -813,7 +879,9 @@
     ],
     "threshold": 23,
     "confidence_threshold": 0.6,
-    "top_k": 1
+    "top_k": 1,
+    "batch_size": 32,
+    "frame_sample_rate": 4
   },
   {
     "skip_frames": true,
@@ -837,7 +905,9 @@
     ],
     "threshold": 23,
     "confidence_threshold": 0.6,
-    "top_k": 3
+    "top_k": 3,
+    "batch_size": 32,
+    "frame_sample_rate": 4
   },
   {
     "skip_frames": true,
@@ -861,7 +931,9 @@
     ],
     "threshold": 23,
     "confidence_threshold": 0.6,
-    "top_k": 5
+    "top_k": 5,
+    "batch_size": 32,
+    "frame_sample_rate": 4
   },
   {
     "skip_frames": true,
@@ -885,7 +957,9 @@
     ],
     "threshold": 24,
     "confidence_threshold": 0.3,
-    "top_k": 1
+    "top_k": 1,
+    "batch_size": 32,
+    "frame_sample_rate": 4
   },
   {
     "skip_frames": true,
@@ -909,7 +983,9 @@
     ],
     "threshold": 24,
     "confidence_threshold": 0.3,
-    "top_k": 3
+    "top_k": 3,
+    "batch_size": 32,
+    "frame_sample_rate": 4
   },
   {
     "skip_frames": true,
@@ -933,7 +1009,9 @@
     ],
     "threshold": 24,
     "confidence_threshold": 0.3,
-    "top_k": 5
+    "top_k": 5,
+    "batch_size": 32,
+    "frame_sample_rate": 4
   },
   {
     "skip_frames": true,
@@ -957,7 +1035,9 @@
     ],
     "threshold": 24,
     "confidence_threshold": 0.45,
-    "top_k": 1
+    "top_k": 1,
+    "batch_size": 32,
+    "frame_sample_rate": 4
   },
   {
     "skip_frames": true,
@@ -981,7 +1061,9 @@
     ],
     "threshold": 24,
     "confidence_threshold": 0.45,
-    "top_k": 3
+    "top_k": 3,
+    "batch_size": 32,
+    "frame_sample_rate": 4
   },
   {
     "skip_frames": true,
@@ -1005,7 +1087,9 @@
     ],
     "threshold": 24,
     "confidence_threshold": 0.45,
-    "top_k": 5
+    "top_k": 5,
+    "batch_size": 32,
+    "frame_sample_rate": 4
   },
   {
     "skip_frames": true,
@@ -1029,7 +1113,9 @@
     ],
     "threshold": 24,
     "confidence_threshold": 0.6,
-    "top_k": 1
+    "top_k": 1,
+    "batch_size": 32,
+    "frame_sample_rate": 4
   },
   {
     "skip_frames": true,
@@ -1053,7 +1139,9 @@
     ],
     "threshold": 24,
     "confidence_threshold": 0.6,
-    "top_k": 3
+    "top_k": 3,
+    "batch_size": 32,
+    "frame_sample_rate": 4
   },
   {
     "skip_frames": true,
@@ -1077,7 +1165,9 @@
     ],
     "threshold": 24,
     "confidence_threshold": 0.6,
-    "top_k": 5
+    "top_k": 5,
+    "batch_size": 32,
+    "frame_sample_rate": 4
   },
   {
     "skip_frames": true,
@@ -1101,7 +1191,9 @@
     ],
     "threshold": 25,
     "confidence_threshold": 0.3,
-    "top_k": 1
+    "top_k": 1,
+    "batch_size": 32,
+    "frame_sample_rate": 4
   },
   {
     "skip_frames": true,
@@ -1125,7 +1217,9 @@
     ],
     "threshold": 25,
     "confidence_threshold": 0.3,
-    "top_k": 3
+    "top_k": 3,
+    "batch_size": 32,
+    "frame_sample_rate": 4
   },
   {
     "skip_frames": true,
@@ -1149,7 +1243,9 @@
     ],
     "threshold": 25,
     "confidence_threshold": 0.3,
-    "top_k": 5
+    "top_k": 5,
+    "batch_size": 32,
+    "frame_sample_rate": 4
   },
   {
     "skip_frames": true,
@@ -1173,7 +1269,9 @@
     ],
     "threshold": 25,
     "confidence_threshold": 0.45,
-    "top_k": 1
+    "top_k": 1,
+    "batch_size": 32,
+    "frame_sample_rate": 4
   },
   {
     "skip_frames": true,
@@ -1197,7 +1295,9 @@
     ],
     "threshold": 25,
     "confidence_threshold": 0.45,
-    "top_k": 3
+    "top_k": 3,
+    "batch_size": 32,
+    "frame_sample_rate": 4
   },
   {
     "skip_frames": true,
@@ -1221,7 +1321,9 @@
     ],
     "threshold": 25,
     "confidence_threshold": 0.45,
-    "top_k": 5
+    "top_k": 5,
+    "batch_size": 32,
+    "frame_sample_rate": 4
   },
   {
     "skip_frames": true,
@@ -1245,7 +1347,9 @@
     ],
     "threshold": 25,
     "confidence_threshold": 0.6,
-    "top_k": 1
+    "top_k": 1,
+    "batch_size": 32,
+    "frame_sample_rate": 4
   },
   {
     "skip_frames": true,
@@ -1269,7 +1373,9 @@
     ],
     "threshold": 25,
     "confidence_threshold": 0.6,
-    "top_k": 3
+    "top_k": 3,
+    "batch_size": 32,
+    "frame_sample_rate": 4
   },
   {
     "skip_frames": true,
@@ -1293,7 +1399,9 @@
     ],
     "threshold": 25,
     "confidence_threshold": 0.6,
-    "top_k": 5
+    "top_k": 5,
+    "batch_size": 32,
+    "frame_sample_rate": 4
   },
   {
     "skip_frames": true,
@@ -1317,7 +1425,9 @@
     ],
     "threshold": 26,
     "confidence_threshold": 0.3,
-    "top_k": 1
+    "top_k": 1,
+    "batch_size": 32,
+    "frame_sample_rate": 4
   },
   {
     "skip_frames": true,
@@ -1341,7 +1451,9 @@
     ],
     "threshold": 26,
     "confidence_threshold": 0.3,
-    "top_k": 3
+    "top_k": 3,
+    "batch_size": 32,
+    "frame_sample_rate": 4
   },
   {
     "skip_frames": true,
@@ -1365,7 +1477,9 @@
     ],
     "threshold": 26,
     "confidence_threshold": 0.3,
-    "top_k": 5
+    "top_k": 5,
+    "batch_size": 32,
+    "frame_sample_rate": 4
   },
   {
     "skip_frames": true,
@@ -1389,7 +1503,9 @@
     ],
     "threshold": 26,
     "confidence_threshold": 0.45,
-    "top_k": 1
+    "top_k": 1,
+    "batch_size": 32,
+    "frame_sample_rate": 4
   },
   {
     "skip_frames": true,
@@ -1413,7 +1529,9 @@
     ],
     "threshold": 26,
     "confidence_threshold": 0.45,
-    "top_k": 3
+    "top_k": 3,
+    "batch_size": 32,
+    "frame_sample_rate": 4
   },
   {
     "skip_frames": true,
@@ -1437,7 +1555,9 @@
     ],
     "threshold": 26,
     "confidence_threshold": 0.45,
-    "top_k": 5
+    "top_k": 5,
+    "batch_size": 32,
+    "frame_sample_rate": 4
   },
   {
     "skip_frames": true,
@@ -1461,7 +1581,9 @@
     ],
     "threshold": 26,
     "confidence_threshold": 0.6,
-    "top_k": 1
+    "top_k": 1,
+    "batch_size": 32,
+    "frame_sample_rate": 4
   },
   {
     "skip_frames": true,
@@ -1485,7 +1607,9 @@
     ],
     "threshold": 26,
     "confidence_threshold": 0.6,
-    "top_k": 3
+    "top_k": 3,
+    "batch_size": 32,
+    "frame_sample_rate": 4
   },
   {
     "skip_frames": true,
@@ -1509,6 +1633,8 @@
     ],
     "threshold": 26,
     "confidence_threshold": 0.6,
-    "top_k": 5
+    "top_k": 5,
+    "batch_size": 32,
+    "frame_sample_rate": 4
   }
 ]

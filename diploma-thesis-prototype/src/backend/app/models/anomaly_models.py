@@ -12,3 +12,5 @@ class AnomalyPreprocessRequest(BaseModel):
 class AnomalyRecognitionRequest(BaseModel):
     video_id: int
     categories: List[str]
+    batch_size: int = 32
+    frame_sample_rate: int = 4

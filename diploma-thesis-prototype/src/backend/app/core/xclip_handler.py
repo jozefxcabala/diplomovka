@@ -64,11 +64,11 @@ class XCLIPHandler:
         logits_per_video = outputs.logits_per_video  # Similarity score between images and text
         return logits_per_video
 
-    def analyze_video(self, video_path, batch_size=32):
+    def analyze_video(self, video_path, batch_size=32, frame_sample_rate = 4):
         """
         Analyzes the entire video, splits it into batches of frames, performs classification, and returns the results.
         """
-        frames = self.process_video(video_path)
+        frames = self.process_video(video_path, batch_size, frame_sample_rate)
 
         descriptions = self.extract_descriptions()
         logits_per_video = self.classify_batch(frames, descriptions)

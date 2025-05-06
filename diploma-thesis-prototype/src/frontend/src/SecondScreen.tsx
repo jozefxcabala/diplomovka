@@ -112,6 +112,8 @@ const SecondScreen: React.FC<SecondScreenProps> = ({ categories, settings, video
         body: JSON.stringify({
           video_id,
           categories: categoriesSecondScreen,
+          batch_size: settingsSecondScreen.batch_size,
+          frame_sample_rate: settingsSecondScreen.frame_sample_rate,
         }),
       });
   

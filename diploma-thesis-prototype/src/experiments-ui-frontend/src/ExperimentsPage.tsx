@@ -33,6 +33,8 @@ interface UBnormalExperimentRequest {
   num_of_skip_frames: number;
   confidence_threshold: number;
   top_k: number;
+  batch_size: number;
+  frame_sample_rate: number;
 }
 
 const defaultRequest: UBnormalExperimentRequest = {
@@ -57,7 +59,9 @@ const defaultRequest: UBnormalExperimentRequest = {
   skip_frames: true,
   num_of_skip_frames: 5,
   confidence_threshold: 0.25,
-  top_k: 5
+  top_k: 5,
+  batch_size: 32,
+  frame_sample_rate: 4
 };
 
 const ExperimentsPage: React.FC = () => {

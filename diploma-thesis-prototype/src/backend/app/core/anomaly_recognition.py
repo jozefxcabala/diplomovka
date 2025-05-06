@@ -30,11 +30,11 @@ def fetch_video_segments(video_id, db_manager: DatabaseManager):
         return videos
     
 def analyze_video_task(args):
-    video_path, list_of_categories, detection_id = args
+    video_path, list_of_categories, detection_id, batch_size, frame_sample_rate = args
     handler = XCLIPHandler(list_of_categories)
-    return (detection_id, handler.analyze_video(video_path, batch_size=32))
+    return (detection_id, handler.analyze_video(video_path, batch_size=32, frame_sample_rate=4))
 
-def main(video_id, categories_json):
+def main(video_id, categories_json, batch_size = 32, frame_sample_rate = 4):
     print(f"The XCLIP - Action Recognition program has started.")
 
     db_manager = DatabaseManager(db_name="diploma_thesis_prototype_db", user="postgres", password="postgres")
@@ -62,7 +62,7 @@ def main(video_id, categories_json):
     # Use multiprocessing Pool for parallel processing
     num_processes = os.cpu_count()
     with Pool(processes=min(len(videos), num_processes)) as pool:
-        results = pool.map(analyze_video_task, [(video_path, list_of_categories, detection_id) for video_path, detection_id in videos])
+        results = pool.map(analyze_video_task, [(video_path, list_of_categories, detection_id, batch_size, frame_sample_rate) for video_path, detection_id in videos])
     
     save_results_to_db(results, video_id, db_manager)
     

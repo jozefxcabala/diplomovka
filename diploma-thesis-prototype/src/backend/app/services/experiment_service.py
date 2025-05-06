@@ -9,7 +9,7 @@ from backend.app.models.result_models import ResultInterpreterRequest
 
 from backend.app.core.database_manager import DatabaseManager
 
-def run_full_analysis(video_path, model_path, num_segments, processing_mode, classes_to_detect, name_of_analysis, categories, threshold, skip_frames, num_of_skip_frames, confidence_threshold, top_k):
+def run_full_analysis(video_path, model_path, num_segments, processing_mode, classes_to_detect, name_of_analysis, categories, threshold, skip_frames, num_of_skip_frames, confidence_threshold, top_k, batch_size, frame_sample_rate):
   # 1 Object Detection (video_path, name_of_analysis, settings)
   detect_res = run_object_detection(DetectionRequest(
         video_path=video_path,
@@ -36,7 +36,9 @@ def run_full_analysis(video_path, model_path, num_segments, processing_mode, cla
   # 3 Anomaly Recognition (video_id, categories)
   recog_res = run_anomaly_recognition(AnomalyRecognitionRequest(
     video_id=video_id,
-    categories=categories
+    categories=categories,
+    batch_size=batch_size,
+    frame_sample_rate=frame_sample_rate
   ))
 
   # 4 Result Interpreter (video_id, threshold, categories)

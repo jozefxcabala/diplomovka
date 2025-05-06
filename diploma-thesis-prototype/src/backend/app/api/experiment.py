@@ -43,6 +43,8 @@ class UBnormalExperimentRequest(BaseModel):
     num_of_skip_frames: int = 5
     confidence_threshold: float = 0.25
     top_k: int = 5
+    batch_size: int = 32
+    frame_sample_rate: int = 4
 
 
 @router.post("/experiments/ubnormal/run")
@@ -80,7 +82,9 @@ def run_experiment_pipeline(request: UBnormalExperimentRequest):
                 skip_frames=request.skip_frames,
                 num_of_skip_frames=request.num_of_skip_frames,
                 confidence_threshold=request.confidence_threshold,
-                top_k=request.top_k
+                top_k=request.top_k,
+                batch_size=request.batch_size,
+                frame_sample_rate=request.frame_sample_rate
             )
             normal_video_analysis_results.append(normal_full_analysis_response)
 
@@ -98,7 +102,9 @@ def run_experiment_pipeline(request: UBnormalExperimentRequest):
                 skip_frames=request.skip_frames,
                 num_of_skip_frames=request.num_of_skip_frames,
                 confidence_threshold=request.confidence_threshold,
-                top_k=request.top_k
+                top_k=request.top_k,
+                batch_size=request.batch_size,
+                frame_sample_rate=request.frame_sample_rate
             )
             abnormal_video_analysis_results.append(abnormal_full_analysis_response)
 

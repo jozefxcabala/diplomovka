@@ -158,6 +158,8 @@ const FirstScreen: React.FC<FirstScreenProps> = ({
         body: JSON.stringify({
           video_id,
           categories: categoriesFirstScreen,
+          batch_size: settingsFirstScreen.batch_size,
+          frame_sample_rate: settingsFirstScreen.frame_sample_rate,
         }),
       });
   
