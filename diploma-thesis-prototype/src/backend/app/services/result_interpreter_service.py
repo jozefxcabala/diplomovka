@@ -6,7 +6,8 @@ def run_result_interpreter(request: ResultInterpreterRequest):
     result_interpreter_main(
         request.video_id,
         request.threshold,
-        request.categories
+        request.categories,
+        request.top_k
     )
     return {"message": "Result interpretation completed."}
 

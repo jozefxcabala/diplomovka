@@ -32,14 +32,14 @@ def get_probs(logits):
             })
     return result
 
-def save_anomalies(threshold, list_of_categories, db_manager: DatabaseManager, logits):
+def save_anomalies(threshold, list_of_categories, db_manager: DatabaseManager, logits, topk_a):
     try:
         db_manager.connect()
         for value in logits:
             logits_tensor = value['logits_per_video']
             detection_id = int(value['detection_id'])
 
-            topk = min(5, logits_tensor.shape[0])
+            topk = min(topk_a, logits_tensor.shape[0])
             top_scores, top_indices = logits_tensor.topk(topk)
 
             anomalies = []
@@ -58,7 +58,7 @@ def save_anomalies(threshold, list_of_categories, db_manager: DatabaseManager, l
     finally:
         db_manager.close()
 
-def main(video_id, threshold, categories_json):
+def main(video_id, threshold, categories_json, topk):
     print(f"The result interpreter program has started.")
 
     db_manager = DatabaseManager(db_name="diploma_thesis_prototype_db", user="postgres", password="postgres")
@@ -73,7 +73,7 @@ def main(video_id, threshold, categories_json):
     logits_per_video = get_logits_per_video(db_manager, video_id)
     # probs = get_probs(logits_per_video)
     
-    save_anomalies(threshold, list_of_categories, db_manager, logits_per_video)
+    save_anomalies(threshold, list_of_categories, db_manager, logits_per_video, topk)
     
     end_time = time.time()
     elapsed_time = end_time - start_time

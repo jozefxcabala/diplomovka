@@ -153,7 +153,11 @@ def evaluate_results(all_results, scenes, categories):
         for obj in detected_objects.values():
             for anomaly in obj.get("anomalies", []):
                 if isinstance(anomaly, dict) and "type_of_anomaly" in anomaly:
-                    detected_activities.add(anomaly["type_of_anomaly"].strip().lower())
+                    if isinstance(anomaly["type_of_anomaly"], list):
+                        for label in anomaly["type_of_anomaly"]:
+                            detected_activities.add(label.strip().lower())
+                    else:
+                        detected_activities.add(anomaly["type_of_anomaly"].strip().lower())
 
         all_gt_activities = set(a.strip().lower() for a in get_gt_activities_for_video(video_path))
         gt_activities = all_gt_activities.intersection(categories_set)

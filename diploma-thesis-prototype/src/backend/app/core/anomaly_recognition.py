@@ -53,6 +53,10 @@ def main(video_id, categories_json):
     results = []
     videos = fetch_video_segments(video_id, db_manager)
 
+    if not videos:
+        print("⚠️  No video segments found for this video_id. Skipping analysis.")
+        return
+
     os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
     # Use multiprocessing Pool for parallel processing

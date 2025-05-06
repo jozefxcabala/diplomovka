@@ -9,7 +9,7 @@ from backend.app.models.result_models import ResultInterpreterRequest
 
 from backend.app.core.database_manager import DatabaseManager
 
-def run_full_analysis(video_path, model_path, num_segments, processing_mode, classes_to_detect, name_of_analysis, categories, threshold, skip_frames, num_of_skip_frames, confidence_threshold):
+def run_full_analysis(video_path, model_path, num_segments, processing_mode, classes_to_detect, name_of_analysis, categories, threshold, skip_frames, num_of_skip_frames, confidence_threshold, top_k):
   # 1 Object Detection (video_path, name_of_analysis, settings)
   detect_res = run_object_detection(DetectionRequest(
         video_path=video_path,
@@ -43,13 +43,14 @@ def run_full_analysis(video_path, model_path, num_segments, processing_mode, cla
   res_int_res = run_result_interpreter(ResultInterpreterRequest(
     video_id=video_id,
     threshold=threshold,
-    categories=categories
+    categories=categories,
+    top_k=top_k
   ))
 
   # 5 Load Results
   db = DatabaseManager(db_name="diploma_thesis_prototype_db", user="postgres", password="postgres")
   db.connect()
-  anomalies = db.fetch_anomalies_by_video_id(video_id)
+  anomalies = db.fetch_all_anomalies_by_video_id(video_id) 
 
   result_dict = {
         "path": video_path,
@@ -63,7 +64,7 @@ def run_full_analysis(video_path, model_path, num_segments, processing_mode, cla
           "anomalies": [{
              "start": anomaly["start_frame"], 
              "end": anomaly["end_frame"],
-             "type_of_anomaly": anomaly["type_of_anomaly"]
+             "type_of_anomaly": [a["label"] for a in anomaly["anomalies"][:top_k]]
           }],
   }
 

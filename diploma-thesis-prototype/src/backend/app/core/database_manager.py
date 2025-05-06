@@ -694,3 +694,40 @@ class DatabaseManager:
         self.release_connection(conn)
 
         return [{"label": row[0], "score": row[1]} for row in rows]
+    
+    def fetch_all_anomalies_by_video_id(self, video_id):
+        conn = self.get_connection()
+        cursor = conn.cursor()
+
+        query = """
+            SELECT 
+                d.id, d.video_id, d.start_frame, d.end_frame,
+                da.anomaly_label, da.anomaly_score
+            FROM detections d
+            JOIN detection_anomalies da ON d.id = da.detection_id
+            WHERE d.video_id = %s
+            ORDER BY d.id, da.anomaly_score DESC;
+        """
+
+        cursor.execute(query, (video_id,))
+        rows = cursor.fetchall()
+        self.release_connection(conn)
+
+        detection_map = {}
+        for row in rows:
+            detection_id = row[0]
+            if detection_id not in detection_map:
+                detection_map[detection_id] = {
+                    'id': detection_id,
+                    'video_id': row[1],
+                    'start_frame': row[2],
+                    'end_frame': row[3],
+                    'anomalies': []
+                }
+
+            detection_map[detection_id]['anomalies'].append({
+                'label': row[4],
+                'score': row[5]
+            })
+
+        return list(detection_map.values())

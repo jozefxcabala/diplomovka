@@ -88,11 +88,25 @@
   transition: all 0.3s ease-in-out;
 }
 
-.save-config-button {
+.save-config-button, .set-parameters-button {
   background-color: #ff9800;
   color: white;
 }
 
-.save-config-button:hover {
+.save-config-button:hover:not(:disabled), .set-parameters-button {
   background-color: #e48c00;
+}
+
+.start-button {
+  background-color: #28a745;
+  color: white;
+}
+
+.start-button:disabled, .save-config-button:disabled {
+  background-color: #4f4f4f;
+  cursor: not-allowed;
+}
+
+.start-button:hover:not(:disabled) {
+  background-color: #218838;
 }

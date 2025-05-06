@@ -37,10 +37,12 @@ class ExperimentRequest(BaseModel):
     skip_frames: bool = True
     num_of_skip_frames: int = 5
     confidence_threshold: float = 0.25
+    top_k: int = 5
 
 
 @router.post("/experiments/ubnormal/run")
 def run_experiment_pipeline(request: ExperimentRequest):
+    print("REQUEST:", request)
     start_time = time.time()
 
     scenes = load_analyzed_filenames_with_objects_and_anomalies_from_annotations(
@@ -70,7 +72,8 @@ def run_experiment_pipeline(request: ExperimentRequest):
                 threshold=request.threshold,
                 skip_frames=request.skip_frames,
                 num_of_skip_frames=request.num_of_skip_frames,
-                confidence_threshold=request.confidence_threshold
+                confidence_threshold=request.confidence_threshold,
+                top_k=request.top_k
             )
             normal_video_analysis_results.append(normal_full_analysis_response)
 
@@ -87,7 +90,8 @@ def run_experiment_pipeline(request: ExperimentRequest):
                 threshold=request.threshold,
                 skip_frames=request.skip_frames,
                 num_of_skip_frames=request.num_of_skip_frames,
-                confidence_threshold=request.confidence_threshold
+                confidence_threshold=request.confidence_threshold,
+                top_k=request.top_k
             )
             abnormal_video_analysis_results.append(abnormal_full_analysis_response)
 
@@ -108,7 +112,7 @@ def run_experiment_pipeline(request: ExperimentRequest):
     f1_score = (2 * precision * recall) / (precision + recall) if (precision + recall) > 0 else 0
 
     return {
-        **all_results,
+        # **all_results,
         "total_videos_analyzed": len(normal_video_analysis_results) + len(abnormal_video_analysis_results),
         "total_duration_seconds": total_duration,
         "statistics": {
