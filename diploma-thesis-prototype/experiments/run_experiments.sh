@@ -27,6 +27,9 @@ fi
 mkdir -p "$ROOT_DIR/logs"
 mkdir -p "$RESULTS_DIR"
 
+# === Trap termination ===
+trap "echo '🛑 Caught termination signal. Killing backend...'; kill $BACKEND_PID; exit 1" SIGINT SIGTERM
+
 # === 1. Download Dataset ===
 echo "📦 Checking UBnormal dataset..."
 if [ ! -d "$DATASET_DIR" ]; then
@@ -63,27 +66,33 @@ echo "✅ Backend is up."
 # === 4. Iterate over payloads from file ===
 echo "🔁 Reading payloads from $PAYLOADS_FILE..."
 INDEX=0
-jq -c '.[]' "$PAYLOADS_FILE" | while read -r PAYLOAD; do
-  echo "🔬 Running experiment #$INDEX..."
+mapfile -t PAYLOADS < <(jq -c '.[]' "$PAYLOADS_FILE")
+for PAYLOAD in "${PAYLOADS[@]}"; do
+  START_EPOCH=$(date +%s)
+  START_HUMAN=$(date "+%Y-%m-%d %H:%M:%S")
 
-  START_TIME=$(date +%s)
+  echo "🔬 Running experiment #$INDEX..."
+  echo "🕒 Started at: $START_HUMAN"
 
   RESPONSE=$(curl -s -X POST http://127.0.0.1:8000/api/experiments/ubnormal/run \
     -H "Content-Type: application/json" \
     -d "$PAYLOAD")
 
-  END_TIME=$(date +%s)
-  DURATION=$((END_TIME - START_TIME))
-
-  # Format duration as hh:mm:ss
-  DURATION_FMT=$(printf '%02d:%02d:%02d' $((DURATION/3600)) $(( (DURATION%3600)/60 )) $((DURATION%60)))
-
   OUT_FILE="$RESULTS_DIR/experiment_result_${INDEX}_$(date +%Y%m%d_%H%M%S).json"
   echo "{ \"request_data\": $PAYLOAD, \"result_data\": $RESPONSE }" > "$OUT_FILE"
 
+  END_EPOCH=$(date +%s)
+  END_HUMAN=$(date "+%Y-%m-%d %H:%M:%S")
+  DURATION=$((END_EPOCH - START_EPOCH))
+
+  HOURS=$(printf "%02d" $((DURATION / 3600)))
+  MINUTES=$(printf "%02d" $(((DURATION % 3600) / 60)))
+  SECONDS=$(printf "%02d" $((DURATION % 60)))
+
   echo "✅ Saved result to $OUT_FILE"
-  echo "🕒 Experiment #$INDEX took $DURATION seconds (=$DURATION_FMT)"
-  echo "-----------------------------------------------"
+  echo "🏁 Finished at: $END_HUMAN (duration: ${DURATION} seconds (=${HOURS}:${MINUTES}:${SECONDS}))"
+  echo "----------------------------------------"
+
   INDEX=$((INDEX+1))
 done
 
