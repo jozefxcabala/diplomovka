@@ -66,14 +66,24 @@ INDEX=0
 jq -c '.[]' "$PAYLOADS_FILE" | while read -r PAYLOAD; do
   echo "🔬 Running experiment #$INDEX..."
 
+  START_TIME=$(date +%s)
+
   RESPONSE=$(curl -s -X POST http://127.0.0.1:8000/api/experiments/ubnormal/run \
     -H "Content-Type: application/json" \
     -d "$PAYLOAD")
+
+  END_TIME=$(date +%s)
+  DURATION=$((END_TIME - START_TIME))
+
+  # Format duration as hh:mm:ss
+  DURATION_FMT=$(printf '%02d:%02d:%02d' $((DURATION/3600)) $(( (DURATION%3600)/60 )) $((DURATION%60)))
 
   OUT_FILE="$RESULTS_DIR/experiment_result_${INDEX}_$(date +%Y%m%d_%H%M%S).json"
   echo "{ \"request_data\": $PAYLOAD, \"result_data\": $RESPONSE }" > "$OUT_FILE"
 
   echo "✅ Saved result to $OUT_FILE"
+  echo "🕒 Experiment #$INDEX took $DURATION seconds (=$DURATION_FMT)"
+  echo "-----------------------------------------------"
   INDEX=$((INDEX+1))
 done
 
