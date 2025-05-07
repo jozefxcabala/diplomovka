@@ -1,0 +1,40 @@
+name: diploma-thesis-prototype
+channels:
+  - conda-forge
+  - pytorch
+  - defaults
+
+dependencies:
+  - python=3.11
+  - pip
+  - numpy
+  - pandas
+  - scipy
+  - matplotlib
+  - seaborn
+  - scikit-learn
+  - pytorch
+  - torchvision
+  - opencv
+  - psutil
+  - pyyaml
+  - tqdm
+  - sqlalchemy
+  - libpq
+  - postgresql
+  - pip:
+      - fastapi
+      - uvicorn
+      - transformers
+      - decord
+      - imageio
+      - imageio-ffmpeg
+      - ultralytics
+      - psycopg2
+      - python-dotenv
+      - python-multipart
+      - moviepy
+      - lapx
+      - tokenizers
+      - ffmpeg
+      - dcord

@@ -4,16 +4,10 @@ This repository contains the prototype implementation for the diploma thesis. Th
 
 ## Installation
 
-To set up the Conda environment, run the following command inside `diploma-thesis-prototype/enviroments`:
+To set up the Conda environment and initialize the PostgreSQL database, run the following installation script from the project root `diploma-thesis-prototype/enviroments`:
 
 ```bash
-conda env create -f diploma-thesis-prototype-env.yml
-```
-
-Once the installation is complete, activate the environment:
-
-```bash
-conda activate diploma-thesis-prototype
+bash setup.sh
 ```
 
 Install node modules:
@@ -27,6 +21,11 @@ npm install
 ```
 
 ## Running the Prototype
+Activate the environment:
+
+```bash
+conda activate diploma-thesis-prototype
+```
 
 Navigate to the `src` directory:
 

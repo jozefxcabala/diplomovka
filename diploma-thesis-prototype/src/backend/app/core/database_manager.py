@@ -24,12 +24,45 @@ class DatabaseManager:
         self.max_connection_pool = 20
 
     def connect(self):
-        """Initializing the connection pool."""
-        self.connection_pool = psycopg2.pool.SimpleConnectionPool(
-            self.min_connection_pool, self.max_connection_pool,
-            dbname=self.db_name, user=self.user, password=self.password,
-            host=self.host, port=self.port
-        )
+        """Initialize the connection pool and create database if it doesn't exist."""
+        try:
+            # Step 1: Connect to default 'postgres' DB to check existence
+            sys_conn = psycopg2.connect(
+                dbname="postgres",
+                user=self.user,
+                password=self.password,
+                host=self.host,
+                port=self.port
+            )
+            sys_conn.autocommit = True
+            sys_cursor = sys_conn.cursor()
+
+            # Step 2: Check if target database exists
+            sys_cursor.execute("SELECT 1 FROM pg_database WHERE datname = %s;", (self.db_name,))
+            exists = sys_cursor.fetchone()
+
+            # Step 3: Create the database if it doesn't exist
+            if not exists:
+                print(f"Database '{self.db_name}' not found. Creating it...")
+                sys_cursor.execute(sql.SQL("CREATE DATABASE {}").format(sql.Identifier(self.db_name)))
+
+            sys_cursor.close()
+            sys_conn.close()
+
+            # Step 4: Connect to the actual DB with pooling
+            self.connection_pool = psycopg2.pool.SimpleConnectionPool(
+                self.min_connection_pool, self.max_connection_pool,
+                dbname=self.db_name,
+                user=self.user,
+                password=self.password,
+                host=self.host,
+                port=self.port
+            )
+            print(f"Connected to database '{self.db_name}' successfully.")
+
+        except psycopg2.Error as e:
+            print(f"Database connection error: {e}")
+            raise
 
     def get_connection(self):
         return self.connection_pool.getconn()
