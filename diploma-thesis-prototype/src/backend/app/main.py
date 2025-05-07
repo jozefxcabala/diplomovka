@@ -30,6 +30,6 @@ app.include_router(configuration.router, prefix="/api")
 app.include_router(experiment.router, prefix="/api")
 
 
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+# if __name__ == "__main__":
+#     import uvicorn
+#     uvicorn.run(app, host="127.0.0.1", port=8000)
