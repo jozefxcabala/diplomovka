@@ -48,7 +48,9 @@ fi
 # === 2. Start Backend ===
 echo "🚀 Starting FastAPI backend..."
 cd "$SRC_DIR" || exit 1
-PYTHONPATH=src uvicorn backend.app.main:app --host 127.0.0.1 --port 8000 > "$BACKEND_LOG" 2>&1 &
+conda run --no-capture-output -n diploma-thesis-prototype \
+  uvicorn backend.app.main:app --host 127.0.0.1 --port 8000 \
+  > "$BACKEND_LOG" 2>&1 &
 BACKEND_PID=$!
 
 # === 3. Wait for Backend ===
