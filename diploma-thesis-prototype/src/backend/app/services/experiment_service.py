@@ -15,7 +15,7 @@ def run_full_analysis(video_path, model_path, num_segments, processing_mode, cla
         video_path=video_path,
         model_path=model_path,
         num_segments=num_segments,
-        processing_mode=processing_mode,
+        processing_mode='parallel',
         classes_to_detect=classes_to_detect,
         name_of_analysis=name_of_analysis,
         skip_frames=skip_frames,
