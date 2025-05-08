@@ -35,6 +35,7 @@ interface UBnormalExperimentRequest {
   top_k: number;
   batch_size: number;
   frame_sample_rate: number;
+  processing_mode: string;
 }
 
 const defaultRequest: UBnormalExperimentRequest = {
@@ -61,7 +62,8 @@ const defaultRequest: UBnormalExperimentRequest = {
   confidence_threshold: 0.25,
   top_k: 5,
   batch_size: 32,
-  frame_sample_rate: 4
+  frame_sample_rate: 4,
+  processing_mode: "sequential"
 };
 
 const ExperimentsPage: React.FC = () => {

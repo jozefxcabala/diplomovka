@@ -108,7 +108,7 @@ def crop_video_for_detection(args):
     except Exception as e:
         return f"❌ Error in detection {detection['id']}: {e}"
 
-def prepare_data_for_xclip(video_id, video_path, db_manager, output_dir, offset_x, offset_y, size_threshold):
+def prepare_data_for_xclip(video_id, video_path, db_manager, output_dir, offset_x, offset_y, size_threshold, processing_mode = "parallel"):
     detections, all_bounding_boxes = fetch_detections_and_bounding_boxes(video_id, db_manager)
 
     args_list = []
@@ -123,21 +123,21 @@ def prepare_data_for_xclip(video_id, video_path, db_manager, output_dir, offset_
         
         args_list.append((video_path, detection, max_bb, output_dir, video_id, offset_x, offset_y, size_threshold))
 
-    for args in args_list:
-        result = crop_video_for_detection(args)
+    if processing_mode == "parallel":
+        try:
+            with Pool(initializer=init_worker) as pool:
+                pool.map(crop_video_for_detection, args_list)
+        except KeyboardInterrupt:
+            print("\nDetection was interrupted. Terminating threads...")
+            pool.terminate()
+            raise DetectionInterruptedError("The detection was manually interrupted.")
+        finally:
+            print("All threads have been terminated.")
+    else:
+        for args in args_list:
+            result = crop_video_for_detection(args)
         
-    # Parallel processing using multiprocessing Pool
-    # try:
-    #     with Pool(initializer=init_worker) as pool:
-    #         pool.map(crop_video_for_detection, args_list)
-    # except KeyboardInterrupt:
-    #     print("\nDetection was interrupted. Terminating threads...")
-    #     pool.terminate()
-    #     raise DetectionInterruptedError("The detection was manually interrupted.")
-    # finally:
-    #     print("All threads have been terminated.")
-
-def main(video_id, video_path, output_dir, offset_x, offset_y, size_threshold):
+def main(video_id, video_path, output_dir, offset_x, offset_y, size_threshold, processing_mode):
     db_manager = DatabaseManager(db_name="diploma_thesis_prototype_db", user="postgres", password="postgres")
     db_manager.connect()
     
@@ -146,7 +146,7 @@ def main(video_id, video_path, output_dir, offset_x, offset_y, size_threshold):
     try:
         print("The program for preparing data for XCLIP action recognition has started.")
 
-        prepare_data_for_xclip(video_id, video_path, db_manager, output_dir, offset_x, offset_y, size_threshold)
+        prepare_data_for_xclip(video_id, video_path, db_manager, output_dir, offset_x, offset_y, size_threshold, processing_mode)
 
     except DetectionInterruptedError as e:
         print("\nThe detection was manually interrupted. Shutting down the program.")

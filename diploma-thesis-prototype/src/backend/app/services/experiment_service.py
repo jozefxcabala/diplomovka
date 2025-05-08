@@ -31,6 +31,7 @@ def run_full_analysis(video_path, model_path, num_segments, processing_mode, cla
     video_id=video_id,
     video_path=video_path,
     output_path=output_path,
+    processing_mode=processing_mode,
   ))
 
   # 3 Anomaly Recognition (video_id, categories)
@@ -38,7 +39,8 @@ def run_full_analysis(video_path, model_path, num_segments, processing_mode, cla
     video_id=video_id,
     categories=categories,
     batch_size=batch_size,
-    frame_sample_rate=frame_sample_rate
+    frame_sample_rate=frame_sample_rate,
+    processing_mode=processing_mode,
   ))
 
   # 4 Result Interpreter (video_id, threshold, categories)

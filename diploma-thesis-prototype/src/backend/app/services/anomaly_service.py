@@ -11,7 +11,8 @@ def run_anomaly_preprocessing(request: AnomalyPreprocessRequest):
         request.output_path,
         request.max_frames,
         request.target_width,
-        request.target_height
+        request.target_height,
+        request.processing_mode
     )
     return {"message": "Anomaly preprocessing completed."}
 
@@ -20,6 +21,7 @@ def run_anomaly_recognition(request: AnomalyRecognitionRequest):
         video_id=request.video_id,
         categories_json=request.categories,
         batch_size=request.batch_size,
-        frame_sample_rate=request.frame_sample_rate
+        frame_sample_rate=request.frame_sample_rate,
+        processing_mode=request.processing_mode
     )
     return {"message": "Anomaly recognition completed."}

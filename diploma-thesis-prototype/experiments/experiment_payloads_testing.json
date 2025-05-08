@@ -23,6 +23,7 @@
     "confidence_threshold": 0.1,
     "top_k": 1,
     "batch_size": 32,
-    "frame_sample_rate": 4
+    "frame_sample_rate": 4,
+    "processing_mode": "sequential"
   }
 ]

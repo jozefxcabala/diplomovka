@@ -139,7 +139,8 @@ const FirstScreen: React.FC<FirstScreenProps> = ({
         body: JSON.stringify({
           video_path,
           video_id,
-          output_path
+          output_path,
+          processing_mode: settingsFirstScreen.processing_mode
         }),
       });
   
@@ -160,6 +161,7 @@ const FirstScreen: React.FC<FirstScreenProps> = ({
           categories: categoriesFirstScreen,
           batch_size: settingsFirstScreen.batch_size,
           frame_sample_rate: settingsFirstScreen.frame_sample_rate,
+          processing_mode: settingsFirstScreen.processing_mode
         }),
       });
   

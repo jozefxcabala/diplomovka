@@ -45,6 +45,7 @@ class UBnormalExperimentRequest(BaseModel):
     top_k: int = 5
     batch_size: int = 32
     frame_sample_rate: int = 4
+    processing_mode: str = "sequential"
 
 
 @router.post("/experiments/ubnormal/run")
@@ -74,7 +75,7 @@ def run_experiment_pipeline(request: UBnormalExperimentRequest):
                 video_path=normal_entry["path"],
                 model_path=model_path,
                 num_segments=request.num_segments,
-                processing_mode="parallel",
+                processing_mode=request.processing_mode,
                 classes_to_detect=[0],
                 name_of_analysis=f"{normal_entry['path']}_analysis",
                 categories=request.categories,
@@ -94,7 +95,7 @@ def run_experiment_pipeline(request: UBnormalExperimentRequest):
                 video_path=abnormal_entry["path"],
                 model_path=model_path,
                 num_segments=request.num_segments,
-                processing_mode="parallel",
+                processing_mode=request.processing_mode,
                 classes_to_detect=[0],
                 name_of_analysis=f"{abnormal_entry['path']}_analysis",
                 categories=request.categories,

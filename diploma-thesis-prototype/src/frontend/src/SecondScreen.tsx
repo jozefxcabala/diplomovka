@@ -114,6 +114,7 @@ const SecondScreen: React.FC<SecondScreenProps> = ({ categories, settings, video
           categories: categoriesSecondScreen,
           batch_size: settingsSecondScreen.batch_size,
           frame_sample_rate: settingsSecondScreen.frame_sample_rate,
+          processing_mode: settingsSecondScreen.processing_mode
         }),
       });
   

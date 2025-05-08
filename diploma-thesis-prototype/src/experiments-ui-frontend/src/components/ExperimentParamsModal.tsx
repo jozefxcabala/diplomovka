@@ -14,6 +14,7 @@ interface ExperimentRequest {
   top_k: number;
   batch_size: number;
   frame_sample_rate: number;
+  processing_mode: string;
 }
 
 interface ExperimentParamsModalProps {
