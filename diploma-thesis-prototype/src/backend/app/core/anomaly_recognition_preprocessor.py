@@ -67,43 +67,46 @@ def fetch_detections_and_bounding_boxes(video_id, db_manager):
     return detections, all_bounding_boxes
 
 def crop_video_for_detection(args):
-    input_video_path, detection, max_bb, output_dir, video_id, offset_x, offset_y, size_threshold = args
-    cap = cv2.VideoCapture(input_video_path)
-    output_video_path = os.path.join(output_dir, f"{video_id}_{detection['id']}.mp4")
-    
-    init_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)) 
-    init_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    try:
+        input_video_path, detection, max_bb, output_dir, video_id, offset_x, offset_y, size_threshold = args
+        cap = cv2.VideoCapture(input_video_path)
+        output_video_path = os.path.join(output_dir, f"{video_id}_{detection['id']}.mp4")
+        
+        init_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)) 
+        init_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
-    x1, y1, x2, y2 = map(int, max_bb)
-        
-    x1 = max(0, x1 - offset_x)
-    y1 = max(0, y1 - offset_y)
-    x2 = min(init_width, x2 + offset_x)
-    y2 = min(init_height, y2 + offset_y)
-    
-    fps = cap.get(cv2.CAP_PROP_FPS) 
-    width = abs(x2-x1)
-    height = abs(y2-y1)
-        
-    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-    out = cv2.VideoWriter(output_video_path, fourcc, fps, (width, height))
-
-    detection_start_frame = detection['start_frame']
-    detection_end_frame = detection['end_frame']
-
-    cap.set(cv2.CAP_PROP_POS_FRAMES, detection_start_frame)
-    
-    for frame_idx in range(detection_start_frame, detection_end_frame + 1):
-        ret, frame = cap.read()
-        if not ret:
-            break 
-        
-        cropped_frame = frame[y1:y2, x1:x2]
-        
-        out.write(cropped_frame)
+        x1, y1, x2, y2 = map(int, max_bb)
             
-    cap.release()
-    out.release()
+        x1 = max(0, x1 - offset_x)
+        y1 = max(0, y1 - offset_y)
+        x2 = min(init_width, x2 + offset_x)
+        y2 = min(init_height, y2 + offset_y)
+        
+        fps = cap.get(cv2.CAP_PROP_FPS) 
+        width = abs(x2-x1)
+        height = abs(y2-y1)
+            
+        fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+        out = cv2.VideoWriter(output_video_path, fourcc, fps, (width, height))
+
+        detection_start_frame = detection['start_frame']
+        detection_end_frame = detection['end_frame']
+
+        cap.set(cv2.CAP_PROP_POS_FRAMES, detection_start_frame)
+        
+        for frame_idx in range(detection_start_frame, detection_end_frame + 1):
+            ret, frame = cap.read()
+            if not ret:
+                break 
+            
+            cropped_frame = frame[y1:y2, x1:x2]
+            
+            out.write(cropped_frame)
+                
+        cap.release()
+        out.release()
+    except Exception as e:
+        return f"❌ Error in detection {detection['id']}: {e}"
 
 def prepare_data_for_xclip(video_id, video_path, db_manager, output_dir, offset_x, offset_y, size_threshold):
     detections, all_bounding_boxes = fetch_detections_and_bounding_boxes(video_id, db_manager)
@@ -120,16 +123,19 @@ def prepare_data_for_xclip(video_id, video_path, db_manager, output_dir, offset_
         
         args_list.append((video_path, detection, max_bb, output_dir, video_id, offset_x, offset_y, size_threshold))
 
+    for args in args_list:
+        result = crop_video_for_detection(args)
+        
     # Parallel processing using multiprocessing Pool
-    try:
-        with Pool(initializer=init_worker) as pool:
-            pool.map(crop_video_for_detection, args_list)
-    except KeyboardInterrupt:
-        print("\nDetection was interrupted. Terminating threads...")
-        pool.terminate()
-        raise DetectionInterruptedError("The detection was manually interrupted.")
-    finally:
-        print("All threads have been terminated.")
+    # try:
+    #     with Pool(initializer=init_worker) as pool:
+    #         pool.map(crop_video_for_detection, args_list)
+    # except KeyboardInterrupt:
+    #     print("\nDetection was interrupted. Terminating threads...")
+    #     pool.terminate()
+    #     raise DetectionInterruptedError("The detection was manually interrupted.")
+    # finally:
+    #     print("All threads have been terminated.")
 
 def main(video_id, video_path, output_dir, offset_x, offset_y, size_threshold):
     db_manager = DatabaseManager(db_name="diploma_thesis_prototype_db", user="postgres", password="postgres")

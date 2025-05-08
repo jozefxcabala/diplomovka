@@ -6,6 +6,8 @@ from backend.app.core.database_manager import DatabaseManager
 from multiprocessing import Pool
 import os
 import torch
+class DetectionInterruptedError(Exception):
+    pass
 
 def save_results_to_db(results, video_id, db_manager: DatabaseManager):
     try:
@@ -28,11 +30,15 @@ def fetch_video_segments(video_id, db_manager: DatabaseManager):
     finally:
         db_manager.close()
         return videos
-    
+
 def analyze_video_task(args):
-    video_path, list_of_categories, detection_id, batch_size, frame_sample_rate = args
-    handler = XCLIPHandler(list_of_categories)
-    return (detection_id, handler.analyze_video(video_path, batch_size=32, frame_sample_rate=4))
+    try:
+        video_path, list_of_categories, detection_id, batch_size, frame_sample_rate = args
+        handler = XCLIPHandler(list_of_categories)
+        result = handler.analyze_video(video_path, batch_size=batch_size, frame_sample_rate=frame_sample_rate)
+        return (detection_id, result)
+    except Exception as e:
+        return f"❌ Error in detection {detection_id}: {e}"
 
 def main(video_id, categories_json, batch_size = 32, frame_sample_rate = 4):
     print(f"The XCLIP - Action Recognition program has started.")
@@ -60,9 +66,21 @@ def main(video_id, categories_json, batch_size = 32, frame_sample_rate = 4):
     os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
     # Use multiprocessing Pool for parallel processing
-    num_processes = os.cpu_count()
-    with Pool(processes=min(len(videos), num_processes)) as pool:
-        results = pool.map(analyze_video_task, [(video_path, list_of_categories, detection_id, batch_size, frame_sample_rate) for video_path, detection_id in videos])
+    # num_processes = os.cpu_count()
+    # try:
+    #    with Pool(processes=min(len(videos), num_processes)) as pool:
+    #     results = pool.map(analyze_video_task, [(video_path, list_of_categories, detection_id, batch_size, frame_sample_rate) for video_path, detection_id in videos])
+    # except KeyboardInterrupt:
+    #     print("\Analyzing was interrupted. Terminating threads...")
+    #     pool.terminate()
+    #     raise DetectionInterruptedError("The analyzing was manually interrupted.")
+    # finally:
+    #     print("All threads have been terminated.")
+
+    for video_path, detection_id in videos:
+        res = analyze_video_task((video_path, list_of_categories, detection_id, batch_size, frame_sample_rate))
+        if res:
+            results.append(res)
     
     save_results_to_db(results, video_id, db_manager)
     

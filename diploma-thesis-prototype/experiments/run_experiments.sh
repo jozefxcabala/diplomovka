@@ -52,7 +52,7 @@ fi
 echo "🚀 Starting FastAPI backend..."
 cd "$SRC_DIR" || exit 1
 conda run --no-capture-output -n diploma-thesis-prototype \
-  uvicorn backend.app.main:app --host 127.0.0.1 --port 8000 \
+  uvicorn backend.app.main:app --host 127.0.0.1 --port 8000 --workers 1 \
   > "$BACKEND_LOG" 2>&1 &
 BACKEND_PID=$!
 
@@ -66,7 +66,11 @@ echo "✅ Backend is up."
 # === 4. Iterate over payloads from file ===
 echo "🔁 Reading payloads from $PAYLOADS_FILE..."
 INDEX=0
-mapfile -t PAYLOADS < <(jq -c '.[]' "$PAYLOADS_FILE")
+PAYLOADS=()
+while IFS= read -r line; do
+  PAYLOADS+=("$line")
+done < <(jq -c '.[]' "$PAYLOADS_FILE")
+
 for PAYLOAD in "${PAYLOADS[@]}"; do
   START_EPOCH=$(date +%s)
   START_HUMAN=$(date "+%Y-%m-%d %H:%M:%S")
