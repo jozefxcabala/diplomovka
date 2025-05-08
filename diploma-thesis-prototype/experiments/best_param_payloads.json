@@ -22,248 +22,8 @@
     "threshold": 23,
     "confidence_threshold": 0.45,
     "top_k": 3,
-    "batch_size": 8,
-    "frame_sample_rate": 2,
-    "processing_mode": "sequential"
-  }
-}
-,
-{
-  "request_data": {
-    "skip_frames": true,
-    "num_of_skip_frames": 3,
-    "dataset_path": "experiments/UBnormal",
-    "model_path": "data/models/yolo11n.pt",
-    "num_segments": 8,
-    "categories": [
-      "a person wearing a helmet and an orange vest is walking",
-      "a person wearing a helmet and an orange vest is dancing",
-      "a person wearing a helmet and an orange vest is standing in place",
-      "a person wearing a helmet and an orange vest is jumping",
-      "a person wearing a helmet and an orange vest is running",
-      "a person wearing a helmet and an orange vest is fighting",
-      "a person wearing a helmet and an orange vest have something in hand",
-      "a person wearing a helmet and an orange vest is lying in the ground",
-      "a person wearing a helmet and an orange vest is limping",
-      "a person wearing a helmet and an orange vest fell to the ground",
-      "a person wearing a helmet and an orange vest is sitting",
-      "a person wearing a helmet and an orange vest is riding motocycle"
-    ],
-    "threshold": 23,
-    "confidence_threshold": 0.45,
-    "top_k": 3,
-    "batch_size": 8,
-    "frame_sample_rate": 4,
-    "processing_mode": "sequential"
-  }
-}
-,
-{
-  "request_data": {
-    "skip_frames": true,
-    "num_of_skip_frames": 3,
-    "dataset_path": "experiments/UBnormal",
-    "model_path": "data/models/yolo11n.pt",
-    "num_segments": 8,
-    "categories": [
-      "a person wearing a helmet and an orange vest is walking",
-      "a person wearing a helmet and an orange vest is dancing",
-      "a person wearing a helmet and an orange vest is standing in place",
-      "a person wearing a helmet and an orange vest is jumping",
-      "a person wearing a helmet and an orange vest is running",
-      "a person wearing a helmet and an orange vest is fighting",
-      "a person wearing a helmet and an orange vest have something in hand",
-      "a person wearing a helmet and an orange vest is lying in the ground",
-      "a person wearing a helmet and an orange vest is limping",
-      "a person wearing a helmet and an orange vest fell to the ground",
-      "a person wearing a helmet and an orange vest is sitting",
-      "a person wearing a helmet and an orange vest is riding motocycle"
-    ],
-    "threshold": 23,
-    "confidence_threshold": 0.45,
-    "top_k": 3,
-    "batch_size": 8,
-    "frame_sample_rate": 8,
-    "processing_mode": "sequential"
-  }
-}
-,
-{
-  "request_data": {
-    "skip_frames": true,
-    "num_of_skip_frames": 3,
-    "dataset_path": "experiments/UBnormal",
-    "model_path": "data/models/yolo11n.pt",
-    "num_segments": 8,
-    "categories": [
-      "a person wearing a helmet and an orange vest is walking",
-      "a person wearing a helmet and an orange vest is dancing",
-      "a person wearing a helmet and an orange vest is standing in place",
-      "a person wearing a helmet and an orange vest is jumping",
-      "a person wearing a helmet and an orange vest is running",
-      "a person wearing a helmet and an orange vest is fighting",
-      "a person wearing a helmet and an orange vest have something in hand",
-      "a person wearing a helmet and an orange vest is lying in the ground",
-      "a person wearing a helmet and an orange vest is limping",
-      "a person wearing a helmet and an orange vest fell to the ground",
-      "a person wearing a helmet and an orange vest is sitting",
-      "a person wearing a helmet and an orange vest is riding motocycle"
-    ],
-    "threshold": 23,
-    "confidence_threshold": 0.45,
-    "top_k": 3,
-    "batch_size": 16,
-    "frame_sample_rate": 2,
-    "processing_mode": "sequential"
-  }
-}
-,
-{
-  "request_data": {
-    "skip_frames": true,
-    "num_of_skip_frames": 3,
-    "dataset_path": "experiments/UBnormal",
-    "model_path": "data/models/yolo11n.pt",
-    "num_segments": 8,
-    "categories": [
-      "a person wearing a helmet and an orange vest is walking",
-      "a person wearing a helmet and an orange vest is dancing",
-      "a person wearing a helmet and an orange vest is standing in place",
-      "a person wearing a helmet and an orange vest is jumping",
-      "a person wearing a helmet and an orange vest is running",
-      "a person wearing a helmet and an orange vest is fighting",
-      "a person wearing a helmet and an orange vest have something in hand",
-      "a person wearing a helmet and an orange vest is lying in the ground",
-      "a person wearing a helmet and an orange vest is limping",
-      "a person wearing a helmet and an orange vest fell to the ground",
-      "a person wearing a helmet and an orange vest is sitting",
-      "a person wearing a helmet and an orange vest is riding motocycle"
-    ],
-    "threshold": 23,
-    "confidence_threshold": 0.45,
-    "top_k": 3,
-    "batch_size": 16,
-    "frame_sample_rate": 4,
-    "processing_mode": "sequential"
-  }
-}
-,
-{
-  "request_data": {
-    "skip_frames": true,
-    "num_of_skip_frames": 3,
-    "dataset_path": "experiments/UBnormal",
-    "model_path": "data/models/yolo11n.pt",
-    "num_segments": 8,
-    "categories": [
-      "a person wearing a helmet and an orange vest is walking",
-      "a person wearing a helmet and an orange vest is dancing",
-      "a person wearing a helmet and an orange vest is standing in place",
-      "a person wearing a helmet and an orange vest is jumping",
-      "a person wearing a helmet and an orange vest is running",
-      "a person wearing a helmet and an orange vest is fighting",
-      "a person wearing a helmet and an orange vest have something in hand",
-      "a person wearing a helmet and an orange vest is lying in the ground",
-      "a person wearing a helmet and an orange vest is limping",
-      "a person wearing a helmet and an orange vest fell to the ground",
-      "a person wearing a helmet and an orange vest is sitting",
-      "a person wearing a helmet and an orange vest is riding motocycle"
-    ],
-    "threshold": 23,
-    "confidence_threshold": 0.45,
-    "top_k": 3,
-    "batch_size": 16,
-    "frame_sample_rate": 8,
-    "processing_mode": "sequential"
-  }
-}
-,
-{
-  "request_data": {
-    "skip_frames": true,
-    "num_of_skip_frames": 3,
-    "dataset_path": "experiments/UBnormal",
-    "model_path": "data/models/yolo11n.pt",
-    "num_segments": 8,
-    "categories": [
-      "a person wearing a helmet and an orange vest is walking",
-      "a person wearing a helmet and an orange vest is dancing",
-      "a person wearing a helmet and an orange vest is standing in place",
-      "a person wearing a helmet and an orange vest is jumping",
-      "a person wearing a helmet and an orange vest is running",
-      "a person wearing a helmet and an orange vest is fighting",
-      "a person wearing a helmet and an orange vest have something in hand",
-      "a person wearing a helmet and an orange vest is lying in the ground",
-      "a person wearing a helmet and an orange vest is limping",
-      "a person wearing a helmet and an orange vest fell to the ground",
-      "a person wearing a helmet and an orange vest is sitting",
-      "a person wearing a helmet and an orange vest is riding motocycle"
-    ],
-    "threshold": 23,
-    "confidence_threshold": 0.45,
-    "top_k": 3,
-    "batch_size": 24,
-    "frame_sample_rate": 2,
-    "processing_mode": "sequential"
-  }
-}
-,
-{
-  "request_data": {
-    "skip_frames": true,
-    "num_of_skip_frames": 3,
-    "dataset_path": "experiments/UBnormal",
-    "model_path": "data/models/yolo11n.pt",
-    "num_segments": 8,
-    "categories": [
-      "a person wearing a helmet and an orange vest is walking",
-      "a person wearing a helmet and an orange vest is dancing",
-      "a person wearing a helmet and an orange vest is standing in place",
-      "a person wearing a helmet and an orange vest is jumping",
-      "a person wearing a helmet and an orange vest is running",
-      "a person wearing a helmet and an orange vest is fighting",
-      "a person wearing a helmet and an orange vest have something in hand",
-      "a person wearing a helmet and an orange vest is lying in the ground",
-      "a person wearing a helmet and an orange vest is limping",
-      "a person wearing a helmet and an orange vest fell to the ground",
-      "a person wearing a helmet and an orange vest is sitting",
-      "a person wearing a helmet and an orange vest is riding motocycle"
-    ],
-    "threshold": 23,
-    "confidence_threshold": 0.45,
-    "top_k": 3,
-    "batch_size": 24,
-    "frame_sample_rate": 4,
-    "processing_mode": "sequential"
-  }
-}
-,
-{
-  "request_data": {
-    "skip_frames": true,
-    "num_of_skip_frames": 3,
-    "dataset_path": "experiments/UBnormal",
-    "model_path": "data/models/yolo11n.pt",
-    "num_segments": 8,
-    "categories": [
-      "a person wearing a helmet and an orange vest is walking",
-      "a person wearing a helmet and an orange vest is dancing",
-      "a person wearing a helmet and an orange vest is standing in place",
-      "a person wearing a helmet and an orange vest is jumping",
-      "a person wearing a helmet and an orange vest is running",
-      "a person wearing a helmet and an orange vest is fighting",
-      "a person wearing a helmet and an orange vest have something in hand",
-      "a person wearing a helmet and an orange vest is lying in the ground",
-      "a person wearing a helmet and an orange vest is limping",
-      "a person wearing a helmet and an orange vest fell to the ground",
-      "a person wearing a helmet and an orange vest is sitting",
-      "a person wearing a helmet and an orange vest is riding motocycle"
-    ],
-    "threshold": 23,
-    "confidence_threshold": 0.45,
-    "top_k": 3,
-    "batch_size": 24,
-    "frame_sample_rate": 8,
+    "batch_size": 32,
+    "frame_sample_rate": 1,
     "processing_mode": "sequential"
   }
 }
@@ -323,7 +83,127 @@
     "confidence_threshold": 0.45,
     "top_k": 3,
     "batch_size": 32,
+    "frame_sample_rate": 3,
+    "processing_mode": "sequential"
+  }
+}
+,
+{
+  "request_data": {
+    "skip_frames": true,
+    "num_of_skip_frames": 3,
+    "dataset_path": "experiments/UBnormal",
+    "model_path": "data/models/yolo11n.pt",
+    "num_segments": 8,
+    "categories": [
+      "a person wearing a helmet and an orange vest is walking",
+      "a person wearing a helmet and an orange vest is dancing",
+      "a person wearing a helmet and an orange vest is standing in place",
+      "a person wearing a helmet and an orange vest is jumping",
+      "a person wearing a helmet and an orange vest is running",
+      "a person wearing a helmet and an orange vest is fighting",
+      "a person wearing a helmet and an orange vest have something in hand",
+      "a person wearing a helmet and an orange vest is lying in the ground",
+      "a person wearing a helmet and an orange vest is limping",
+      "a person wearing a helmet and an orange vest fell to the ground",
+      "a person wearing a helmet and an orange vest is sitting",
+      "a person wearing a helmet and an orange vest is riding motocycle"
+    ],
+    "threshold": 23,
+    "confidence_threshold": 0.45,
+    "top_k": 3,
+    "batch_size": 32,
     "frame_sample_rate": 4,
+    "processing_mode": "sequential"
+  }
+}
+,
+{
+  "request_data": {
+    "skip_frames": true,
+    "num_of_skip_frames": 3,
+    "dataset_path": "experiments/UBnormal",
+    "model_path": "data/models/yolo11n.pt",
+    "num_segments": 8,
+    "categories": [
+      "a person wearing a helmet and an orange vest is walking",
+      "a person wearing a helmet and an orange vest is dancing",
+      "a person wearing a helmet and an orange vest is standing in place",
+      "a person wearing a helmet and an orange vest is jumping",
+      "a person wearing a helmet and an orange vest is running",
+      "a person wearing a helmet and an orange vest is fighting",
+      "a person wearing a helmet and an orange vest have something in hand",
+      "a person wearing a helmet and an orange vest is lying in the ground",
+      "a person wearing a helmet and an orange vest is limping",
+      "a person wearing a helmet and an orange vest fell to the ground",
+      "a person wearing a helmet and an orange vest is sitting",
+      "a person wearing a helmet and an orange vest is riding motocycle"
+    ],
+    "threshold": 23,
+    "confidence_threshold": 0.45,
+    "top_k": 3,
+    "batch_size": 32,
+    "frame_sample_rate": 5,
+    "processing_mode": "sequential"
+  }
+}
+,
+{
+  "request_data": {
+    "skip_frames": true,
+    "num_of_skip_frames": 3,
+    "dataset_path": "experiments/UBnormal",
+    "model_path": "data/models/yolo11n.pt",
+    "num_segments": 8,
+    "categories": [
+      "a person wearing a helmet and an orange vest is walking",
+      "a person wearing a helmet and an orange vest is dancing",
+      "a person wearing a helmet and an orange vest is standing in place",
+      "a person wearing a helmet and an orange vest is jumping",
+      "a person wearing a helmet and an orange vest is running",
+      "a person wearing a helmet and an orange vest is fighting",
+      "a person wearing a helmet and an orange vest have something in hand",
+      "a person wearing a helmet and an orange vest is lying in the ground",
+      "a person wearing a helmet and an orange vest is limping",
+      "a person wearing a helmet and an orange vest fell to the ground",
+      "a person wearing a helmet and an orange vest is sitting",
+      "a person wearing a helmet and an orange vest is riding motocycle"
+    ],
+    "threshold": 23,
+    "confidence_threshold": 0.45,
+    "top_k": 3,
+    "batch_size": 32,
+    "frame_sample_rate": 6,
+    "processing_mode": "sequential"
+  }
+}
+,
+{
+  "request_data": {
+    "skip_frames": true,
+    "num_of_skip_frames": 3,
+    "dataset_path": "experiments/UBnormal",
+    "model_path": "data/models/yolo11n.pt",
+    "num_segments": 8,
+    "categories": [
+      "a person wearing a helmet and an orange vest is walking",
+      "a person wearing a helmet and an orange vest is dancing",
+      "a person wearing a helmet and an orange vest is standing in place",
+      "a person wearing a helmet and an orange vest is jumping",
+      "a person wearing a helmet and an orange vest is running",
+      "a person wearing a helmet and an orange vest is fighting",
+      "a person wearing a helmet and an orange vest have something in hand",
+      "a person wearing a helmet and an orange vest is lying in the ground",
+      "a person wearing a helmet and an orange vest is limping",
+      "a person wearing a helmet and an orange vest fell to the ground",
+      "a person wearing a helmet and an orange vest is sitting",
+      "a person wearing a helmet and an orange vest is riding motocycle"
+    ],
+    "threshold": 23,
+    "confidence_threshold": 0.45,
+    "top_k": 3,
+    "batch_size": 32,
+    "frame_sample_rate": 7,
     "processing_mode": "sequential"
   }
 }
@@ -382,8 +262,8 @@
     "threshold": 23,
     "confidence_threshold": 0.45,
     "top_k": 3,
-    "batch_size": 48,
-    "frame_sample_rate": 2,
+    "batch_size": 32,
+    "frame_sample_rate": 9,
     "processing_mode": "sequential"
   }
 }
@@ -412,8 +292,8 @@
     "threshold": 23,
     "confidence_threshold": 0.45,
     "top_k": 3,
-    "batch_size": 48,
-    "frame_sample_rate": 4,
+    "batch_size": 32,
+    "frame_sample_rate": 10,
     "processing_mode": "sequential"
   }
 }
@@ -442,8 +322,8 @@
     "threshold": 23,
     "confidence_threshold": 0.45,
     "top_k": 3,
-    "batch_size": 48,
-    "frame_sample_rate": 8,
+    "batch_size": 32,
+    "frame_sample_rate": 12,
     "processing_mode": "sequential"
   }
 }
@@ -472,8 +352,8 @@
     "threshold": 23,
     "confidence_threshold": 0.45,
     "top_k": 3,
-    "batch_size": 64,
-    "frame_sample_rate": 2,
+    "batch_size": 32,
+    "frame_sample_rate": 14,
     "processing_mode": "sequential"
   }
 }
@@ -502,8 +382,8 @@
     "threshold": 23,
     "confidence_threshold": 0.45,
     "top_k": 3,
-    "batch_size": 64,
-    "frame_sample_rate": 4,
+    "batch_size": 32,
+    "frame_sample_rate": 16,
     "processing_mode": "sequential"
   }
 }
@@ -532,8 +412,38 @@
     "threshold": 23,
     "confidence_threshold": 0.45,
     "top_k": 3,
-    "batch_size": 64,
-    "frame_sample_rate": 8,
+    "batch_size": 32,
+    "frame_sample_rate": 18,
+    "processing_mode": "sequential"
+  }
+}
+,
+{
+  "request_data": {
+    "skip_frames": true,
+    "num_of_skip_frames": 3,
+    "dataset_path": "experiments/UBnormal",
+    "model_path": "data/models/yolo11n.pt",
+    "num_segments": 8,
+    "categories": [
+      "a person wearing a helmet and an orange vest is walking",
+      "a person wearing a helmet and an orange vest is dancing",
+      "a person wearing a helmet and an orange vest is standing in place",
+      "a person wearing a helmet and an orange vest is jumping",
+      "a person wearing a helmet and an orange vest is running",
+      "a person wearing a helmet and an orange vest is fighting",
+      "a person wearing a helmet and an orange vest have something in hand",
+      "a person wearing a helmet and an orange vest is lying in the ground",
+      "a person wearing a helmet and an orange vest is limping",
+      "a person wearing a helmet and an orange vest fell to the ground",
+      "a person wearing a helmet and an orange vest is sitting",
+      "a person wearing a helmet and an orange vest is riding motocycle"
+    ],
+    "threshold": 23,
+    "confidence_threshold": 0.45,
+    "top_k": 3,
+    "batch_size": 32,
+    "frame_sample_rate": 20,
     "processing_mode": "sequential"
   }
 }
@@ -562,248 +472,8 @@
     "threshold": 23,
     "confidence_threshold": 0.45,
     "top_k": 3,
-    "batch_size": 8,
-    "frame_sample_rate": 2,
-    "processing_mode": "sequential"
-  }
-}
-,
-{
-  "request_data": {
-    "skip_frames": true,
-    "num_of_skip_frames": 5,
-    "dataset_path": "experiments/UBnormal",
-    "model_path": "data/models/yolo11n.pt",
-    "num_segments": 8,
-    "categories": [
-      "a person wearing a helmet and an orange vest is walking",
-      "a person wearing a helmet and an orange vest is dancing",
-      "a person wearing a helmet and an orange vest is standing in place",
-      "a person wearing a helmet and an orange vest is jumping",
-      "a person wearing a helmet and an orange vest is running",
-      "a person wearing a helmet and an orange vest is fighting",
-      "a person wearing a helmet and an orange vest have something in hand",
-      "a person wearing a helmet and an orange vest is lying in the ground",
-      "a person wearing a helmet and an orange vest is limping",
-      "a person wearing a helmet and an orange vest fell to the ground",
-      "a person wearing a helmet and an orange vest is sitting",
-      "a person wearing a helmet and an orange vest is riding motocycle"
-    ],
-    "threshold": 23,
-    "confidence_threshold": 0.45,
-    "top_k": 3,
-    "batch_size": 8,
-    "frame_sample_rate": 4,
-    "processing_mode": "sequential"
-  }
-}
-,
-{
-  "request_data": {
-    "skip_frames": true,
-    "num_of_skip_frames": 5,
-    "dataset_path": "experiments/UBnormal",
-    "model_path": "data/models/yolo11n.pt",
-    "num_segments": 8,
-    "categories": [
-      "a person wearing a helmet and an orange vest is walking",
-      "a person wearing a helmet and an orange vest is dancing",
-      "a person wearing a helmet and an orange vest is standing in place",
-      "a person wearing a helmet and an orange vest is jumping",
-      "a person wearing a helmet and an orange vest is running",
-      "a person wearing a helmet and an orange vest is fighting",
-      "a person wearing a helmet and an orange vest have something in hand",
-      "a person wearing a helmet and an orange vest is lying in the ground",
-      "a person wearing a helmet and an orange vest is limping",
-      "a person wearing a helmet and an orange vest fell to the ground",
-      "a person wearing a helmet and an orange vest is sitting",
-      "a person wearing a helmet and an orange vest is riding motocycle"
-    ],
-    "threshold": 23,
-    "confidence_threshold": 0.45,
-    "top_k": 3,
-    "batch_size": 8,
-    "frame_sample_rate": 8,
-    "processing_mode": "sequential"
-  }
-}
-,
-{
-  "request_data": {
-    "skip_frames": true,
-    "num_of_skip_frames": 5,
-    "dataset_path": "experiments/UBnormal",
-    "model_path": "data/models/yolo11n.pt",
-    "num_segments": 8,
-    "categories": [
-      "a person wearing a helmet and an orange vest is walking",
-      "a person wearing a helmet and an orange vest is dancing",
-      "a person wearing a helmet and an orange vest is standing in place",
-      "a person wearing a helmet and an orange vest is jumping",
-      "a person wearing a helmet and an orange vest is running",
-      "a person wearing a helmet and an orange vest is fighting",
-      "a person wearing a helmet and an orange vest have something in hand",
-      "a person wearing a helmet and an orange vest is lying in the ground",
-      "a person wearing a helmet and an orange vest is limping",
-      "a person wearing a helmet and an orange vest fell to the ground",
-      "a person wearing a helmet and an orange vest is sitting",
-      "a person wearing a helmet and an orange vest is riding motocycle"
-    ],
-    "threshold": 23,
-    "confidence_threshold": 0.45,
-    "top_k": 3,
-    "batch_size": 16,
-    "frame_sample_rate": 2,
-    "processing_mode": "sequential"
-  }
-}
-,
-{
-  "request_data": {
-    "skip_frames": true,
-    "num_of_skip_frames": 5,
-    "dataset_path": "experiments/UBnormal",
-    "model_path": "data/models/yolo11n.pt",
-    "num_segments": 8,
-    "categories": [
-      "a person wearing a helmet and an orange vest is walking",
-      "a person wearing a helmet and an orange vest is dancing",
-      "a person wearing a helmet and an orange vest is standing in place",
-      "a person wearing a helmet and an orange vest is jumping",
-      "a person wearing a helmet and an orange vest is running",
-      "a person wearing a helmet and an orange vest is fighting",
-      "a person wearing a helmet and an orange vest have something in hand",
-      "a person wearing a helmet and an orange vest is lying in the ground",
-      "a person wearing a helmet and an orange vest is limping",
-      "a person wearing a helmet and an orange vest fell to the ground",
-      "a person wearing a helmet and an orange vest is sitting",
-      "a person wearing a helmet and an orange vest is riding motocycle"
-    ],
-    "threshold": 23,
-    "confidence_threshold": 0.45,
-    "top_k": 3,
-    "batch_size": 16,
-    "frame_sample_rate": 4,
-    "processing_mode": "sequential"
-  }
-}
-,
-{
-  "request_data": {
-    "skip_frames": true,
-    "num_of_skip_frames": 5,
-    "dataset_path": "experiments/UBnormal",
-    "model_path": "data/models/yolo11n.pt",
-    "num_segments": 8,
-    "categories": [
-      "a person wearing a helmet and an orange vest is walking",
-      "a person wearing a helmet and an orange vest is dancing",
-      "a person wearing a helmet and an orange vest is standing in place",
-      "a person wearing a helmet and an orange vest is jumping",
-      "a person wearing a helmet and an orange vest is running",
-      "a person wearing a helmet and an orange vest is fighting",
-      "a person wearing a helmet and an orange vest have something in hand",
-      "a person wearing a helmet and an orange vest is lying in the ground",
-      "a person wearing a helmet and an orange vest is limping",
-      "a person wearing a helmet and an orange vest fell to the ground",
-      "a person wearing a helmet and an orange vest is sitting",
-      "a person wearing a helmet and an orange vest is riding motocycle"
-    ],
-    "threshold": 23,
-    "confidence_threshold": 0.45,
-    "top_k": 3,
-    "batch_size": 16,
-    "frame_sample_rate": 8,
-    "processing_mode": "sequential"
-  }
-}
-,
-{
-  "request_data": {
-    "skip_frames": true,
-    "num_of_skip_frames": 5,
-    "dataset_path": "experiments/UBnormal",
-    "model_path": "data/models/yolo11n.pt",
-    "num_segments": 8,
-    "categories": [
-      "a person wearing a helmet and an orange vest is walking",
-      "a person wearing a helmet and an orange vest is dancing",
-      "a person wearing a helmet and an orange vest is standing in place",
-      "a person wearing a helmet and an orange vest is jumping",
-      "a person wearing a helmet and an orange vest is running",
-      "a person wearing a helmet and an orange vest is fighting",
-      "a person wearing a helmet and an orange vest have something in hand",
-      "a person wearing a helmet and an orange vest is lying in the ground",
-      "a person wearing a helmet and an orange vest is limping",
-      "a person wearing a helmet and an orange vest fell to the ground",
-      "a person wearing a helmet and an orange vest is sitting",
-      "a person wearing a helmet and an orange vest is riding motocycle"
-    ],
-    "threshold": 23,
-    "confidence_threshold": 0.45,
-    "top_k": 3,
-    "batch_size": 24,
-    "frame_sample_rate": 2,
-    "processing_mode": "sequential"
-  }
-}
-,
-{
-  "request_data": {
-    "skip_frames": true,
-    "num_of_skip_frames": 5,
-    "dataset_path": "experiments/UBnormal",
-    "model_path": "data/models/yolo11n.pt",
-    "num_segments": 8,
-    "categories": [
-      "a person wearing a helmet and an orange vest is walking",
-      "a person wearing a helmet and an orange vest is dancing",
-      "a person wearing a helmet and an orange vest is standing in place",
-      "a person wearing a helmet and an orange vest is jumping",
-      "a person wearing a helmet and an orange vest is running",
-      "a person wearing a helmet and an orange vest is fighting",
-      "a person wearing a helmet and an orange vest have something in hand",
-      "a person wearing a helmet and an orange vest is lying in the ground",
-      "a person wearing a helmet and an orange vest is limping",
-      "a person wearing a helmet and an orange vest fell to the ground",
-      "a person wearing a helmet and an orange vest is sitting",
-      "a person wearing a helmet and an orange vest is riding motocycle"
-    ],
-    "threshold": 23,
-    "confidence_threshold": 0.45,
-    "top_k": 3,
-    "batch_size": 24,
-    "frame_sample_rate": 4,
-    "processing_mode": "sequential"
-  }
-}
-,
-{
-  "request_data": {
-    "skip_frames": true,
-    "num_of_skip_frames": 5,
-    "dataset_path": "experiments/UBnormal",
-    "model_path": "data/models/yolo11n.pt",
-    "num_segments": 8,
-    "categories": [
-      "a person wearing a helmet and an orange vest is walking",
-      "a person wearing a helmet and an orange vest is dancing",
-      "a person wearing a helmet and an orange vest is standing in place",
-      "a person wearing a helmet and an orange vest is jumping",
-      "a person wearing a helmet and an orange vest is running",
-      "a person wearing a helmet and an orange vest is fighting",
-      "a person wearing a helmet and an orange vest have something in hand",
-      "a person wearing a helmet and an orange vest is lying in the ground",
-      "a person wearing a helmet and an orange vest is limping",
-      "a person wearing a helmet and an orange vest fell to the ground",
-      "a person wearing a helmet and an orange vest is sitting",
-      "a person wearing a helmet and an orange vest is riding motocycle"
-    ],
-    "threshold": 23,
-    "confidence_threshold": 0.45,
-    "top_k": 3,
-    "batch_size": 24,
-    "frame_sample_rate": 8,
+    "batch_size": 32,
+    "frame_sample_rate": 1,
     "processing_mode": "sequential"
   }
 }
@@ -863,7 +533,127 @@
     "confidence_threshold": 0.45,
     "top_k": 3,
     "batch_size": 32,
+    "frame_sample_rate": 3,
+    "processing_mode": "sequential"
+  }
+}
+,
+{
+  "request_data": {
+    "skip_frames": true,
+    "num_of_skip_frames": 5,
+    "dataset_path": "experiments/UBnormal",
+    "model_path": "data/models/yolo11n.pt",
+    "num_segments": 8,
+    "categories": [
+      "a person wearing a helmet and an orange vest is walking",
+      "a person wearing a helmet and an orange vest is dancing",
+      "a person wearing a helmet and an orange vest is standing in place",
+      "a person wearing a helmet and an orange vest is jumping",
+      "a person wearing a helmet and an orange vest is running",
+      "a person wearing a helmet and an orange vest is fighting",
+      "a person wearing a helmet and an orange vest have something in hand",
+      "a person wearing a helmet and an orange vest is lying in the ground",
+      "a person wearing a helmet and an orange vest is limping",
+      "a person wearing a helmet and an orange vest fell to the ground",
+      "a person wearing a helmet and an orange vest is sitting",
+      "a person wearing a helmet and an orange vest is riding motocycle"
+    ],
+    "threshold": 23,
+    "confidence_threshold": 0.45,
+    "top_k": 3,
+    "batch_size": 32,
     "frame_sample_rate": 4,
+    "processing_mode": "sequential"
+  }
+}
+,
+{
+  "request_data": {
+    "skip_frames": true,
+    "num_of_skip_frames": 5,
+    "dataset_path": "experiments/UBnormal",
+    "model_path": "data/models/yolo11n.pt",
+    "num_segments": 8,
+    "categories": [
+      "a person wearing a helmet and an orange vest is walking",
+      "a person wearing a helmet and an orange vest is dancing",
+      "a person wearing a helmet and an orange vest is standing in place",
+      "a person wearing a helmet and an orange vest is jumping",
+      "a person wearing a helmet and an orange vest is running",
+      "a person wearing a helmet and an orange vest is fighting",
+      "a person wearing a helmet and an orange vest have something in hand",
+      "a person wearing a helmet and an orange vest is lying in the ground",
+      "a person wearing a helmet and an orange vest is limping",
+      "a person wearing a helmet and an orange vest fell to the ground",
+      "a person wearing a helmet and an orange vest is sitting",
+      "a person wearing a helmet and an orange vest is riding motocycle"
+    ],
+    "threshold": 23,
+    "confidence_threshold": 0.45,
+    "top_k": 3,
+    "batch_size": 32,
+    "frame_sample_rate": 5,
+    "processing_mode": "sequential"
+  }
+}
+,
+{
+  "request_data": {
+    "skip_frames": true,
+    "num_of_skip_frames": 5,
+    "dataset_path": "experiments/UBnormal",
+    "model_path": "data/models/yolo11n.pt",
+    "num_segments": 8,
+    "categories": [
+      "a person wearing a helmet and an orange vest is walking",
+      "a person wearing a helmet and an orange vest is dancing",
+      "a person wearing a helmet and an orange vest is standing in place",
+      "a person wearing a helmet and an orange vest is jumping",
+      "a person wearing a helmet and an orange vest is running",
+      "a person wearing a helmet and an orange vest is fighting",
+      "a person wearing a helmet and an orange vest have something in hand",
+      "a person wearing a helmet and an orange vest is lying in the ground",
+      "a person wearing a helmet and an orange vest is limping",
+      "a person wearing a helmet and an orange vest fell to the ground",
+      "a person wearing a helmet and an orange vest is sitting",
+      "a person wearing a helmet and an orange vest is riding motocycle"
+    ],
+    "threshold": 23,
+    "confidence_threshold": 0.45,
+    "top_k": 3,
+    "batch_size": 32,
+    "frame_sample_rate": 6,
+    "processing_mode": "sequential"
+  }
+}
+,
+{
+  "request_data": {
+    "skip_frames": true,
+    "num_of_skip_frames": 5,
+    "dataset_path": "experiments/UBnormal",
+    "model_path": "data/models/yolo11n.pt",
+    "num_segments": 8,
+    "categories": [
+      "a person wearing a helmet and an orange vest is walking",
+      "a person wearing a helmet and an orange vest is dancing",
+      "a person wearing a helmet and an orange vest is standing in place",
+      "a person wearing a helmet and an orange vest is jumping",
+      "a person wearing a helmet and an orange vest is running",
+      "a person wearing a helmet and an orange vest is fighting",
+      "a person wearing a helmet and an orange vest have something in hand",
+      "a person wearing a helmet and an orange vest is lying in the ground",
+      "a person wearing a helmet and an orange vest is limping",
+      "a person wearing a helmet and an orange vest fell to the ground",
+      "a person wearing a helmet and an orange vest is sitting",
+      "a person wearing a helmet and an orange vest is riding motocycle"
+    ],
+    "threshold": 23,
+    "confidence_threshold": 0.45,
+    "top_k": 3,
+    "batch_size": 32,
+    "frame_sample_rate": 7,
     "processing_mode": "sequential"
   }
 }
@@ -922,8 +712,8 @@
     "threshold": 23,
     "confidence_threshold": 0.45,
     "top_k": 3,
-    "batch_size": 48,
-    "frame_sample_rate": 2,
+    "batch_size": 32,
+    "frame_sample_rate": 9,
     "processing_mode": "sequential"
   }
 }
@@ -952,8 +742,8 @@
     "threshold": 23,
     "confidence_threshold": 0.45,
     "top_k": 3,
-    "batch_size": 48,
-    "frame_sample_rate": 4,
+    "batch_size": 32,
+    "frame_sample_rate": 10,
     "processing_mode": "sequential"
   }
 }
@@ -982,8 +772,8 @@
     "threshold": 23,
     "confidence_threshold": 0.45,
     "top_k": 3,
-    "batch_size": 48,
-    "frame_sample_rate": 8,
+    "batch_size": 32,
+    "frame_sample_rate": 12,
     "processing_mode": "sequential"
   }
 }
@@ -1012,8 +802,8 @@
     "threshold": 23,
     "confidence_threshold": 0.45,
     "top_k": 3,
-    "batch_size": 64,
-    "frame_sample_rate": 2,
+    "batch_size": 32,
+    "frame_sample_rate": 14,
     "processing_mode": "sequential"
   }
 }
@@ -1042,8 +832,8 @@
     "threshold": 23,
     "confidence_threshold": 0.45,
     "top_k": 3,
-    "batch_size": 64,
-    "frame_sample_rate": 4,
+    "batch_size": 32,
+    "frame_sample_rate": 16,
     "processing_mode": "sequential"
   }
 }
@@ -1072,16 +862,16 @@
     "threshold": 23,
     "confidence_threshold": 0.45,
     "top_k": 3,
-    "batch_size": 64,
-    "frame_sample_rate": 8,
+    "batch_size": 32,
+    "frame_sample_rate": 18,
     "processing_mode": "sequential"
   }
 }
 ,
 {
   "request_data": {
-    "skip_frames": false,
-    "num_of_skip_frames": 0,
+    "skip_frames": true,
+    "num_of_skip_frames": 5,
     "dataset_path": "experiments/UBnormal",
     "model_path": "data/models/yolo11n.pt",
     "num_segments": 8,
@@ -1102,248 +892,8 @@
     "threshold": 23,
     "confidence_threshold": 0.45,
     "top_k": 3,
-    "batch_size": 8,
-    "frame_sample_rate": 2,
-    "processing_mode": "sequential"
-  }
-}
-,
-{
-  "request_data": {
-    "skip_frames": false,
-    "num_of_skip_frames": 0,
-    "dataset_path": "experiments/UBnormal",
-    "model_path": "data/models/yolo11n.pt",
-    "num_segments": 8,
-    "categories": [
-      "a person wearing a helmet and an orange vest is walking",
-      "a person wearing a helmet and an orange vest is dancing",
-      "a person wearing a helmet and an orange vest is standing in place",
-      "a person wearing a helmet and an orange vest is jumping",
-      "a person wearing a helmet and an orange vest is running",
-      "a person wearing a helmet and an orange vest is fighting",
-      "a person wearing a helmet and an orange vest have something in hand",
-      "a person wearing a helmet and an orange vest is lying in the ground",
-      "a person wearing a helmet and an orange vest is limping",
-      "a person wearing a helmet and an orange vest fell to the ground",
-      "a person wearing a helmet and an orange vest is sitting",
-      "a person wearing a helmet and an orange vest is riding motocycle"
-    ],
-    "threshold": 23,
-    "confidence_threshold": 0.45,
-    "top_k": 3,
-    "batch_size": 8,
-    "frame_sample_rate": 4,
-    "processing_mode": "sequential"
-  }
-}
-,
-{
-  "request_data": {
-    "skip_frames": false,
-    "num_of_skip_frames": 0,
-    "dataset_path": "experiments/UBnormal",
-    "model_path": "data/models/yolo11n.pt",
-    "num_segments": 8,
-    "categories": [
-      "a person wearing a helmet and an orange vest is walking",
-      "a person wearing a helmet and an orange vest is dancing",
-      "a person wearing a helmet and an orange vest is standing in place",
-      "a person wearing a helmet and an orange vest is jumping",
-      "a person wearing a helmet and an orange vest is running",
-      "a person wearing a helmet and an orange vest is fighting",
-      "a person wearing a helmet and an orange vest have something in hand",
-      "a person wearing a helmet and an orange vest is lying in the ground",
-      "a person wearing a helmet and an orange vest is limping",
-      "a person wearing a helmet and an orange vest fell to the ground",
-      "a person wearing a helmet and an orange vest is sitting",
-      "a person wearing a helmet and an orange vest is riding motocycle"
-    ],
-    "threshold": 23,
-    "confidence_threshold": 0.45,
-    "top_k": 3,
-    "batch_size": 8,
-    "frame_sample_rate": 8,
-    "processing_mode": "sequential"
-  }
-}
-,
-{
-  "request_data": {
-    "skip_frames": false,
-    "num_of_skip_frames": 0,
-    "dataset_path": "experiments/UBnormal",
-    "model_path": "data/models/yolo11n.pt",
-    "num_segments": 8,
-    "categories": [
-      "a person wearing a helmet and an orange vest is walking",
-      "a person wearing a helmet and an orange vest is dancing",
-      "a person wearing a helmet and an orange vest is standing in place",
-      "a person wearing a helmet and an orange vest is jumping",
-      "a person wearing a helmet and an orange vest is running",
-      "a person wearing a helmet and an orange vest is fighting",
-      "a person wearing a helmet and an orange vest have something in hand",
-      "a person wearing a helmet and an orange vest is lying in the ground",
-      "a person wearing a helmet and an orange vest is limping",
-      "a person wearing a helmet and an orange vest fell to the ground",
-      "a person wearing a helmet and an orange vest is sitting",
-      "a person wearing a helmet and an orange vest is riding motocycle"
-    ],
-    "threshold": 23,
-    "confidence_threshold": 0.45,
-    "top_k": 3,
-    "batch_size": 16,
-    "frame_sample_rate": 2,
-    "processing_mode": "sequential"
-  }
-}
-,
-{
-  "request_data": {
-    "skip_frames": false,
-    "num_of_skip_frames": 0,
-    "dataset_path": "experiments/UBnormal",
-    "model_path": "data/models/yolo11n.pt",
-    "num_segments": 8,
-    "categories": [
-      "a person wearing a helmet and an orange vest is walking",
-      "a person wearing a helmet and an orange vest is dancing",
-      "a person wearing a helmet and an orange vest is standing in place",
-      "a person wearing a helmet and an orange vest is jumping",
-      "a person wearing a helmet and an orange vest is running",
-      "a person wearing a helmet and an orange vest is fighting",
-      "a person wearing a helmet and an orange vest have something in hand",
-      "a person wearing a helmet and an orange vest is lying in the ground",
-      "a person wearing a helmet and an orange vest is limping",
-      "a person wearing a helmet and an orange vest fell to the ground",
-      "a person wearing a helmet and an orange vest is sitting",
-      "a person wearing a helmet and an orange vest is riding motocycle"
-    ],
-    "threshold": 23,
-    "confidence_threshold": 0.45,
-    "top_k": 3,
-    "batch_size": 16,
-    "frame_sample_rate": 4,
-    "processing_mode": "sequential"
-  }
-}
-,
-{
-  "request_data": {
-    "skip_frames": false,
-    "num_of_skip_frames": 0,
-    "dataset_path": "experiments/UBnormal",
-    "model_path": "data/models/yolo11n.pt",
-    "num_segments": 8,
-    "categories": [
-      "a person wearing a helmet and an orange vest is walking",
-      "a person wearing a helmet and an orange vest is dancing",
-      "a person wearing a helmet and an orange vest is standing in place",
-      "a person wearing a helmet and an orange vest is jumping",
-      "a person wearing a helmet and an orange vest is running",
-      "a person wearing a helmet and an orange vest is fighting",
-      "a person wearing a helmet and an orange vest have something in hand",
-      "a person wearing a helmet and an orange vest is lying in the ground",
-      "a person wearing a helmet and an orange vest is limping",
-      "a person wearing a helmet and an orange vest fell to the ground",
-      "a person wearing a helmet and an orange vest is sitting",
-      "a person wearing a helmet and an orange vest is riding motocycle"
-    ],
-    "threshold": 23,
-    "confidence_threshold": 0.45,
-    "top_k": 3,
-    "batch_size": 16,
-    "frame_sample_rate": 8,
-    "processing_mode": "sequential"
-  }
-}
-,
-{
-  "request_data": {
-    "skip_frames": false,
-    "num_of_skip_frames": 0,
-    "dataset_path": "experiments/UBnormal",
-    "model_path": "data/models/yolo11n.pt",
-    "num_segments": 8,
-    "categories": [
-      "a person wearing a helmet and an orange vest is walking",
-      "a person wearing a helmet and an orange vest is dancing",
-      "a person wearing a helmet and an orange vest is standing in place",
-      "a person wearing a helmet and an orange vest is jumping",
-      "a person wearing a helmet and an orange vest is running",
-      "a person wearing a helmet and an orange vest is fighting",
-      "a person wearing a helmet and an orange vest have something in hand",
-      "a person wearing a helmet and an orange vest is lying in the ground",
-      "a person wearing a helmet and an orange vest is limping",
-      "a person wearing a helmet and an orange vest fell to the ground",
-      "a person wearing a helmet and an orange vest is sitting",
-      "a person wearing a helmet and an orange vest is riding motocycle"
-    ],
-    "threshold": 23,
-    "confidence_threshold": 0.45,
-    "top_k": 3,
-    "batch_size": 24,
-    "frame_sample_rate": 2,
-    "processing_mode": "sequential"
-  }
-}
-,
-{
-  "request_data": {
-    "skip_frames": false,
-    "num_of_skip_frames": 0,
-    "dataset_path": "experiments/UBnormal",
-    "model_path": "data/models/yolo11n.pt",
-    "num_segments": 8,
-    "categories": [
-      "a person wearing a helmet and an orange vest is walking",
-      "a person wearing a helmet and an orange vest is dancing",
-      "a person wearing a helmet and an orange vest is standing in place",
-      "a person wearing a helmet and an orange vest is jumping",
-      "a person wearing a helmet and an orange vest is running",
-      "a person wearing a helmet and an orange vest is fighting",
-      "a person wearing a helmet and an orange vest have something in hand",
-      "a person wearing a helmet and an orange vest is lying in the ground",
-      "a person wearing a helmet and an orange vest is limping",
-      "a person wearing a helmet and an orange vest fell to the ground",
-      "a person wearing a helmet and an orange vest is sitting",
-      "a person wearing a helmet and an orange vest is riding motocycle"
-    ],
-    "threshold": 23,
-    "confidence_threshold": 0.45,
-    "top_k": 3,
-    "batch_size": 24,
-    "frame_sample_rate": 4,
-    "processing_mode": "sequential"
-  }
-}
-,
-{
-  "request_data": {
-    "skip_frames": false,
-    "num_of_skip_frames": 0,
-    "dataset_path": "experiments/UBnormal",
-    "model_path": "data/models/yolo11n.pt",
-    "num_segments": 8,
-    "categories": [
-      "a person wearing a helmet and an orange vest is walking",
-      "a person wearing a helmet and an orange vest is dancing",
-      "a person wearing a helmet and an orange vest is standing in place",
-      "a person wearing a helmet and an orange vest is jumping",
-      "a person wearing a helmet and an orange vest is running",
-      "a person wearing a helmet and an orange vest is fighting",
-      "a person wearing a helmet and an orange vest have something in hand",
-      "a person wearing a helmet and an orange vest is lying in the ground",
-      "a person wearing a helmet and an orange vest is limping",
-      "a person wearing a helmet and an orange vest fell to the ground",
-      "a person wearing a helmet and an orange vest is sitting",
-      "a person wearing a helmet and an orange vest is riding motocycle"
-    ],
-    "threshold": 23,
-    "confidence_threshold": 0.45,
-    "top_k": 3,
-    "batch_size": 24,
-    "frame_sample_rate": 8,
+    "batch_size": 32,
+    "frame_sample_rate": 20,
     "processing_mode": "sequential"
   }
 }
@@ -1433,186 +983,6 @@
     "confidence_threshold": 0.45,
     "top_k": 3,
     "batch_size": 32,
-    "frame_sample_rate": 8,
-    "processing_mode": "sequential"
-  }
-}
-,
-{
-  "request_data": {
-    "skip_frames": false,
-    "num_of_skip_frames": 0,
-    "dataset_path": "experiments/UBnormal",
-    "model_path": "data/models/yolo11n.pt",
-    "num_segments": 8,
-    "categories": [
-      "a person wearing a helmet and an orange vest is walking",
-      "a person wearing a helmet and an orange vest is dancing",
-      "a person wearing a helmet and an orange vest is standing in place",
-      "a person wearing a helmet and an orange vest is jumping",
-      "a person wearing a helmet and an orange vest is running",
-      "a person wearing a helmet and an orange vest is fighting",
-      "a person wearing a helmet and an orange vest have something in hand",
-      "a person wearing a helmet and an orange vest is lying in the ground",
-      "a person wearing a helmet and an orange vest is limping",
-      "a person wearing a helmet and an orange vest fell to the ground",
-      "a person wearing a helmet and an orange vest is sitting",
-      "a person wearing a helmet and an orange vest is riding motocycle"
-    ],
-    "threshold": 23,
-    "confidence_threshold": 0.45,
-    "top_k": 3,
-    "batch_size": 48,
-    "frame_sample_rate": 2,
-    "processing_mode": "sequential"
-  }
-}
-,
-{
-  "request_data": {
-    "skip_frames": false,
-    "num_of_skip_frames": 0,
-    "dataset_path": "experiments/UBnormal",
-    "model_path": "data/models/yolo11n.pt",
-    "num_segments": 8,
-    "categories": [
-      "a person wearing a helmet and an orange vest is walking",
-      "a person wearing a helmet and an orange vest is dancing",
-      "a person wearing a helmet and an orange vest is standing in place",
-      "a person wearing a helmet and an orange vest is jumping",
-      "a person wearing a helmet and an orange vest is running",
-      "a person wearing a helmet and an orange vest is fighting",
-      "a person wearing a helmet and an orange vest have something in hand",
-      "a person wearing a helmet and an orange vest is lying in the ground",
-      "a person wearing a helmet and an orange vest is limping",
-      "a person wearing a helmet and an orange vest fell to the ground",
-      "a person wearing a helmet and an orange vest is sitting",
-      "a person wearing a helmet and an orange vest is riding motocycle"
-    ],
-    "threshold": 23,
-    "confidence_threshold": 0.45,
-    "top_k": 3,
-    "batch_size": 48,
-    "frame_sample_rate": 4,
-    "processing_mode": "sequential"
-  }
-}
-,
-{
-  "request_data": {
-    "skip_frames": false,
-    "num_of_skip_frames": 0,
-    "dataset_path": "experiments/UBnormal",
-    "model_path": "data/models/yolo11n.pt",
-    "num_segments": 8,
-    "categories": [
-      "a person wearing a helmet and an orange vest is walking",
-      "a person wearing a helmet and an orange vest is dancing",
-      "a person wearing a helmet and an orange vest is standing in place",
-      "a person wearing a helmet and an orange vest is jumping",
-      "a person wearing a helmet and an orange vest is running",
-      "a person wearing a helmet and an orange vest is fighting",
-      "a person wearing a helmet and an orange vest have something in hand",
-      "a person wearing a helmet and an orange vest is lying in the ground",
-      "a person wearing a helmet and an orange vest is limping",
-      "a person wearing a helmet and an orange vest fell to the ground",
-      "a person wearing a helmet and an orange vest is sitting",
-      "a person wearing a helmet and an orange vest is riding motocycle"
-    ],
-    "threshold": 23,
-    "confidence_threshold": 0.45,
-    "top_k": 3,
-    "batch_size": 48,
-    "frame_sample_rate": 8,
-    "processing_mode": "sequential"
-  }
-}
-,
-{
-  "request_data": {
-    "skip_frames": false,
-    "num_of_skip_frames": 0,
-    "dataset_path": "experiments/UBnormal",
-    "model_path": "data/models/yolo11n.pt",
-    "num_segments": 8,
-    "categories": [
-      "a person wearing a helmet and an orange vest is walking",
-      "a person wearing a helmet and an orange vest is dancing",
-      "a person wearing a helmet and an orange vest is standing in place",
-      "a person wearing a helmet and an orange vest is jumping",
-      "a person wearing a helmet and an orange vest is running",
-      "a person wearing a helmet and an orange vest is fighting",
-      "a person wearing a helmet and an orange vest have something in hand",
-      "a person wearing a helmet and an orange vest is lying in the ground",
-      "a person wearing a helmet and an orange vest is limping",
-      "a person wearing a helmet and an orange vest fell to the ground",
-      "a person wearing a helmet and an orange vest is sitting",
-      "a person wearing a helmet and an orange vest is riding motocycle"
-    ],
-    "threshold": 23,
-    "confidence_threshold": 0.45,
-    "top_k": 3,
-    "batch_size": 64,
-    "frame_sample_rate": 2,
-    "processing_mode": "sequential"
-  }
-}
-,
-{
-  "request_data": {
-    "skip_frames": false,
-    "num_of_skip_frames": 0,
-    "dataset_path": "experiments/UBnormal",
-    "model_path": "data/models/yolo11n.pt",
-    "num_segments": 8,
-    "categories": [
-      "a person wearing a helmet and an orange vest is walking",
-      "a person wearing a helmet and an orange vest is dancing",
-      "a person wearing a helmet and an orange vest is standing in place",
-      "a person wearing a helmet and an orange vest is jumping",
-      "a person wearing a helmet and an orange vest is running",
-      "a person wearing a helmet and an orange vest is fighting",
-      "a person wearing a helmet and an orange vest have something in hand",
-      "a person wearing a helmet and an orange vest is lying in the ground",
-      "a person wearing a helmet and an orange vest is limping",
-      "a person wearing a helmet and an orange vest fell to the ground",
-      "a person wearing a helmet and an orange vest is sitting",
-      "a person wearing a helmet and an orange vest is riding motocycle"
-    ],
-    "threshold": 23,
-    "confidence_threshold": 0.45,
-    "top_k": 3,
-    "batch_size": 64,
-    "frame_sample_rate": 4,
-    "processing_mode": "sequential"
-  }
-}
-,
-{
-  "request_data": {
-    "skip_frames": false,
-    "num_of_skip_frames": 0,
-    "dataset_path": "experiments/UBnormal",
-    "model_path": "data/models/yolo11n.pt",
-    "num_segments": 8,
-    "categories": [
-      "a person wearing a helmet and an orange vest is walking",
-      "a person wearing a helmet and an orange vest is dancing",
-      "a person wearing a helmet and an orange vest is standing in place",
-      "a person wearing a helmet and an orange vest is jumping",
-      "a person wearing a helmet and an orange vest is running",
-      "a person wearing a helmet and an orange vest is fighting",
-      "a person wearing a helmet and an orange vest have something in hand",
-      "a person wearing a helmet and an orange vest is lying in the ground",
-      "a person wearing a helmet and an orange vest is limping",
-      "a person wearing a helmet and an orange vest fell to the ground",
-      "a person wearing a helmet and an orange vest is sitting",
-      "a person wearing a helmet and an orange vest is riding motocycle"
-    ],
-    "threshold": 23,
-    "confidence_threshold": 0.45,
-    "top_k": 3,
-    "batch_size": 64,
     "frame_sample_rate": 8,
     "processing_mode": "sequential"
   }

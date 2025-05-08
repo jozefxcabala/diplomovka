@@ -68,7 +68,7 @@ class XCLIPHandler:
         """
         Analyzes the entire video, splits it into batches of frames, performs classification, and returns the results.
         """
-        frames = self.process_video(video_path, batch_size, frame_sample_rate)
+        frames = self.process_video(video_path, 32, frame_sample_rate)
 
         descriptions = self.extract_descriptions()
         logits_per_video = self.classify_batch(frames, descriptions)

@@ -13,6 +13,9 @@ def save_results_to_db(results, video_id, db_manager: DatabaseManager):
     try:
         db_manager.connect()
         for detection_id, logits_per_video in results:
+            if logits_per_video is None:
+                print(f"⚠️  Skipping detection {detection_id} due to previous error.")
+                continue
             logits_binary = logits_per_video.numpy().tobytes()
             db_manager.insert_anomaly_recognition_data(video_id, detection_id, logits_binary)
     except Exception as e:
@@ -38,7 +41,8 @@ def analyze_video_task(args):
         result = handler.analyze_video(video_path, batch_size=batch_size, frame_sample_rate=frame_sample_rate)
         return (detection_id, result)
     except Exception as e:
-        return f"❌ Error in detection {detection_id}: {e}"
+        print(f"❌ Error in detection {detection_id}: {e}")
+        return (detection_id, None)
 
 def main(video_id, categories_json, batch_size = 32, frame_sample_rate = 4, processing_mode = "parallel"):
     print(f"The XCLIP - Action Recognition program has started.")
