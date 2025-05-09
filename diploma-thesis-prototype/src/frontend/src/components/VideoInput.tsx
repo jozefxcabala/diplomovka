@@ -34,7 +34,7 @@ const VideoInput: React.FC<VideoInputProps> = ({ width = 640, height = 360, onVi
         className="video-input-hidden"
         type="file"
         onChange={handleFileChange}
-        accept=".mov,.mp4"
+        accept=".mp4"
         hidden
       />
       {!source && (
