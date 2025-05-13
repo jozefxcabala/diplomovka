@@ -9,7 +9,8 @@ from fastapi.responses import JSONResponse
 
 from backend.app.services.ubnormal_experiment_service import (
     load_analyzed_filenames_with_objects_and_anomalies_from_annotations,
-    evaluate_results as evaluate_results_ubnormal
+    evaluate_results as evaluate_results_ubnormal,
+    get_activities_for_scene
 )
 from backend.app.services.experiment_service import run_full_analysis
 
@@ -62,12 +63,14 @@ def run_experiment_pipeline(request: UBnormalExperimentRequest):
     normal_video_analysis_results = []
     abnormal_video_analysis_results = []
 
-    counter = 0
-    scenes_to_process = 1
+    categories_for_scenes = get_activities_for_scene(scenes, request.categories)
+
+    # counter = 0
+    # scenes_to_process = 1
 
     for scene_name, scene_data in scenes.items():
-        if counter >= scenes_to_process:
-            break
+        # if counter >= scenes_to_process:
+            # break
 
         normals = scene_data["normal"]
         for normal_entry in normals:
@@ -78,7 +81,7 @@ def run_experiment_pipeline(request: UBnormalExperimentRequest):
                 processing_mode=request.processing_mode,
                 classes_to_detect=[0],
                 name_of_analysis=f"{normal_entry['path']}_analysis",
-                categories=request.categories,
+                categories=categories_for_scenes[scene_name],
                 threshold=request.threshold,
                 skip_frames=request.skip_frames,
                 num_of_skip_frames=request.num_of_skip_frames,
@@ -98,7 +101,7 @@ def run_experiment_pipeline(request: UBnormalExperimentRequest):
                 processing_mode=request.processing_mode,
                 classes_to_detect=[0],
                 name_of_analysis=f"{abnormal_entry['path']}_analysis",
-                categories=request.categories,
+                categories=categories_for_scenes[scene_name],
                 threshold=request.threshold,
                 skip_frames=request.skip_frames,
                 num_of_skip_frames=request.num_of_skip_frames,
@@ -109,7 +112,7 @@ def run_experiment_pipeline(request: UBnormalExperimentRequest):
             )
             abnormal_video_analysis_results.append(abnormal_full_analysis_response)
 
-        counter += 1
+        # counter += 1
 
     end_time = time.time()
     total_duration = round(end_time - start_time, 2)

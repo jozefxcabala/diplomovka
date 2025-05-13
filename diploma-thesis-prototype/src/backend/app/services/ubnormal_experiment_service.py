@@ -2,6 +2,26 @@ import os
 import re
 from collections import defaultdict
 
+def get_activities_for_scene(scenes: dict, CATEGORIES: list[str]) -> dict[str, list[str]]:
+    category_set = set(c.lower() for c in CATEGORIES)
+    scene_to_activities = {}
+
+    for scene_key, scene_data in scenes.items():
+        activities = set()
+
+        for label_type in ["normal", "abnormal"]:
+            for video_entry in scene_data[label_type]:
+                for obj in video_entry["objects"].values():
+                    for anomaly in obj.get("anomalies", []):
+                        if "activity" in anomaly:
+                            activity = anomaly["activity"].strip().lower()
+                            if activity in category_set:
+                                activities.add(activity)
+
+        scene_to_activities[scene_key] = sorted(activities)
+
+    return scene_to_activities
+
 def safe_parse(value):
     return value if value != "-" else "unset"
 
