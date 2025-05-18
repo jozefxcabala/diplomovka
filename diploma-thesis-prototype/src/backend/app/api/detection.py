@@ -1,3 +1,12 @@
+"""
+detection.py
+
+This API router handles object detection functionality.
+
+Endpoints:
+- POST /object-detection: runs the object detection pipeline with provided parameters.
+- GET /detections/{video_id}: retrieves detections for a given video ID.
+"""
 from fastapi import APIRouter, HTTPException
 from backend.app.models.detection_models import DetectionRequest, DetectionResponse
 from backend.app.services.detection_service import run_object_detection

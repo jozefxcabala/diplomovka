@@ -1,3 +1,20 @@
+/**
+ * ExperimentParamsModal component
+ *
+ * A modal interface for editing experiment parameters in YAML format.
+ * This component is used to configure how the experiment is executed.
+ *
+ * Props:
+ * - isOpen: controls the visibility of the modal
+ * - onClose: function to close the modal
+ * - onApply: callback triggered with the parsed experiment settings
+ * - existingRequest: the current experiment configuration to prefill the editor
+ *
+ * Features:
+ * - Loads the existing experiment request and serializes it as YAML
+ * - Allows the user to modify the YAML
+ * - Validates YAML input before applying the configuration
+ */
 import React, { useState, useEffect } from "react";
 import yaml from "js-yaml";
 import "./ExperimentParamsModal.css";
@@ -28,6 +45,7 @@ const ExperimentParamsModal: React.FC<ExperimentParamsModalProps> = ({ isOpen, o
   const [yamlText, setYamlText] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
 
+  // Load and serialize the existing request when modal opens
   useEffect(() => {
     if (isOpen && existingRequest) {
       try {
@@ -39,6 +57,7 @@ const ExperimentParamsModal: React.FC<ExperimentParamsModalProps> = ({ isOpen, o
     }
   }, [isOpen, existingRequest]);
 
+  // Parse YAML input and apply settings if valid
   const handleApply = () => {
     try {
       const parsed = yaml.load(yamlText) as ExperimentRequest;
@@ -49,8 +68,10 @@ const ExperimentParamsModal: React.FC<ExperimentParamsModalProps> = ({ isOpen, o
     }
   };
 
+  // Don’t render modal when it's closed
   if (!isOpen) return null;
 
+  // Modal content and layout
   return (
     <div className="modal-overlay">
       <div className="modal-content">

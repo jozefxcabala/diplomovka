@@ -1,3 +1,13 @@
+# This script evaluates anomaly detection results per scene using video annotations and stored detection results.
+#
+# Functionality:
+# - Parses command-line arguments to configure threshold, confidence threshold, and top_k values.
+# - Loads ground-truth annotations from the UBnormal dataset.
+# - Fetches detections and anomaly logits from a PostgreSQL database.
+# - Matches detections against ground-truth activities for each video.
+# - Computes evaluation metrics (precision, recall, F1-score) per scene.
+# - Outputs results as a JSON summary.
+
 from collections import defaultdict
 import io
 import json
@@ -38,7 +48,7 @@ parser.add_argument('--confidence_threshold', type=float, default=0.1, help='Min
 parser.add_argument('--top_k', type=int, default=3, help='Number of top logits to consider (default: 3)')
 args = parser.parse_args()
 
-# Použitie argumentov
+# Use parsed arguments
 THRESHOLD = args.threshold
 CONFIDENCE_THRESHOLD = args.confidence_threshold
 TOP_K = args.top_k
@@ -59,7 +69,7 @@ CATEGORIES = [
 ]
 
 def format_duration(seconds):
-    """Vráti formátovaný string z počtu sekúnd: X hodín Y minút Z sekúnd"""
+    """Return formatted duration string (X h Y min Z s)"""
     hours = int(seconds) // 3600
     minutes = (int(seconds) % 3600) // 60
     secs = int(seconds) % 60
@@ -160,7 +170,7 @@ def safe_parse(value):
     return value if value != "-" else "unset"
 
 def parse_annotation_line(line: str):
-    parts = [safe_parse(p) for p in re.split(r'[,\s]+', line.strip(), maxsplit=6)]  # maxsplit=6, lebo už nie je object_id
+    parts = [safe_parse(p) for p in re.split(r'[,\s]+', line.strip(), maxsplit=6)]  # maxsplit=6, object_id is excluded
 
     if len(parts) >= 7:
         scene = parts[0]
@@ -235,23 +245,23 @@ def load_scenes(video_root_path: str) -> dict[str, dict[str, list[dict]]]:
                         if key not in video_entries:
                             video_entries[key] = {}
 
-                        # Generovanie nového object_id ak treba
+                        # Generate new object_id if needed
                         next_object_id = str(len(video_entries[key]) + 1)
 
-                        # Vytvor objekt pre nové object_id
+                        # Create object for new object_id
                         video_entries[key][next_object_id] = {
                             "name": "person",
                             "anomalies": []
                         }
 
-                        # Zapíš anomáliu do objektu
+                        # Add anomaly to object
                         video_entries[key][next_object_id]["anomalies"].append({
                             "start": start,
                             "end": end,
                             "activity": activity
                         })
 
-                # vytvoríme video entries
+                # Create video entries
                 for (scene_num, scenario_num, label, part_num), objects in video_entries.items():
                     if (isinstance(part_num, int) or part_num in ["fire", "fog", "smoke"]) and part_num != "unset":
                         video_filename = f"{label}_scene_{scene_num}_scenario_{scenario_num}_{part_num}.mp4"
@@ -267,7 +277,7 @@ def load_scenes(video_root_path: str) -> dict[str, dict[str, list[dict]]]:
 
                     temp_result[scene_key][label].append(video_info)
 
-    # zoradenie
+    # Sort scenes
     sorted_result = {}
     for scene_key in sorted(temp_result.keys(), key=lambda k: int(k.split('_')[1])):
         sorted_result[scene_key] = {
@@ -298,19 +308,19 @@ def get_activities_for_scenes(scenes: dict, CATEGORIES: list[str]) -> dict[str, 
     return scene_to_activities
 
 def get_gt_activities_for_scene(path: str, scenes: dict, categories: list[str]) -> list[str]:
-    # Extrahuj názov scény zo súborovej cesty (napr. Scene1)
+    # Extract scene name from path (e.g., Scene1)
     match = re.search(r"/Scene(\d+)/", path)
 
     if not match:
         return []
 
-    scene_number = match.group(1)  # napr. "1"
-    target_scene = f"scene_{scene_number}"  # → "scene_1"
+    scene_number = match.group(1)
+    target_scene = f"scene_{scene_number}"
     categories_set = set(c.strip().lower() for c in categories)
     activities = []
 
     for scene_key, scene_data in scenes.items():
-        if target_scene in scene_key.lower():  # napr. 'scene1' in 'scene_1'
+        if target_scene in scene_key.lower():
             for label_type in ["normal", "abnormal"]:
                 for video_entry in scene_data[label_type]:
                     for obj in video_entry["objects"].values():

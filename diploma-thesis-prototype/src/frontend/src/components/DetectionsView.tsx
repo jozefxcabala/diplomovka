@@ -1,3 +1,18 @@
+/**
+ * DetectionsView component
+ *
+ * Displays a list of detection results from a video analysis.
+ * Each detection can be clicked to seek to the corresponding timestamp in the video.
+ *
+ * Props:
+ * - detections: array of detection objects with id, timestamp, confidence, and anomalies
+ * - onDetectionClick: callback to jump to the detection timestamp in the video
+ * - fps: frames per second used to convert timestamp to seconds
+ *
+ * Features:
+ * - Displays the top anomaly label per detection (by score)
+ * - Highlights timestamp and ID for each detection
+ */
 import React from "react";
 import "./DetectionsView.css"; 
 
@@ -21,6 +36,7 @@ const DetectionsView: React.FC<DetectionViewProps> = ({ detections, onDetectionC
   return (
     <div className="detection-view">
       {detections.map((detection) => {
+        // Select the top-scoring anomaly for display
         const topAnomaly = detection.anomalies.length > 0
           ? detection.anomalies.reduce((best, current) =>
               current.score > best.score ? current : best
@@ -28,6 +44,7 @@ const DetectionsView: React.FC<DetectionViewProps> = ({ detections, onDetectionC
           : null;
 
         return (
+          // Clicking the item triggers a jump to the video timestamp
           <div key={detection.id} className="detection-item" onClick={() => onDetectionClick(detection.timestamp)}>
             <div className="detection-info">
               <h3 className="detection-title">

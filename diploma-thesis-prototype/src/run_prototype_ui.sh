@@ -1,5 +1,17 @@
 #!/bin/bash
 
+# This script controls the startup, stop, and mode selection for the diploma thesis prototype system.
+#
+# Functionality:
+# - Supports launching backend, frontend, or both (default).
+# - Provides a mode for running experiments, including dataset download if needed.
+# - Starts the HTTP server for video access and logs its output.
+# - Activates a virtual environment for backend services if present.
+# - Routes logs to the appropriate directory and supports graceful shutdown.
+#
+# Usage:
+#   ./run_prototype_ui.sh [--backend | --frontend | --prod | --stop | --experiments]
+
 MODE="all"
 RELOAD_FLAG="--reload"
 EXPERIMENTS_MODE="false"
@@ -26,7 +38,7 @@ elif [ "$1" == "--experiments" ]; then
     EXPERIMENTS_MODE="true"
 fi
 
-# 🛑 Stop mode
+# Gracefully stop all running services if --stop is passed
 if [ "$MODE" == "stop" ]; then
     echo "🛑 Stopping all running servers..."
     pkill -f "python3 -m http.server"

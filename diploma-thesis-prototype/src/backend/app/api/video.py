@@ -1,3 +1,13 @@
+"""
+video.py
+
+This API router handles video-related endpoints for the prototype backend.
+
+Endpoints:
+- GET /video/{video_id}: retrieves metadata for a specific video.
+- POST /video/visualization: triggers the visualization of detected anomalies.
+- POST /video/upload: uploads a video file to the server.
+"""
 from fastapi import APIRouter, HTTPException
 from backend.app.models.video_models import VideoVisualizationRequest
 from backend.app.services.video_service import run_video_visualization, save_uploaded_video, get_video_data

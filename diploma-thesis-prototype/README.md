@@ -36,6 +36,8 @@ cd src
 Run the prototype with:
 
 ```bash
+# Run this first to stop any previous sessions in case the last one ended unexpectedly
+./run_prototype_ui.sh --stop 
 # Starts the full prototype: HTTP video server, FastAPI backend, and standard React frontend
 ./run_prototype_ui.sh
 ```
@@ -72,6 +74,7 @@ These commands launch various parts of the prototype UI stack:
 When running the script, logs will be written to:
 
 - `backend.log` — FastAPI backend
+- `experiment_backend.log` — FastAPI backend for experiments
 - `frontend.log` — Standard React frontend
 - `experiments-ui-frontend.log` — Experimental frontend (if used)
 - `http_server.log` — Simple HTTP server for video hosting
@@ -90,3 +93,46 @@ Use `tail -f <logfile>` to monitor logs in real time.
   ```
   
   The active environment should be `diploma-thesis-prototype-env`.
+
+## Project Structure
+
+The project is organized into the following main directories:
+
+```
+diploma-thesis-prototype/
+├── data/                          # Input data and models
+│   ├── input/                     # Categories, YAML configurations, test video
+│   ├── models/                    # Training models (e.g. YOLO)
+│   └── output/                    # Output results – detections, segments, visualization
+│
+├── enviroments/                  # Conda environment setup files for Linux and Windows
+│
+├── experiments/                  # Evaluation pipeline and scripts
+│   ├── payloads/                 # Experiment configurations (JSON)
+│   ├── results/                  # Experiment results (metrics, outputs)
+│   ├── scripts/                  # Supporting shell scripts (eval, count, run, find...)
+│   └── UBnormal/                 # UBnormal dataset (scenes, annotations, videos)
+│
+├── logs/                         # Log output from all system components
+│
+├── src/
+│   ├── backend/
+│   │   ├── app/
+│   │   │   ├── api/              # FastAPI routers for different services
+│   │   │   ├── core/             # Logic for video processing, detection, recognition
+│   │   │   ├── models/           # Pydantic models (request/response, DB)
+│   │   │   ├── services/         # Service layer for detection, config, result handling
+│   │   │   └── utils/            # Helper utilities (file handling, conversions)
+│   │   └── requirements.txt      # Python dependencies for the backend
+│
+│   ├── frontend/                 # Main React frontend UI
+│   │   ├── components/           # Modals, detection display, inputs
+│   │   └── pages/                # StartupScreen, FirstScreen, SecondScreen, etc.
+│
+│   ├── experiments-ui-frontend/  # Experimental React frontend
+│       ├── components/           # Parameter modal, charts, result cards
+│       └── ExperimentsPage.tsx   # Main experiments interface
+│
+├── run_prototype_ui.sh           # Main script for launching backend and frontend
+├── setup.sh                      # Setup script for installing dependencies
+```

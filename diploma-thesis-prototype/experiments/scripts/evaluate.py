@@ -1,3 +1,13 @@
+# This script evaluates anomaly recognition results for each video using stored detection outputs and ground-truth annotations.
+#
+# Functionality:
+# - Parses command-line arguments to configure threshold, confidence threshold, and top_k.
+# - Loads video metadata and annotations from the UBnormal dataset.
+# - Fetches detection results and anomaly logits from a PostgreSQL database.
+# - Interprets anomalies using top-K scores over a list of predefined categories.
+# - Compares detected anomalies against ground-truth to calculate TP, FP, FN, TN.
+# - Computes evaluation metrics: precision, recall, and F1-score.
+
 from collections import defaultdict
 import io
 import re
@@ -58,7 +68,7 @@ CATEGORIES = [
 ]
 
 def format_duration(seconds):
-    """Vráti formátovaný string z počtu sekúnd: X hodín Y minút Z sekúnd"""
+    """Return formatted duration string from seconds (e.g., X h Y min Z s)."""
     hours = int(seconds) // 3600
     minutes = (int(seconds) % 3600) // 60
     secs = int(seconds) % 60
@@ -76,7 +86,7 @@ def interpret_result(video_id: int, threshold: float, list_of_categories: List[s
         with contextlib.redirect_stdout(io.StringIO()):
             db_manager.connect()
 
-        # 1️⃣ Získaj všetky detection_id s confidence >= threshold
+        # Step 1: Get all detection_id with confidence >= threshold
         conn = psycopg2.connect(**DB_CONFIG)
         cur = conn.cursor()
         cur.execute("""
@@ -87,15 +97,15 @@ def interpret_result(video_id: int, threshold: float, list_of_categories: List[s
         cur.close()
         conn.close()
 
-        # 2️⃣ Získaj všetky logity pre video
+        # Step 2: Get all logits for the video
         all_logits = db_manager.get_anomaly_recognition_data_by_video_id(video_id)
 
-        # 3️⃣ Filtrovanie na tie, ktoré majú confidence nad prahom
+        # Step 3: Filter logits for valid detections
         logits_per_video_binary_map = [
             entry for entry in all_logits if entry['detection_id'] in valid_detection_ids
         ]
 
-        # 4️⃣ Interpretácia
+        # Step 4: Interpret logits and extract top anomalies
         for data in logits_per_video_binary_map:
             detection_id = int(data['detection_id'])
             logits_tensor = torch.tensor(np.frombuffer(data['logits_per_video'], dtype=np.float32))
@@ -210,7 +220,7 @@ def safe_parse(value):
     return value if value != "-" else "unset"
 
 def parse_annotation_line(line: str):
-    parts = [safe_parse(p) for p in re.split(r'[,\s]+', line.strip(), maxsplit=6)]  # maxsplit=6, lebo už nie je object_id
+    parts = [safe_parse(p) for p in re.split(r'[,\s]+', line.strip(), maxsplit=6)]  # maxsplit=6, since object_id is not included
 
     if len(parts) >= 7:
         scene = parts[0]
@@ -285,23 +295,23 @@ def load_scenes(video_root_path: str) -> dict[str, dict[str, list[dict]]]:
                         if key not in video_entries:
                             video_entries[key] = {}
 
-                        # Generovanie nového object_id ak treba
+                        # Generate new object_id if needed
                         next_object_id = str(len(video_entries[key]) + 1)
 
-                        # Vytvor objekt pre nové object_id
+                        # Create object entry for the new object_id
                         video_entries[key][next_object_id] = {
                             "name": "person",
                             "anomalies": []
                         }
 
-                        # Zapíš anomáliu do objektu
+                        # Add anomaly entry to the object
                         video_entries[key][next_object_id]["anomalies"].append({
                             "start": start,
                             "end": end,
                             "activity": activity
                         })
 
-                # vytvoríme video entries
+                # Create video entries per video
                 for (scene_num, scenario_num, label, part_num), objects in video_entries.items():
                     if (isinstance(part_num, int) or part_num in ["fire", "fog", "smoke"]) and part_num != "unset":
                         video_filename = f"{label}_scene_{scene_num}_scenario_{scenario_num}_{part_num}.mp4"
@@ -317,7 +327,7 @@ def load_scenes(video_root_path: str) -> dict[str, dict[str, list[dict]]]:
 
                     temp_result[scene_key][label].append(video_info)
 
-    # zoradenie
+    # Sort scenes
     sorted_result = {}
     for scene_key in sorted(temp_result.keys(), key=lambda k: int(k.split('_')[1])):
         sorted_result[scene_key] = {
@@ -348,19 +358,19 @@ def get_activities_for_scenes(scenes: dict, CATEGORIES: list[str]) -> dict[str, 
     return scene_to_activities
 
 def get_gt_activities_for_scene(path: str, scenes: dict, categories: list[str]) -> list[str]:
-    # Extrahuj názov scény zo súborovej cesty (napr. Scene1)
+    # Extract scene name from path (e.g., Scene1)
     match = re.search(r"/Scene(\d+)/", path)
 
     if not match:
         return []
 
-    scene_number = match.group(1)  # napr. "1"
-    target_scene = f"scene_{scene_number}"  # → "scene_1"
+    scene_number = match.group(1)
+    target_scene = f"scene_{scene_number}"
     categories_set = set(c.strip().lower() for c in categories)
     activities = []
 
     for scene_key, scene_data in scenes.items():
-        if target_scene in scene_key.lower():  # napr. 'scene1' in 'scene_1'
+        if target_scene in scene_key.lower():
             for label_type in ["normal", "abnormal"]:
                 for video_entry in scene_data[label_type]:
                     for obj in video_entry["objects"].values():
@@ -369,7 +379,7 @@ def get_gt_activities_for_scene(path: str, scenes: dict, categories: list[str]) 
                                 act = anomaly["activity"].strip().lower()
                                 if act in categories_set:
                                     activities.append(act)
-        return activities
+            return activities
     return []
 
 def main():
@@ -389,7 +399,7 @@ def main():
         vpath = re.sub(r'^.*(?=/UBnormal)', '../..', video["video_path"])
         categories = get_gt_activities_for_scene(vpath, scenes, CATEGORIES)
 
-        # ⏳ Live progresný výpis (prepisuje sa)
+        # Optional live progress output
         progress_str = f"{idx + 1}/{len(videos)} videos processed"
         # print(progress_str.ljust(40), end="\r", flush=True)
 
@@ -414,7 +424,7 @@ def main():
             "result": result_dict
         })
 
-    # Výpočty metrík
+    # Metric calculations
     tp, fp, fn, tn = evaluate_results(interpreter_results, scenes, CATEGORIES)
 
     precision = tp / (tp + fp) if (tp + fp) > 0 else 0

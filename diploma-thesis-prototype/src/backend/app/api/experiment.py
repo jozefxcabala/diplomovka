@@ -1,3 +1,15 @@
+"""
+experiment.py
+
+This API router provides an endpoint for executing the full analysis pipeline over the UBnormal dataset.
+It loads scenes and annotations, runs detection and anomaly recognition on each video,
+evaluates the results, and returns performance metrics.
+
+Endpoint:
+- POST /experiments/ubnormal/run: launches the evaluation over all scenes (normal and abnormal),
+  then returns TP, FP, FN, TN, and derived metrics such as precision, recall, and F1-score.
+"""
+
 import os
 import time
 from typing import List
@@ -65,6 +77,7 @@ def run_experiment_pipeline(request: UBnormalExperimentRequest):
 
     categories_for_scenes = get_activities_for_scene(scenes, request.categories)
 
+    # Optional: limit number of scenes to process (disabled by default)
     # counter = 0
     # scenes_to_process = 1
 

@@ -1,3 +1,22 @@
+/**
+ * PrototypeSettingModal component
+ *
+ * A modal component for configuring analysis settings in YAML format.
+ *
+ * Features:
+ * - Textarea input for YAML-based setting customization
+ * - File upload input to load settings from a `.yaml` file
+ * - Button to load default settings
+ * - Validation to check if YAML is correctly formatted
+ *
+ * Props:
+ * - isOpen: controls whether the modal is visible
+ * - onClose: closes the modal
+ * - onUseSettings: callback that receives the parsed settings object
+ * - existingSettings: optionally preload existing settings
+ * - existingSelectedFileName: optionally display a previously selected file name
+ * - setSelectedSettingsFileName: updates the file name in parent state
+ */
 import React, { useState, useEffect } from "react";
 import yaml from "js-yaml";
 import "./PrototypeSettingsModal.css";
@@ -11,14 +30,26 @@ interface PrototypeSettingModalProps {
   setSelectedSettingsFileName?: (selectedFileName: string) => void;
 }
 
-const defaultYaml = `model_path: "data/models/yolo11n.pt"
+const defaultYaml = `
+###############################################
+##            DO NOT CHANGE THIS             ##
+###############################################
+model_path: "data/models/yolo11n.pt"
+batch_size: 32
+frame_sample_rate: 4
 num_segments: 8
 processing_mode: "parallel"
 classes_to_detect:
   - 0
+skip_frames: true
+num_of_skip_frames: 5
+###############################################
+##            YOU CAN CHANGE THIS            ##
+###############################################
 threshold: 22
-batch_size: 32
-frame_sample_rate: 4`;
+confidence_threshold: 0.6
+top_k: 1
+`;
 
 const PrototypeSettingModal: React.FC<PrototypeSettingModalProps> = ({
   isOpen,

@@ -1,3 +1,15 @@
+"""
+anomaly_recognition.py
+
+This script runs anomaly recognition using the XCLIP model. It analyzes video segments
+related to previously detected objects and saves the recognition logits to the database.
+
+Main Functions:
+- main: orchestrates the full recognition workflow using multiprocessing (or sequential mode).
+- fetch_video_segments: retrieves video segments tied to object detections.
+- analyze_video_task: processes a single video segment using the XCLIP handler.
+- save_results_to_db: stores recognition results in the database.
+"""
 from backend.app.core.xclip_handler import XCLIPHandler
 import time
 import argparse
@@ -75,7 +87,7 @@ def main(video_id, categories_json, batch_size = 32, frame_sample_rate = 4, proc
             with Pool(processes=min(len(videos), num_processes)) as pool:
                 results = pool.map(analyze_video_task, [(video_path, list_of_categories, detection_id, batch_size, frame_sample_rate) for video_path, detection_id in videos])
         except KeyboardInterrupt:
-            print("\Analyzing was interrupted. Terminating threads...")
+            print("⚠️  Analyzing was interrupted. Terminating threads...")
             pool.terminate()
             raise DetectionInterruptedError("The analyzing was manually interrupted.")
         finally:

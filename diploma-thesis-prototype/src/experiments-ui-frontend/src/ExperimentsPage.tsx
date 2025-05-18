@@ -1,3 +1,19 @@
+/****
+ * ExperimentsPage component
+ *
+ * This page provides an interface for running and visualizing anomaly detection experiments
+ * on the UBnormal dataset. It allows users to:
+ * - Set custom experiment parameters via a modal.
+ * - Launch the experiment by sending a request to the backend.
+ * - Visualize evaluation results with bar charts (counts and metrics).
+ * - Download results as a JSON file.
+ *
+ * State:
+ * - request: input parameters for the backend experiment API.
+ * - results: evaluation output (precision, recall, F1, etc.).
+ * - loading: whether the experiment is running.
+ * - isModalOpen: whether the parameter modal is open.
+ */
 import React, { useState } from "react";
 import { Bar } from "react-chartjs-2";
 import {
@@ -73,6 +89,7 @@ const ExperimentsPage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const runExperiment = async () => {
+    // Start loading and send request to backend
     setLoading(true);
     try {
       const response = await fetch("http://localhost:8000/api/experiments/ubnormal/run", {
@@ -92,6 +109,7 @@ const ExperimentsPage: React.FC = () => {
 
   const handleSave = () => {
     if (!results) return;
+    // Prepare data for saving and trigger download
     const fullData = { request_data: request, result_data: results };
     const filename = `experiment_results_${new Date().toISOString().replace(/[:.]/g, "_")}.json`;
     const blob = new Blob([JSON.stringify(fullData, null, 2)], { type: "application/json" });
@@ -105,6 +123,7 @@ const ExperimentsPage: React.FC = () => {
 
   return (
     <div className="experiments-container">
+      {/* Navigation bar with controls */}
       <header className="experiments-navbar">
         <h1 className="app-title">🧪 Experiments Dashboard</h1>
         <div className="navbar-buttons">
@@ -114,6 +133,7 @@ const ExperimentsPage: React.FC = () => {
         </div>
       </header>
 
+      {/* Loading overlay shown while experiment is running */}
       {loading && (
         <div className="loading-overlay">
           <div className="loading-spinner" />
@@ -121,6 +141,7 @@ const ExperimentsPage: React.FC = () => {
         </div>
       )}
 
+      {/* Show results and charts if experiment has finished */}
       {results && !loading && (
         <div className="experiments-content">
           <div className="results-grid">
@@ -133,6 +154,7 @@ const ExperimentsPage: React.FC = () => {
           </div>
 
           <div className="charts-section">
+            {/* Bar chart for detection counts */}
             <div className="chart-box">
               <Bar
                 data={{
@@ -147,6 +169,7 @@ const ExperimentsPage: React.FC = () => {
               />
             </div>
 
+            {/* Bar chart for precision/recall/F1 */}
             <div className="chart-box">
               <Bar
                 data={{

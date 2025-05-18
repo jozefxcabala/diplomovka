@@ -1,9 +1,20 @@
 #!/bin/bash
+#!/bin/bash
+
+# This script automates batch evaluation of anomaly detection using various threshold, confidence, and top_k parameter combinations.
+#
+# Functionality:
+# - Defines ranges for thresholds, confidence levels, and top_k values.
+# - Iterates over all combinations of these parameters.
+# - Executes the `evaluate_per_scenes.py` script with current parameters and captures its JSON output.
+# - Aggregates all results into a single JSON array in `results.json`.
+# - Tracks progress and prints start/end timestamps.
 
 start_time=$(date '+%H:%M:%S – %d.%m.%Y')
 echo "🟢 Started at $start_time"
 
 thresholds=$(seq 16 1 27)
+# Confidence thresholds to evaluate
 confidences=(0.3 0.45 0.6 0.75)
 top_ks=$(seq 1 1 5)
 

@@ -1,3 +1,20 @@
+/**
+ * SaveConfigButton component
+ *
+ * This button allows users to save the current analysis configuration (settings + categories) to the backend.
+ *
+ * Props:
+ * - categories: list of selected category labels
+ * - settings: object containing current analysis settings
+ * - disabled: whether the button is disabled
+ * - buttonText: optional label for the button
+ * - onSaved: optional callback triggered with configId after successful save
+ *
+ * On click:
+ * - Prompts the user to enter a name for the configuration.
+ * - Sends a POST request to the backend API to save the config.
+ * - Displays a success alert and triggers the `onSaved` callback if provided.
+ */
 import React from "react";
 
 interface SaveConfigButtonProps {

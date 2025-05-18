@@ -1,3 +1,21 @@
+/**
+ * LoadConfigModal component
+ *
+ * This modal allows users to:
+ * - Select an existing configuration and load it for use.
+ * - Switch to editing mode to modify or delete configurations in YAML format.
+ *
+ * Features:
+ * - Fetches configurations from the backend on open.
+ * - Displays configurations in flip card format with use and delete actions.
+ * - Provides a YAML editor for modifying selected configurations.
+ * - Validates YAML content before saving changes back to the backend.
+ *
+ * Props:
+ * - isOpen: boolean that controls modal visibility
+ * - onClose: function to close the modal
+ * - onSelect: function called when a configuration is selected for use
+ */
 import React, { useEffect, useState } from "react";
 import yaml from "js-yaml";
 import FlipCard from "./FlipCard";
@@ -17,7 +35,7 @@ interface LoadConfigModalProps {
   onSelect: (config: ConfigItem) => void;
 }
 
-// Validácia
+// Validates the structure and types of the configuration object
 const validateConfig = (config: any): string[] => {
   const errors: string[] = [];
 
@@ -67,6 +85,7 @@ const LoadConfigModal: React.FC<LoadConfigModalProps> = ({ isOpen, onClose, onSe
 
   useEffect(() => {
     if (!isOpen) return;
+    // Fetch configurations from backend when modal is opened
     const fetchConfigs = async () => {
       try {
         const res = await fetch("http://localhost:8000/api/configuration");
@@ -81,10 +100,12 @@ const LoadConfigModal: React.FC<LoadConfigModalProps> = ({ isOpen, onClose, onSe
 
   const handleDelete = async (id: number) => {
     await fetch(`http://localhost:8000/api/configuration/${id}`, { method: "DELETE" });
+    // Optimistically remove config from state after delete
     setConfigs((prev) => prev.filter((c) => c.id !== id));
   };
 
   const handleEditClick = (config: ConfigItem) => {
+    // Prepare selected config for YAML editing
     setEditingConfigId(config.id);
     setYamlText(yaml.dump(config));
     setError(null);
@@ -98,6 +119,7 @@ const LoadConfigModal: React.FC<LoadConfigModalProps> = ({ isOpen, onClose, onSe
   };
 
   const handleSaveChanges = async () => {
+    // Parse and validate YAML text before saving
     try {
       const parsed = yaml.load(yamlText) as ConfigItem;
 
@@ -117,6 +139,7 @@ const LoadConfigModal: React.FC<LoadConfigModalProps> = ({ isOpen, onClose, onSe
       setIsEditingMode(false);
       setError(null);
 
+      // Refresh configuration list after successful update
       const res = await fetch("http://localhost:8000/api/configuration");
       const updated = await res.json();
       setConfigs(updated);
@@ -125,6 +148,7 @@ const LoadConfigModal: React.FC<LoadConfigModalProps> = ({ isOpen, onClose, onSe
     }
   };
 
+  // Hide modal if not open
   if (!isOpen) return null;
 
   return (
@@ -134,6 +158,7 @@ const LoadConfigModal: React.FC<LoadConfigModalProps> = ({ isOpen, onClose, onSe
 
         {error && <pre className="error">{error}</pre>}
 
+        {/* View: selection mode */}
         {!isEditingMode ? (
           <>
             <div className="config-list-wrapper">
@@ -155,7 +180,9 @@ const LoadConfigModal: React.FC<LoadConfigModalProps> = ({ isOpen, onClose, onSe
               <button className="footer-button edit" onClick={() => setIsEditingMode(true)}>Edit Configurations</button>
             </div>
           </>
-        ) : editingConfigId === null ? (
+        ) : 
+        /* View: choose config to edit */
+        editingConfigId === null ? (
           <>
             <div className="config-list-wrapper">
               <ul className="config-list">
@@ -173,7 +200,9 @@ const LoadConfigModal: React.FC<LoadConfigModalProps> = ({ isOpen, onClose, onSe
               <button className="footer-button cancel" onClick={handleCancelEdit}>Cancel</button>
             </div>
           </>
-        ) : (
+        ) : 
+        /* View: editing YAML of selected config */
+        (
           <>
             <textarea
               value={yamlText}

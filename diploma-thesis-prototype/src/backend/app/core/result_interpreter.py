@@ -1,3 +1,16 @@
+"""
+result_interpreter.py
+
+This script interprets anomaly recognition results by mapping logits to category labels and
+saving those exceeding a threshold to the database.
+
+Functions:
+- get_logits_per_video: retrieves logits for each detection from the database.
+- get_probs: converts logits to probabilities using softmax.
+- save_anomalies: saves top-k high-confidence anomalies to the database.
+- main: orchestrates the result interpretation pipeline.
+"""
+
 import time
 import argparse
 import torch
@@ -61,23 +74,24 @@ def save_anomalies(threshold, list_of_categories, db_manager: DatabaseManager, l
 def main(video_id, threshold, categories_json, topk):
     print(f"The result interpreter program has started.")
 
+    # Initialize database connection
     db_manager = DatabaseManager(db_name="diploma_thesis_prototype_db", user="postgres", password="postgres")
 
-    # Load categories from the provided JSON file
-    # with open(categories_json_path, 'r') as f:
-    #     list_of_categories = json.load(f)
     list_of_categories = categories_json
-    
-    start_time = time.time()
 
+    start_time = time.time()
+    
+    # Retrieve raw logits for each detection
     logits_per_video = get_logits_per_video(db_manager, video_id)
     # probs = get_probs(logits_per_video)
     
+    # Save top-k anomalies that exceed the threshold
     save_anomalies(threshold, list_of_categories, db_manager, logits_per_video, topk)
     
     end_time = time.time()
     elapsed_time = end_time - start_time
 
+    # Print execution time summary
     print(f"Program finished. It took {elapsed_time:.2f} seconds.")
 
 

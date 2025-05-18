@@ -1,9 +1,21 @@
+# This script provides a GUI tool for manually annotating video files with activity labels for anomaly detection datasets.
+#
+# Functionality:
+# - Uses Tkinter for the GUI and OpenCV to read video frames.
+# - Displays a list of videos from a selected folder and allows users to preview them.
+# - Provides a checklist of predefined actions (ACTIONS) to tag each video.
+# - Saves annotations in a text file with fields: scene, scenario, object_type, mode, -, -, action.
+# - Displays a live preview of saved annotations.
+#
+# Useful for building or refining labeled datasets for training or evaluation purposes.
+
 import tkinter as tk
 from tkinter import filedialog
 import os
 import cv2
 from PIL import Image, ImageTk
 
+# List of possible actions to annotate in videos
 ACTIONS = [
     "person is running",
     "person is walking",
@@ -43,25 +55,32 @@ class VideoAnnotator:
         self.frame = None
         self.status_label = None
 
+        # Initialize the user interface
         self.setup_ui()
 
     def setup_ui(self):
+        # Button to select video folder
         folder_btn = tk.Button(self.root, text="Select Folder", command=self.load_folder)
         folder_btn.pack()
 
+        # Main layout frame containing listbox, video canvas, and annotation checklist
         main_frame = tk.Frame(self.root)
         main_frame.pack(fill=tk.BOTH, expand=True)
 
+        # List of available videos
         self.video_listbox = tk.Listbox(main_frame, width=40)
         self.video_listbox.pack(side=tk.LEFT, fill=tk.Y)
         self.video_listbox.bind("<<ListboxSelect>>", self.load_video)
 
+        # Canvas to display video frames
         self.canvas = tk.Canvas(main_frame, width=640, height=480)
         self.canvas.pack(side=tk.LEFT)
 
+        # Frame for checkboxes and controls
         self.right_frame = tk.Frame(main_frame)
         self.right_frame.pack(side=tk.LEFT, fill=tk.Y)
 
+        # Checkboxes for each action label
         self.check_vars = []
         for action in ACTIONS:
             var = tk.BooleanVar()
@@ -69,19 +88,21 @@ class VideoAnnotator:
             chk.pack(anchor=tk.W)
             self.check_vars.append((action, var))
 
+        # Button to save annotation
         save_btn = tk.Button(self.right_frame, text="Save Annotation", command=self.save_annotation)
         save_btn.pack(pady=10)
 
         self.status_label = tk.Label(self.right_frame, text="", fg="green")
         self.status_label.pack()
 
-        # Annotations preview label
+        # Label and text box to preview saved annotations
         self.preview_label = tk.Label(self.right_frame, text="Annotations Preview:", fg="white")
         self.preview_label.pack(pady=(20, 0))
 
         self.preview_text = tk.Text(self.right_frame, height=10, width=60, state=tk.DISABLED, bg="#2e2e2e", fg="white")
         self.preview_text.pack()
 
+    # Parse video filename to extract scene, scenario, object type, and mode (normal/abnormal)
     def extract_info_from_filename(self, filename):
         base = filename.replace('.mp4', '').replace('.avi', '')
         parts = base.split('_')
@@ -92,11 +113,13 @@ class VideoAnnotator:
         object_type = parts[-1] if parts[-1] in known_objects else '-'
         return scene, scenario, object_type, mode
 
+    # Custom sort key prioritizing abnormal videos and sorting by scenario
     def extract_sort_key(self, filename):
         _, scenario, _, mode = self.extract_info_from_filename(filename)
         is_normal = 1 if mode == 'n' else 0
         return (is_normal, scenario)
 
+    # Load and sort video files from selected folder
     def load_folder(self):
         base = os.path.join(os.getcwd(), "ubnormal")
         folder = filedialog.askdirectory(initialdir=base)
@@ -110,6 +133,7 @@ class VideoAnnotator:
         for video in self.video_list:
             self.video_listbox.insert(tk.END, video)
 
+    # Load selected video and reset checkboxes
     def load_video(self, event):
         selection = self.video_listbox.curselection()
         if not selection:
@@ -126,6 +150,7 @@ class VideoAnnotator:
             var.set(False)
         self.status_label.config(text="")
 
+    # Continuously update video frame in the canvas
     def update_frame(self):
         if self.cap and self.cap.isOpened():
             ret, frame = self.cap.read()
@@ -138,6 +163,7 @@ class VideoAnnotator:
                 self.canvas.imgtk = imgtk
                 self.root.after(30, self.update_frame)
 
+    # Collect selected actions and write them to annotations file
     def save_annotation(self):
         if not self.current_video_path:
             self.status_label.config(text="Please select a video first!", fg="red")
@@ -163,6 +189,7 @@ class VideoAnnotator:
 
         self.update_preview()
 
+    # Refresh annotation preview from file
     def update_preview(self):
         output_path = os.path.join(self.folder_path, "annotations.txt")
         if not os.path.exists(output_path):

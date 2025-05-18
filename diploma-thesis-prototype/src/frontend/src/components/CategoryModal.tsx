@@ -1,3 +1,21 @@
+/**
+ * CategoryModal component
+ *
+ * This modal allows users to define or load a list of categories used for analysis.
+ *
+ * Props:
+ * - isOpen: controls modal visibility.
+ * - onClose: closes the modal.
+ * - onUseCategories: callback called with parsed category array.
+ * - existingCategories: optional preloaded categories to display.
+ * - existingSelectedFileName: optional previously selected filename.
+ * - setSelectedCategoryFileName: callback to update selected file name.
+ *
+ * Features:
+ * - Manually input JSON list of categories via a textarea.
+ * - Load category list from a JSON file.
+ * - Error handling for invalid JSON input.
+ */
 import React, { useState, useEffect } from "react";
 import "./CategoryModal.css";
 
@@ -15,18 +33,21 @@ const CategoryModal: React.FC<CategoryModalProps> = ({ isOpen, onClose, onUseCat
   const [error, setError] = useState<string | null>(null);
   const [selectedFileName, setSelectedFileName] = useState<string>("No file selected");
 
+  // Populate textarea with existing categories when modal opens
   useEffect(() => {
     if (isOpen && existingCategories && existingCategories.length > 0) {
       setJsonText(JSON.stringify(existingCategories, null, 2));
     }
   }, [isOpen, existingCategories]);
 
+  // Load previously selected file name if available
   useEffect(() => {
     if (isOpen && existingSelectedFileName) {
       setSelectedFileName(existingSelectedFileName);
     }
   }, [isOpen, existingSelectedFileName]);
 
+  // Handle loading category list from uploaded JSON file
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -47,6 +68,7 @@ const CategoryModal: React.FC<CategoryModalProps> = ({ isOpen, onClose, onUseCat
     }
   };
 
+  // Parse and validate user input and trigger callback
   const handleUseCategories = () => {
     try {
       const parsedCategories = JSON.parse(jsonText);
@@ -60,8 +82,10 @@ const CategoryModal: React.FC<CategoryModalProps> = ({ isOpen, onClose, onUseCat
     }
   };
 
+  // Do not render modal if it's not open
   if (!isOpen) return null;
 
+  // Modal overlay and content
   return (
     <div className="modal-overlay">
       <div className="modal-content">

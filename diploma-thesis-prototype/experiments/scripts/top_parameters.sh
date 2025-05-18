@@ -1,8 +1,19 @@
 #!/bin/bash
 
+#!/bin/bash
+
+# This script extracts the key parameter values from a list of JSON result files containing top F1-score experiment results.
+#
+# Functionality:
+# - Defines a list of specific result JSON files.
+# - Iterates through each file.
+# - Uses `jq` to extract and display selected request parameters such as threshold, confidence threshold, top_k, etc.
+#
+# Useful for reviewing configurations that led to the best performing results.
+
 echo "📋 Extracting parameters from top F1 score result files..."
 
-# Zoznam konkrétnych súborov
+# List of specific result files
 files=(
   "find_best_parameters/experiment_result_34_20250508_033222.json"
   "find_best_parameters/experiment_result_31_20250508_031856.json"
@@ -11,7 +22,7 @@ files=(
   "find_best_parameters/experiment_result_40_20250508_040036.json"
 )
 
-# Iterácia cez každý súbor a výpis požadovaných parametrov
+# Iterate through each file and print selected parameters
 for file in "${files[@]}"; do
   echo -e "\n📄 $file"
   jq '.request_data | {

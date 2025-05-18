@@ -1,3 +1,25 @@
+/**
+ * SecondScreen component
+ *
+ * This screen displays the results of a completed video analysis.
+ * It allows the user to:
+ * - View the output video with overlayed anomaly detections.
+ * - Open a panel showing individual detections and jump to specific timestamps.
+ * - Rerun the analysis with the same or updated settings and categories.
+ * - Save the current configuration.
+ * - Modify settings and categories using modals.
+ *
+ * Props:
+ * - categories: selected category labels.
+ * - settings: configuration parameters for analysis.
+ * - setCategories / setSettings: functions to update values.
+ * - selectedCategoryFileName / selectedSettingsFileName: names of selected files.
+ * - setSelectedCategoryFileName / setSelectedSettingsFileName: file name setters.
+ * - video_id: identifier of the analyzed video.
+ * - startRunningAnalysis: function to start (re)analysis.
+ * - updateStageStatus: updates the visual progress status of pipeline stages.
+ * - goToStartupScreen: navigates user back to the initial screen.
+ */
 import { useState, useEffect, useRef } from "react";
 import "./App.css";
 import "./components/VideoInput.css";
@@ -125,7 +147,8 @@ const SecondScreen: React.FC<SecondScreenProps> = ({ categories, settings, video
       // 5 Result Interpreter
       console.log("🔎 Running result interpretation...");
       updateStageStatus("Interpreter", "in-progress");
-      const threshold = settings?.threshold;
+      const threshold = settingsSecondScreen?.threshold;
+      const top_k = settingsSecondScreen?.top_k;
       const resIntRes = await fetch("http://localhost:8000/api/result-interpreter", {
         method: "POST",
         headers: {
@@ -134,7 +157,8 @@ const SecondScreen: React.FC<SecondScreenProps> = ({ categories, settings, video
         body: JSON.stringify({
           video_id,
           threshold,
-          categories: categoriesSecondScreen
+          categories: categoriesSecondScreen,
+          top_k: top_k
         }),
       });
   
@@ -191,7 +215,7 @@ const SecondScreen: React.FC<SecondScreenProps> = ({ categories, settings, video
   const handleDetectionClick = (timestamp: number) => {
     if (videoRef.current) {
       videoRef.current.currentTime = timestamp / fps;
-      // videoRef.current.play(); // Automaticky spustí video
+      // videoRef.current.play(); // Optionally auto-play the video
     }
   };
 
@@ -249,12 +273,28 @@ const SecondScreen: React.FC<SecondScreenProps> = ({ categories, settings, video
           )}
       </div>
   
-      <div ref={panelRef} className={`bottom-panel ${isBottomPanelOpen ? "open" : "closed"}`} onClick={toggleBottomPanel}>
+      <div
+        ref={panelRef}
+        className={`bottom-panel ${isBottomPanelOpen ? "open" : "closed"} ${detections.length === 0 ? "disabled no-pointer" : ""}`}
+        onClick={() => {
+          if (detections.length > 0) toggleBottomPanel();
+        }}
+      >
         <div className="panel-drag-bar"></div>
-        {isBottomPanelOpen ? <div className="detection-header">Hide Detections 🔥</div> : <div className="detection-header">Show Detections 🔥</div>}
-        {isBottomPanelOpen && (
+        <div className="detection-header">
+          {detections.length === 0
+            ? "No detections 🔒"
+            : isBottomPanelOpen
+            ? "Hide Detections 🔥"
+            : "Show Detections 🔥"}
+        </div>
+        {isBottomPanelOpen && detections.length > 0 && (
           <div className="panel-content">
-            <DetectionsView detections={detections} onDetectionClick={handleDetectionClick} fps={fps}/>
+            <DetectionsView
+              detections={detections}
+              onDetectionClick={handleDetectionClick}
+              fps={fps}
+            />
           </div>
         )}
       </div>

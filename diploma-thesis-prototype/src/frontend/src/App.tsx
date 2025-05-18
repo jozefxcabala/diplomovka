@@ -1,3 +1,19 @@
+/**
+ * App component (main entry point)
+ *
+ * This component manages the overall screen flow and shared state of the application.
+ * It determines which screen to display based on user actions:
+ * - StartupScreen: initial screen for choosing to start, load config, or view results.
+ * - FirstScreen: used to upload video, select categories and settings, and start full analysis.
+ * - RunningAnalysisScreen: visualizes the progress of either full or partial analysis.
+ * - SecondScreen: displays final analysis results and allows rerunning from selected stages.
+ *
+ * State includes:
+ * - Screen selection (startup, first, running, partialRunning, second)
+ * - Selected categories, settings, file names
+ * - Video ID and loaded configuration
+ * - Stage progress tracking for full or partial analysis
+ */
 import { useState } from "react";
 import FirstScreen from "./FirstScreen";
 import SecondScreen from "./SecondScreen";

@@ -1,5 +1,18 @@
 #!/bin/bash
 
+# This script automates the execution of multiple experiments using payloads defined in a JSON file.
+#
+# Functionality:
+# - Verifies existence of required dataset and downloads it if missing.
+# - Starts the FastAPI backend server in the background using Conda.
+# - Reads a list of experiment configurations (payloads) from a given JSON file.
+# - Sends each payload to the backend for execution and saves the results as JSON.
+# - Measures and logs execution time per experiment.
+# - Cleans up by terminating the backend after all experiments are finished.
+#
+# Usage:
+#   ./run_experiments.sh <payload_file.json>
+
 # === SETTINGS ===
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 SRC_DIR="$ROOT_DIR/src"
@@ -27,6 +40,7 @@ fi
 mkdir -p "$ROOT_DIR/logs"
 mkdir -p "$RESULTS_DIR"
 
+ # Gracefully handle termination signals (e.g., Ctrl+C)
 # === Trap termination ===
 trap "echo '🛑 Caught termination signal. Killing backend...'; kill $BACKEND_PID; exit 1" SIGINT SIGTERM
 

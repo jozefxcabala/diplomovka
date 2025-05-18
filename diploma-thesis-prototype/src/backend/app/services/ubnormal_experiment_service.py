@@ -1,3 +1,15 @@
+"""
+ubnormal_experiment_service.py
+
+Provides utilities for parsing annotations, loading structured video data with associated anomalies,
+extracting scene-level activity mappings, and evaluating detection results against ground truth.
+
+Main functions:
+- get_activities_for_scene: maps available activities per scene from annotations.
+- parse_annotation_line: parses a single annotation line into structured fields.
+- load_analyzed_filenames_with_objects_and_anomalies_from_annotations: builds scene/video structure with objects and anomalies.
+- evaluate_results: computes TP/FP/FN/TN and logs decisions for each detection category.
+"""
 import os
 import re
 from collections import defaultdict
@@ -26,7 +38,7 @@ def safe_parse(value):
     return value if value != "-" else "unset"
 
 def parse_annotation_line(line: str):
-    parts = [safe_parse(p) for p in re.split(r'[,\s]+', line.strip(), maxsplit=6)]  # maxsplit=6, lebo už nie je object_id
+    parts = [safe_parse(p) for p in re.split(r'[,\s]+', line.strip(), maxsplit=6)]  # maxsplit=6, no more object_id
 
     if len(parts) >= 7:
         scene = parts[0]
@@ -100,23 +112,23 @@ def load_analyzed_filenames_with_objects_and_anomalies_from_annotations(video_ro
                         if key not in video_entries:
                             video_entries[key] = {}
 
-                        # Generovanie nového object_id ak treba
+                        # Generate new object_id if needed
                         next_object_id = str(len(video_entries[key]) + 1)
 
-                        # Vytvor objekt pre nové object_id
+                        # Create a new object entry
                         video_entries[key][next_object_id] = {
                             "name": "person",
                             "anomalies": []
                         }
 
-                        # Zapíš anomáliu do objektu
+                        # Add anomaly entry to the object
                         video_entries[key][next_object_id]["anomalies"].append({
                             "start": start,
                             "end": end,
                             "activity": activity
                         })
 
-                # vytvoríme video entries
+                # Construct video entries with file paths
                 for (scene_num, scenario_num, label, part_num), objects in video_entries.items():
                     if (isinstance(part_num, int) or part_num in ["fire", "fog", "smoke"]) and part_num != "unset":
                         video_filename = f"{label}_scene_{scene_num}_scenario_{scenario_num}_{part_num}.mp4"
@@ -132,7 +144,7 @@ def load_analyzed_filenames_with_objects_and_anomalies_from_annotations(video_ro
 
                     temp_result[scene_key][label].append(video_info)
 
-    # zoradenie
+    # Sort scenes by scene number
     sorted_result = {}
     for scene_key in sorted(temp_result.keys(), key=lambda k: int(k.split('_')[1])):
         sorted_result[scene_key] = {
@@ -207,6 +219,7 @@ def evaluate_results(all_results, scenes, categories):
                 "decision": decision
             })
 
-    # print("Detailed results: ", detailed_results)
+    # Debug output of the evaluation results per category and video
+    print("Detailed results: ", detailed_results)
 
     return tp, fp, fn, tn

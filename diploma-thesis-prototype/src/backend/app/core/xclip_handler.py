@@ -77,4 +77,3 @@ class XCLIPHandler:
     
 # Sources:
 # https://github.com/NielsRogge/Transformers-Tutorials/blob/master/X-CLIP/Zero_shot_classify_a_YouTube_video_with_X_CLIP.ipynb
-# https://huggingface.co/docs/transformers/model_doc/xclip

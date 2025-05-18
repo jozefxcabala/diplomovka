@@ -1,3 +1,17 @@
+/**
+ * VideoInput component
+ *
+ * Allows the user to upload a .mp4 video file and preview it directly in the browser.
+ * The video is passed back to the parent via the `onVideoUpload` callback.
+ *
+ * Props:
+ * - width, height: dimensions of the preview video (default 640x360)
+ * - onVideoUpload: function to handle the uploaded video file
+ *
+ * Features:
+ * - Hidden file input triggered by a styled button
+ * - Video preview shown once a file is selected
+ */
 import React, { useRef, useState } from "react";
 import { FaPlay } from "react-icons/fa";
 import "./VideoInput.css";

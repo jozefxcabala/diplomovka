@@ -1,3 +1,17 @@
+"""
+configuration.py
+
+This API router provides endpoints for managing analysis configurations.
+
+Endpoints:
+- POST /configuration: saves a new configuration to the database.
+- GET /configuration: returns a list of all saved configurations.
+- GET /configuration/{config_id}: fetches a specific configuration by its ID.
+- DELETE /configuration/{config_id}: deletes a configuration by ID.
+- PUT /configuration/{config_id}: updates an existing configuration.
+- POST /configuration/link: links a configuration to a video.
+"""
+
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import JSONResponse
 from typing import List

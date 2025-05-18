@@ -1,3 +1,20 @@
+/**
+ * StartupScreen component
+ *
+ * This is the entry screen for the prototype application. It allows users to:
+ * - Start a new analysis from scratch.
+ * - Load a previously saved configuration.
+ * - View results from a previously analyzed video.
+ *
+ * Modals:
+ * - LoadConfigModal: used to select and load an existing configuration.
+ * - LoadAnalysisModal: used to browse and select a video with completed results.
+ *
+ * Props:
+ * - onStartNewAnalysis: Triggered when the user starts a new analysis.
+ * - onLoadConfig: Triggered when the user selects a configuration to load.
+ * - onViewResults: Triggered when the user selects a previously analyzed video.
+ */
 import React, { useState } from "react";
 import styles from "./StartupScreen.module.css";
 import LoadConfigModal from "./components/LoadConfigModal";

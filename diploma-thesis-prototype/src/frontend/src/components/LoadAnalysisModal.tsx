@@ -1,3 +1,21 @@
+/**
+ * LoadAnalysisModal component
+ *
+ * This modal displays a list of previously analyzed videos with their associated configuration and metadata.
+ * Users can:
+ * - Select an analysis to view results.
+ * - Delete an analysis from the backend.
+ *
+ * Features:
+ * - Fetches processed video results from the backend when opened.
+ * - Displays name, path, duration, fps, and timestamp for each result.
+ * - Allows deleting a result without selecting it.
+ *
+ * Props:
+ * - isOpen: controls whether the modal is visible.
+ * - onClose: function to close the modal.
+ * - onSelect: function to choose a previously analyzed video.
+ */
 import React, { useEffect, useState } from "react";
 import "./LoadAnalysisModal.css";
 
@@ -29,6 +47,7 @@ const LoadAnalysisModal: React.FC<LoadAnalysisModalProps> = ({ isOpen, onClose, 
 
   useEffect(() => {
     if (!isOpen) return;
+    // Fetch the list of analyzed videos from the backend when the modal opens
     const fetchResults = async () => {
       try {
         const res = await fetch("http://localhost:8000/api/results/xclip-preprocessing");
@@ -44,9 +63,11 @@ const LoadAnalysisModal: React.FC<LoadAnalysisModalProps> = ({ isOpen, onClose, 
 
   const handleDelete = async (id: number) => {
     await fetch(`http://localhost:8000/api/results/xclip-preprocessing/${id}`, { method: "DELETE" });
+    // Remove the deleted video from local state to update the UI
     setResults((prev) => prev.filter((c) => c.id !== id));
   };
 
+  // Don’t render the modal if it is not open
   if (!isOpen) return null;
 
   return (
@@ -58,6 +79,7 @@ const LoadAnalysisModal: React.FC<LoadAnalysisModalProps> = ({ isOpen, onClose, 
         <div className="config-list-wrapper">
           <ul className="config-list">
             {results?.map((video) => (
+              // Render each analyzed video as a clickable result card
               <li key={video.id} className="config-item">
               <div
                 className="result-card"
@@ -82,6 +104,7 @@ const LoadAnalysisModal: React.FC<LoadAnalysisModalProps> = ({ isOpen, onClose, 
                   <button
                     className="delete-button"
                     onClick={(e) => {
+                      // Prevent click from triggering the parent onSelect handler
                       e.stopPropagation();
                       handleDelete(video.id);
                     }}

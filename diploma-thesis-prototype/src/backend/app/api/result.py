@@ -1,3 +1,13 @@
+"""
+result.py
+
+This API router exposes endpoints related to the result interpretation phase of the analysis pipeline.
+
+Endpoints:
+- POST /result-interpreter: triggers the result interpretation process for a given video.
+- GET /results/xclip-preprocessing: fetches metadata of analyzed videos from the database.
+- DELETE /results/xclip-preprocessing/{video_id}: deletes all data related to the specified video.
+"""
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import JSONResponse
 from backend.app.core.database_manager import DatabaseManager

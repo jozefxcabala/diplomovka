@@ -1,3 +1,29 @@
+/**
+ * FirstScreen component
+ *
+ * This screen allows the user to start a full analysis from scratch.
+ * The user can:
+ * - Upload a video.
+ * - Choose categories and analysis settings via modals.
+ * - Save configurations.
+ * - Launch the full analysis pipeline consisting of:
+ *   1. Uploading the video
+ *   2. Object detection
+ *   3. Saving configuration and linking it with the video
+ *   4. Anomaly preprocessing
+ *   5. Anomaly recognition
+ *   6. Result interpretation
+ *   7. Video visualization
+ *
+ * Props:
+ * - categories, settings: default values passed from parent
+ * - setCategories, setSettings: functions to save updated values
+ * - setSelectedCategoryFileName, setSelectedSettingsFileName: file name setters
+ * - setVideoId: updates video ID after upload
+ * - startRunningAnalysis: begins the analysis progress state
+ * - updateStageStatus: updates each analysis stage’s status
+ * - goToStartupScreen: navigation back to the start
+ */
 import { useState, useEffect } from "react";
 import VideoInput from "./components/VideoInput";
 import CategoryModal from "./components/CategoryModal";
@@ -173,6 +199,7 @@ const FirstScreen: React.FC<FirstScreenProps> = ({
       console.log("🔎 Running result interpretation...");
       updateStageStatus("Interpreter", "in-progress");
       const threshold = settingsFirstScreen?.threshold;
+      const top_k = settingsFirstScreen?.top_k;
       const resIntRes = await fetch("http://localhost:8000/api/result-interpreter", {
         method: "POST",
         headers: {
@@ -181,7 +208,8 @@ const FirstScreen: React.FC<FirstScreenProps> = ({
         body: JSON.stringify({
           video_id,
           threshold,
-          categories: categoriesFirstScreen
+          categories: categoriesFirstScreen,
+          top_k: top_k
         }),
       });
   

@@ -1,3 +1,19 @@
+/**
+ * FlipCard component
+ *
+ * Displays a configuration card with a front and back side.
+ * - Front side shows the config name and actions: Use, Delete, Show Info.
+ * - Back side reveals detailed information: categories and selected settings.
+ *
+ * Props:
+ * - config: the configuration data (id, name, categories, settings)
+ * - onUse: callback triggered when "Use" is clicked
+ * - onDelete: callback triggered when "Delete" is clicked
+ *
+ * Features:
+ * - CSS-based flip animation toggled by internal `flipped` state
+ * - Clean layout for comparing configuration entries
+ */
 import { useState } from "react";
 import "./FlipCard.css";
 
@@ -15,12 +31,13 @@ interface FlipCardProps {
 }
 
 const FlipCard: React.FC<FlipCardProps> = ({ config, onUse, onDelete }) => {
+  // Tracks whether the card is flipped to show back side
   const [flipped, setFlipped] = useState(false);
 
   return (
     <div className={`flip-card ${flipped ? "flipped" : ""}`}>
       <div className="flip-card-inner">
-        {/* Front side */}
+        {/*  Front side of the card with name and buttons */}
         <div className="flip-card-front">
           <div className="flip-header">
             <strong className="config-name">{config.name}</strong>
@@ -32,7 +49,7 @@ const FlipCard: React.FC<FlipCardProps> = ({ config, onUse, onDelete }) => {
           </div>
         </div>
 
-        {/* Back side */}
+        {/*  Back side of the card showing detailed info */}
         <div className="flip-card-back">
         <div className="back-info">
           <div className="config-categories">

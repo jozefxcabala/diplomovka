@@ -4,14 +4,20 @@ import json
 import cv2
 from psycopg2 import pool
 
-# This class, `DatabaseManager`, provides an interface for interacting with a PostgreSQL database to store and manage video processing data.
-# It includes methods for:
-# - Connecting to the database using a connection pool to manage multiple connections efficiently.
-# - Creating, clearing, and dropping tables for storing video metadata, detections, and bounding boxes.
-# - Inserting new video, detection, and bounding box records into the database.
-# - Fetching detections and bounding boxes from the database, filtered by video ID or detection ID.
-# - Updating detection data such as the end frame for a detection.
-# The connection pool is initialized with minimum and maximum pool sizes, ensuring efficient database access without overloading the server with too many concurrent connections.
+# This class, `DatabaseManager`, provides an interface for interacting with a PostgreSQL database
+# to store and manage data for a video-based anomaly detection system.
+#
+# Functionality includes:
+# - Managing connection pooling and automatic creation of the database if it doesn't exist.
+# - Creating, clearing, and dropping all necessary tables.
+# - Inserting and fetching videos, detections, bounding boxes, and anomaly-related data.
+# - Handling storage and retrieval of analysis configurations and their links to videos.
+# - Managing detection anomalies, including top-k anomaly labels and scores per detection.
+# - Providing access to raw logits and interpreted anomaly results.
+# - Serving metadata for video preview and visualization.
+#
+# Used throughout the pipeline to support object detection, anomaly recognition, result interpretation,
+# visualization, and configuration management.
 class DatabaseManager:
     def __init__(self, db_name, user, password, host='localhost', port='5432'):
         self.db_name = db_name
