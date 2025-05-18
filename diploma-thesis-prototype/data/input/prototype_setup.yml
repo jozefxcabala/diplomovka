@@ -1,0 +1,18 @@
+###############################################
+##            DO NOT CHANGE THIS             ##
+###############################################
+model_path: "data/models/yolo11n.pt"
+batch_size: 32
+frame_sample_rate: 4
+num_segments: 8
+processing_mode: "parallel"
+classes_to_detect:
+  - 0
+skip_frames: true
+num_of_skip_frames: 5
+###############################################
+##            YOU CAN CHANGE THIS            ##
+###############################################
+threshold: 22
+confidence_threshold: 0.6
+top_k: 1
